@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v2;
 
-[Route("api/v{version:apiVersion}/package")]
 [ApiVersion("2.0")]
 public class PackageController:ApiControllerBase
 {

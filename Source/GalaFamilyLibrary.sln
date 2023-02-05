@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.Infrastructure", "GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj", "{67DA2BF4-8420-434A-B89B-62C77DB812D6}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.Infrastructure", "GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj", "{67DA2BF4-8420-434A-B89B-62C77DB812D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{F49B823E-585A-4E6E-B6B0-4A00B650AD8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.FamilyService", "GalaFamilyLibrary.FamilyService\GalaFamilyLibrary.FamilyService.csproj", "{A5911B50-CAB5-43AF-8EFB-2832E166A032}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.FamilyService", "GalaFamilyLibrary.FamilyService\GalaFamilyLibrary.FamilyService.csproj", "{A5911B50-CAB5-43AF-8EFB-2832E166A032}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.DynamoPackageService", "GalaFamilyLibrary.DynamoPackageService\GalaFamilyLibrary.DynamoPackageService.csproj", "{2FF2AFF9-157B-4E04-8FE7-6567F7FF86E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.DynamoPackageService", "GalaFamilyLibrary.DynamoPackageService\GalaFamilyLibrary.DynamoPackageService.csproj", "{2FF2AFF9-157B-4E04-8FE7-6567F7FF86E3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{AA98B495-5070-4848-A323-D8267B6BC3C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.Gateway", "GalaFamilyLibrary.Gateway\GalaFamilyLibrary.Gateway.csproj", "{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.Gateway", "GalaFamilyLibrary.Gateway\GalaFamilyLibrary.Gateway.csproj", "{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.UserService", "GalaFamilyLibrary.UserService\GalaFamilyLibrary.UserService.csproj", "{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,10 +39,21 @@ Global
 		{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A5911B50-CAB5-43AF-8EFB-2832E166A032} = {F49B823E-585A-4E6E-B6B0-4A00B650AD8A}
 		{2FF2AFF9-157B-4E04-8FE7-6567F7FF86E3} = {F49B823E-585A-4E6E-B6B0-4A00B650AD8A}
 		{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B} = {AA98B495-5070-4848-A323-D8267B6BC3C8}
+		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191} = {F49B823E-585A-4E6E-B6B0-4A00B650AD8A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {301A9876-88C7-44C2-97BF-F2397A8B3A36}
 	EndGlobalSection
 EndGlobal

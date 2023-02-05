@@ -1,7 +1,14 @@
 ﻿{
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v1/package",
+      "UpstreamPathTemplate": "/package/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Delete",
+        "Put"
+      ],
+      "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -9,11 +16,20 @@
           "Port": 6001
         }
       ],
-      "UpstreamPathTemplate": "/api/v1/package",
-      "UpstreamHttpMethod": [ "Get" ]
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "ServiceName": "dynamo packages"
     },
     {
-      "DownstreamPathTemplate": "/api/v1/family",
+      "UpstreamPathTemplate": "/family/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Delete",
+        "Put"
+      ],
+      "DownstreamPathTemplate": "/api/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -21,12 +37,21 @@
           "Port": 7001
         }
       ],
-      "UpstreamPathTemplate": "/api/v1/family",
-      "UpstreamHttpMethod": [ "Get" ]
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "ServiceName": "family library"
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001",
-    "RouteIsCaseSensitive": false
+    "RouteIsCaseSensitive": false,
+    "ServiceDiscoveryProvider": {
+      "Scheme": "https",
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul",
+      "PollingInterval": 100
+    }
   }
 }

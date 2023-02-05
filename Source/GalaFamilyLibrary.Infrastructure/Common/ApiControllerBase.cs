@@ -3,7 +3,7 @@
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class ApiControllerBase : ControllerBase
 {
     [NonAction]

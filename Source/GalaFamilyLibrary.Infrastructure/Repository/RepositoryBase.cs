@@ -25,7 +25,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
             return await _db.Queryable<T>().WithCacheIF(useCache).In(id).SingleAsync();
         }
 
-        public async Task<List<T>> GetByExpression(Expression<Func<T, bool>> whereExpression)
+        public async Task<List<T>> GetByExpressionAsync(Expression<Func<T, bool>> whereExpression)
         {
             return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync();
         }

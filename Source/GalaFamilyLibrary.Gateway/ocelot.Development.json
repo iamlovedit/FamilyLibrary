@@ -1,0 +1,48 @@
+﻿{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/package/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Delete",
+        "Put"
+      ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 6001
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/family/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Delete",
+        "Put"
+      ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7001
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:5001",
+    "RouteIsCaseSensitive": false
+  }
+}

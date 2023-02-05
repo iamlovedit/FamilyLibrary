@@ -35,7 +35,7 @@ public abstract class ServiceBase<T> : IServiceBase<T> where T : class, new()
 
         public async Task<IList<T>> GetByExpressionAsync(Expression<Func<T, bool>> expression)
         {
-            return await DAL.GetByExpression(expression);
+            return await DAL.GetByExpressionAsync(expression);
         }
 
         public async Task<int> AddAsync(T entity)

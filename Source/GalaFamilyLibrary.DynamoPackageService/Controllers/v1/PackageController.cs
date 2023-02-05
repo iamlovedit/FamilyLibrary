@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 
-[Route("api/v{version:apiVersion}/package")]
 [ApiVersion("1.0")]
 public class PackageController:ApiControllerBase
 {
@@ -21,5 +20,10 @@ public class PackageController:ApiControllerBase
     public async Task<string> Get()
     {
         return await Task.FromResult(nameof(PackageController));
+    }
+    [HttpGet("get1")]
+    public async Task<string> Get1()
+    {
+        return await Task.FromResult("package get1");
     }
 }

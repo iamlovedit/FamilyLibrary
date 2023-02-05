@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
-[Route("api/v{version:apiVersion}/family")]
 [ApiVersion("1.0")]
 public class FamilyController:ApiControllerBase
 {
@@ -21,5 +20,10 @@ public class FamilyController:ApiControllerBase
     public async Task<string> Get()
     {
         return await Task.FromResult(nameof(FamilyController));
+    }
+    [HttpGet("get1")]
+    public async Task<string> Get1()
+    {
+        return await Task.FromResult("family get1");
     }
 }

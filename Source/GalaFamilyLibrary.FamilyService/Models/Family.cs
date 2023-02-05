@@ -2,6 +2,7 @@
 
 namespace GalaFamilyLibrary.FamilyService.Models;
 
+[SugarTable("families")]
 public class Family
 {
     [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]

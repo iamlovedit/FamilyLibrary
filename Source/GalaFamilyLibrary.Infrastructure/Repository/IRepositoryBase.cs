@@ -11,7 +11,7 @@ public interface IRepositoryBase<T> where T : class, new()
    
     Task<T> GetByIdAsync(object id, bool useCache = false);
     
-    Task<List<T>> GetByExpression(Expression<Func<T, bool>> whereExpression);
+    Task<List<T>> GetByExpressionAsync(Expression<Func<T, bool>> whereExpression);
 
     Task<IList<T>> GetAllAsync(bool useCache = false);
 

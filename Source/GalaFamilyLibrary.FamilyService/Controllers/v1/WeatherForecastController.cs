@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
-[Route("api/v{version:apiVersion}/weatherForecast")]
 [ApiVersion("1.0")]
 public class WeatherForecastController : ApiControllerBase
 {
@@ -24,11 +23,10 @@ public class WeatherForecastController : ApiControllerBase
     public IEnumerable<WeatherForecast> Get()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
+        {
+            Date = DateTime.Now.AddDays(index),
+            TemperatureC = Random.Shared.Next(-20, 55),
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+        });
     }
 }

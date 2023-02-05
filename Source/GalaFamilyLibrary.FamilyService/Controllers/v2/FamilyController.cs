@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v2;
 
-[Route("api/v{version:apiVersion}/family")]
 [ApiVersion("2.0")]
 public class FamilyController : ApiControllerBase
 {

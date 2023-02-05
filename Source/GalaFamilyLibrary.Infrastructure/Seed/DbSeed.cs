@@ -5,7 +5,7 @@ using SqlSugar;
 
 namespace GalaFamilyLibrary.Infrastructure.Seed;
 
-public  class DbSeed
+public class DbSeed
 {
     public static void InitTables(AppDbContext appDbContext, string modelsAssembly, string modelNamespace)
     {
@@ -26,13 +26,15 @@ public  class DbSeed
 
         try
         {
+            var assembly = Assembly.GetExecutingAssembly();
+            var modelTypes = assembly.DefinedTypes.Select(tInfo => tInfo.AsType()).Where(t => t.IsClass && t.GetCustomAttribute<SugarTable>() != null);
             var path = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
-            var referencedAssemblies = Directory.GetFiles(path, modelsAssembly)
-                .Select(Assembly.LoadFrom).ToArray();
-            var modelTypes = referencedAssemblies
-                .SelectMany(a => a.DefinedTypes)
-                .Select(type => type.AsType())
-                .Where(t => t.IsClass && t.Namespace != null && t.Namespace.Equals(modelNamespace));
+            //var referencedAssemblies = Directory.GetFiles(path, modelsAssembly)
+            //    .Select(Assembly.LoadFrom).ToArray();
+            //var modelTypes = referencedAssemblies
+            //    .SelectMany(a => a.DefinedTypes)
+            //    .Select(type => type.AsType())
+            //    .Where(t => t.IsClass && t.Namespace != null && t.Namespace.Equals(modelNamespace));
 
             foreach (var type in modelTypes)
             {
@@ -53,7 +55,7 @@ public  class DbSeed
         }
     }
 
-    public static async void InitSeed<T>(AppDbContext appDbContext, string seedFileName) where T:class,new()
+    public static async void InitSeed<T>(AppDbContext appDbContext, string seedFileName) where T : class, new()
     {
         if (appDbContext == null) throw new ArgumentNullException(nameof(appDbContext));
         if (string.IsNullOrEmpty(seedFileName))
