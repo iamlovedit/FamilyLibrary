@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 
-services.AddDbSetup();
 services.AddGenericSetup(builder.Configuration);
 
 var app = builder.Build();

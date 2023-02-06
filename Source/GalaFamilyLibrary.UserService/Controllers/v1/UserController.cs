@@ -3,11 +3,13 @@ using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.UserService.DataTransferObjetcts;
 using GalaFamilyLibrary.UserService.Models;
 using GalaFamilyLibrary.UserService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.UserService.Controllers.v1
 {
     [ApiVersion("1.0")]
+    [Authorize]
     public class UserController : ApiControllerBase
     {
         private readonly ILogger<UserController> _logger;
@@ -22,6 +24,7 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<MessageModel<string>> Regsiter([FromBody] LibraryUserCreationDto userCreationDto)
         {
             if ((await _userService.GetFirstByExpressionAsync(u => u.Username == userCreationDto.Username) != null))

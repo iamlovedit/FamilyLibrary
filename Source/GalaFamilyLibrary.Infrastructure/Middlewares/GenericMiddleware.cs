@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Infrastructure.Cors;
+﻿using GalaFamilyLibrary.Infrastructure.Consul;
+using GalaFamilyLibrary.Infrastructure.Cors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 
@@ -17,12 +18,12 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 app.UseSwagger();
                 app.UseVersionedSwaggerUI();
             }
-
-            //app.UseConsul();
-
-            app.UseCorsService();
+            
+            app.UseConsul(app.Configuration);
 
             app.UseHttpsRedirection();
+
+            app.UseCorsService();
 
             app.UseAuthorization();
 

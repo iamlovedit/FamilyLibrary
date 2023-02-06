@@ -29,6 +29,7 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
         }
 
         [AllowAnonymous]
+        [HttpPost]
         public async Task<MessageModel<string>> GetTokenAsync([FromBody] LoginUserDto loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))

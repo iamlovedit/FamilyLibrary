@@ -23,6 +23,8 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddDbSetup();
 
+            services.AddConsulConfigSetup(configuration);
+
             //sqlsugar
             services.AddSqlsugarSetup(configuration);
             //route
@@ -44,7 +46,6 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddAuthorizationSetup(configuration);
 
-            //services.AddConsulConfigSetup(configuration); TODO:
         }
     }
 }

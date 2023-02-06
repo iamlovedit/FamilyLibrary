@@ -33,7 +33,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             var audience = audienceSection["Audience"];
             var expiration = audienceSection["Expiration"];
 
-            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, audience, issuer, TimeSpan.FromMinutes(expiration.ObjToInt()), signingCredentials));
+            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, issuer, audience, TimeSpan.FromMinutes(expiration.ObjToInt()), signingCredentials));
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Consumer", policy => policy.RequireRole("Consumer").Build());

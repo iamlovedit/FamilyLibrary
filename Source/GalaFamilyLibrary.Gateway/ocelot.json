@@ -17,9 +17,10 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
       },
-      "ServiceName": "dynamo packages"
+      // "ServiceName": "dynamo packages"
     },
     {
       "UpstreamPathTemplate": "/family/{url}",
@@ -38,20 +39,21 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
       },
-      "ServiceName": "family library"
+      // "ServiceName": "family library"
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001",
     "RouteIsCaseSensitive": false,
-    "ServiceDiscoveryProvider": {
-      "Scheme": "https",
-      "Host": "localhost",
-      "Port": 8500,
-      "Type": "Consul",
-      "PollingInterval": 100
-    }
+    //"ServiceDiscoveryProvider": {
+    //  "Scheme": "https",
+    //  "Host": "localhost",
+    //  "Port": 8500,
+    //  "Type": "Consul",
+    //  "PollingInterval": 100
+    //}
   }
 }

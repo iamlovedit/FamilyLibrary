@@ -1,3 +1,32 @@
-﻿{
-
-}
+﻿[
+  {
+    "id": 1,
+    "name": "test1",
+    "createTime": "\/Date(1546272000000+0800)\/",
+    "updateTime": "\/Date(1546272000000+0800)\/",
+    "uploaderId": 1,
+    "categoryId": 125,
+    "versions": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022
+    ]
+  },
+  {
+    "id": 2,
+    "name": "test2",
+    "createTime": "\/Date(1546272000000+0800)\/",
+    "updateTime": "\/Date(1546272000000+0800)\/",
+    "uploaderId": 2,
+    "categoryId": 125,
+    "versions": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022
+    ]
+  }
+]

@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("ocelot.json", false, true);
 var services = builder.Services;
 
-services.AddOcelot().AddConsul();
+services.AddOcelot()/*.AddConsul()*/;
 services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
