@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Infrastructure.Consul;
+﻿using System.Reflection;
+using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +20,9 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
                 throw new ArgumentNullException(nameof(configuration));
             }
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddDbSetup();
+
             //sqlsugar
             services.AddSqlsugarSetup(configuration);
             //route

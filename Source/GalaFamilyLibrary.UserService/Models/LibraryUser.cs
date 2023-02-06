@@ -16,17 +16,23 @@ namespace GalaFamilyLibrary.UserService.Models
         [SugarColumn(IsNullable = false, Length = 16)]
         public string Username { get; set; }
 
-        [SugarColumn(IsNullable = false, Length = 16)]
+        [SugarColumn(IsNullable = false)]
         public string Password { get; set; }
+
+        [SugarColumn(IsNullable = false)]
+        public string Salt { get; set; }
 
         public DateTime CreateTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
 
+        [SugarColumn(IsNullable = true)]
         public DateTime LastLoginTime { get; set; }
 
+
         public bool IsDeleted { get; set; }
-            
+
         public int ErrorCount { get; set; }
+
     }
 }

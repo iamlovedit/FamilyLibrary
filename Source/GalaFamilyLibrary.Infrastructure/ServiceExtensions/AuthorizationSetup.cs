@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using SqlSugar.Extensions;
 using System.Security.Claims;
 using System.Text;
 
@@ -22,16 +23,17 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-
-            var key = configuration.GetSection("Audience")["Key"];
+            var audienceSection = configuration.GetSection("Audience");
+            var key = audienceSection["Key"];
             var keyByteArray = Encoding.ASCII.GetBytes(key);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
-            var issuer = configuration.GetSection("Audience")["Issuer"];
-            var audience = configuration.GetSection("Audience")["Audience"];
+            var issuer = audienceSection["Issuer"];
+            var audience = audienceSection["Audience"];
+            var expiration = audienceSection["Expiration"];
 
-            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, audience, issuer, TimeSpan.FromSeconds(60 * 60), signingCredentials));
+            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, audience, issuer, TimeSpan.FromMinutes(expiration.ObjToInt()), signingCredentials));
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Consumer", policy => policy.RequireRole("Consumer").Build());

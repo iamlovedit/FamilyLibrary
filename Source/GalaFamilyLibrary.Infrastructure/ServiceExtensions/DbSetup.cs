@@ -11,7 +11,7 @@ public static class DbSetup
         {
             throw new ArgumentNullException(nameof(services));
         }
-        services.AddScoped<DbSeed>();
+        services.AddScoped<DatabaseSeed>();
         services.AddScoped<AppDbContext>();
     }
 }
