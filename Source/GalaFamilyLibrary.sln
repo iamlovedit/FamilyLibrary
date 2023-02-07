@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Gateway", "Gateway", "{AA98
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.Gateway", "GalaFamilyLibrary.Gateway\GalaFamilyLibrary.Gateway.csproj", "{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.UserService", "GalaFamilyLibrary.UserService\GalaFamilyLibrary.UserService.csproj", "{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.UserService", "GalaFamilyLibrary.UserService\GalaFamilyLibrary.UserService.csproj", "{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4026EE9F-21E4-4F79-AF7E-19C5D38D34B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4026EE9F-21E4-4F79-AF7E-19C5D38D34B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4026EE9F-21E4-4F79-AF7E-19C5D38D34B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4026EE9F-21E4-4F79-AF7E-19C5D38D34B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4026EE9F-21E4-4F79-AF7E-19C5D38D34B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

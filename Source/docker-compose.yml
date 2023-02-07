@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  galafamilylibrary.dynamopackageservice:
+    image: ${DOCKER_REGISTRY-}galafamilylibrarydynamopackageservice
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
+
+  galafamilylibrary.familyservice:
+    image: ${DOCKER_REGISTRY-}galafamilylibraryfamilyservice
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
+
+
+  galafamilylibrary.userservice:
+    image: ${DOCKER_REGISTRY-}galafamilylibraryuserservice
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.UserService/Dockerfile
+
+
+  galafamilylibrary.gateway:
+    image: ${DOCKER_REGISTRY-}galafamilylibrarygateway
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
+
