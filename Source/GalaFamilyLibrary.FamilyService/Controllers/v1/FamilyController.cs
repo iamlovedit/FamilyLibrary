@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
 [ApiVersion("1.0")]
-public class FamilyController:ApiControllerBase
+public class FamilyController : ApiControllerBase
 {
     private readonly IFamilyService _familyService;
     private readonly ILogger<FamilyController> _logger;
 
-    public FamilyController(IFamilyService familyService,ILogger<FamilyController> logger)
+    public FamilyController(IFamilyService familyService, ILogger<FamilyController> logger)
     {
         _familyService = familyService;
         _logger = logger;

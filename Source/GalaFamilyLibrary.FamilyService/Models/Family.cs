@@ -1,5 +1,4 @@
-﻿using GalaFamilyLibrary.UserService.Models;
-using SqlSugar;
+﻿using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.Models;
 
@@ -16,8 +15,8 @@ public class Family
 
     public DateTime UpdateTime { get; set; }
 
-    [Navigate(NavigateType.OneToOne, nameof(UploaderId))]
-    public LibraryUser User { get; set; }
+    //[Navigate(NavigateType.OneToOne, nameof(UploaderId))]
+    //public LibraryUser User { get; set; }
 
     public int UploaderId { get; set; }
 
