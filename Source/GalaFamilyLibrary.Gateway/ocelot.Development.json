@@ -19,8 +19,8 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "ServiceName": "dynamo packages"
+      }
+      // "ServiceName": "dynamo packages"
     },
     {
       "UpstreamPathTemplate": "/family/{url}",
@@ -39,21 +39,43 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      },
-      "ServiceName": "family library"
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+      // "ServiceName": "family library"
+    },
+    {
+      "UpstreamPathTemplate": "/user/{url}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "Post",
+        "Delete",
+        "Put"
+      ],
+      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 8001
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001",
-    "RequestIdKey": "OcRequestId",
     "RouteIsCaseSensitive": false,
-    "ServiceDiscoveryProvider": {
-      "Scheme": "https",
-      "Host": "localhost",
-      "Port": 8500,
-      "Type": "Consul",
-      "PollingInterval": 100
-    }
+    "RequestIdKey": "ot-traceid",
+    //"ServiceDiscoveryProvider": {
+    //  "Scheme": "https",
+    //  "Host": "localhost",
+    //  "Port": 8500,
+    //  "Type": "Consul",
+    //  "PollingInterval": 100
+    //}
   }
 }

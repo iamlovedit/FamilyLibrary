@@ -8,7 +8,8 @@ namespace GalaFamilyLibrary.DynamoPackageService.Helpers
     {
         public MappingProfiles()
         {
-            CreateMap<DynamoPackage, PackageDto>();
+            CreateMap<DynamoPackage, PackageDTO>();
+            CreateMap<PackageVersion, PackageVersionDTO>();
         }
     }
 }

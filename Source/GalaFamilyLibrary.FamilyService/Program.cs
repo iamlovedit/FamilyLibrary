@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
-
 services.AddGenericSetup(builder.Configuration);
 
 var app = builder.Build();

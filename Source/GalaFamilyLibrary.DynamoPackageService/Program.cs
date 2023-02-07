@@ -12,7 +12,7 @@ var services = builder.Services;
 
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
 services.AddGenericSetup(builder.Configuration);
-
+services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

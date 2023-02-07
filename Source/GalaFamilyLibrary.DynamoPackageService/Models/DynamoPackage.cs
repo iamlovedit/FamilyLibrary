@@ -10,6 +10,9 @@ public class DynamoPackage
     [JsonProperty("_id")]
     public string Id { get; set; }
 
+    [SugarColumn(IsNullable = false)]
+    public string Name { get; set; }
+
     [JsonProperty("created")]
     public DateTime CreateTime { get; set; }
 
