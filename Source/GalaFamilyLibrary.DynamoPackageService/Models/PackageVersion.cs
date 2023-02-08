@@ -22,5 +22,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Models
         [JsonProperty("scan_status")]
         [SugarColumn(IsNullable = true)]
         public string ScanStatus { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }

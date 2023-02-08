@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
+using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,8 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddDbSetup();
 
             services.AddConsulConfigSetup(configuration);
+
+            services.AddRedisCacheSetup(configuration);
 
             //sqlsugar
             services.AddSqlsugarSetup(configuration);

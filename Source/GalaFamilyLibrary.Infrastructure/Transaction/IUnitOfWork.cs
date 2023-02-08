@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace GalaFamilyLibrary.Infrastructure.UnitOfWork
+namespace GalaFamilyLibrary.Infrastructure.Transaction
 {
     public interface IUnitOfWork
     {

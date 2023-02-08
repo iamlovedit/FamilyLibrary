@@ -32,4 +32,6 @@ public class DynamoPackage
 
     [Navigate(NavigateType.OneToMany, nameof(PackageVersion.PackageId))]
     public List<PackageVersion> Versions { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

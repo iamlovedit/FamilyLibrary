@@ -1,6 +1,6 @@
 ﻿using GalaFamilyLibrary.DynamoPackageService.Models;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.Infrastructure.UnitOfWork;
+using GalaFamilyLibrary.Infrastructure.Transaction;
 using Newtonsoft.Json.Linq;
 using Quartz;
 
@@ -32,30 +32,76 @@ namespace GalaFamilyLibrary.DynamoPackageService.Tasks
                 var json = await responseMessage.Content.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(json))
                 {
-                    var jObject = JObject.Parse(json);
-                    var content = jObject["content"];
-                    if (!string.IsNullOrEmpty(content?.ToString()))
+                    try
                     {
-                        var newPacakges = content.ToObject<List<DynamoPackage>>();
-                        var client = _appDbContext.GetEntityDB<DynamoPackage>();
-                        var oldPackages = await client.GetListAsync();
-                        try
+                        var jObject = JObject.Parse(json);
+                        var content = jObject["content"];
+                        if (!string.IsNullOrEmpty(content?.ToString()))
                         {
+                            var newPacakges = content.ToObject<List<DynamoPackage>>();
+                            var packageDb = _appDbContext.GetEntityDB<DynamoPackage>();
+                            var packageVersionDb = _appDbContext.GetEntityDB<PackageVersion>();
+                            var oldPackages = await packageDb.GetListAsync();
+                            var oldPackageVersions = await packageVersionDb.GetListAsync();
                             _unitOfWork.BeginTransaction();
+                            var addedPackages = new List<DynamoPackage>();
+                            var addedPackageVersions = new List<PackageVersion>();
+                            var newPackageVersions = new List<PackageVersion>();
                             foreach (var package in newPacakges)
                             {
-                                if (!oldPackages.Any(p => p.Id == package.Id))
+                                var oldPackage = oldPackages.FirstOrDefault(p => p.Id == package.Id);
+                                if (oldPackage is null)
                                 {
-                                    await client.InsertAsync(package);
+                                    addedPackages.Add(package);
+                                }
+                                else
+                                {
+                                    await packageDb.UpdateAsync(package);
+                                }
+
+                                foreach (var pVersion in package.Versions)
+                                {
+                                    var oldPackageVersion = oldPackageVersions.FirstOrDefault(v => v.Id == pVersion.Id);
+                                    if (oldPackageVersion is null)
+                                    {
+                                        addedPackageVersions.Add(pVersion);
+                                    }
+                                    else
+                                    {
+                                        await packageVersionDb.UpdateAsync(pVersion);
+                                    }
+                                    newPackageVersions.Add(pVersion);
+                                }
+                            }
+
+                            await packageDb.InsertRangeAsync(addedPackages);
+                            await packageVersionDb.InsertRangeAsync(addedPackageVersions);
+
+                            foreach (var package in oldPackages)
+                            {
+                                var newPackage = newPacakges.FirstOrDefault(p => p.Id == package.Id);
+                                if (newPacakges is null)
+                                {
+                                    package.IsDeleted = true;
+                                    await packageDb.UpdateAsync(package);
+                                }
+                            }
+                            foreach (var pVersion in oldPackageVersions)
+                            {
+                                var newVersion = newPackageVersions.FirstOrDefault(v => v.Id == pVersion.Id);
+                                if (newVersion is null)
+                                {
+                                    pVersion.IsDeleted = true;
+                                    await packageVersionDb.UpdateAsync(pVersion);
                                 }
                             }
                             _unitOfWork.CommitTransaction();
                         }
-                        catch (Exception e)
-                        {
-                            _unitOfWork.RollbackTransaction();
-                            _logger.LogError(e, e.Message);
-                        }
+                    }
+                    catch (Exception e)
+                    {
+                        _unitOfWork.RollbackTransaction();
+                        _logger.LogError(e, e.Message);
                     }
                 }
             }

@@ -4,7 +4,7 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Services;
 
-public class PackageService:ServiceBase<DynamoPackage>,IPackageService
+public class PackageService : ServiceBase<DynamoPackage>, IPackageService
 {
     public PackageService(IRepositoryBase<DynamoPackage> dbContext) : base(dbContext)
     {
@@ -14,6 +14,6 @@ public class PackageService:ServiceBase<DynamoPackage>,IPackageService
     {
         return await DAL.DbContext.Queryable<DynamoPackage>()
           .Includes(d => d.Versions)
-          .InSingleAsync(id);
+          .FirstAsync(p => p.IsDeleted == false && p.Id == id);
     }
 }
