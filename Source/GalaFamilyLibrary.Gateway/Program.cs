@@ -29,27 +29,10 @@ builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
 });
 var services = builder.Services;
 services.AddOcelot()/*.AddConsul()*/;
+services.AddLogging();
 services.AddJwtAuthentication(builder.Configuration);
 
 var app = builder.Build();
 app.UseAuthentication();
-
-app.UseOcelot(pipeConfig =>
-{
-
-}).ConfigureAwait(true);
-//app.UseOcelot((ocelotBuilder, pipeConfig) =>
-//{
-//    ocelotBuilder.UseDownstreamContextMiddleware();
-//    ocelotBuilder.UseExceptionHandlerMiddleware();
-//    ocelotBuilder.UseResponderMiddleware();
-//    ocelotBuilder.UseMiddleware<ResponseMiddleware>();
-//    ocelotBuilder.UseDownstreamRouteFinderMiddleware();
-//    ocelotBuilder.UseMultiplexingMiddleware();
-//    ocelotBuilder.UseDownstreamRequestInitialiser();
-//    ocelotBuilder.UseRequestIdMiddleware();
-//    ocelotBuilder.UseLoadBalancingMiddleware();
-//    ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
-//    ocelotBuilder.UseHttpRequesterMiddleware();
-//}).ConfigureAwait(true);
+app.UseOcelot().ConfigureAwait(true);
 app.Run();

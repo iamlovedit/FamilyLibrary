@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.FamilyService.DataTransferObjetcts;
+using GalaFamilyLibrary.FamilyService.DataTransferObjects;
 using GalaFamilyLibrary.FamilyService.Models;
 
 namespace GalaFamilyLibrary.FamilyService.Helpers
@@ -8,7 +8,10 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
     {
         public MappingProfiles()
         {
-            CreateMap<Family, FamilyDto>();
+            CreateMap<Family, FamilyDTO>();
+            CreateMap<FamilyCategory, FamilyCategoryDTO>();
+            CreateMap<FamilyCreationDTO, Family>()
+                .ForMember(f => f.CreateTime, options => options.MapFrom(c => DateTime.Now));
         }
     }
 }

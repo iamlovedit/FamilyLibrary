@@ -1,4 +1,4 @@
-﻿namespace GalaFamilyLibrary.DynamoPackageService.DataTransferObjetcts
+﻿namespace GalaFamilyLibrary.DynamoPackageService.DataTransferObjects
 {
     public class PackageDTO
     {

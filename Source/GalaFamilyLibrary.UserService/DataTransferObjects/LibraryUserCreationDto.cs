@@ -1,4 +1,4 @@
-﻿namespace GalaFamilyLibrary.UserService.DataTransferObjetcts
+﻿namespace GalaFamilyLibrary.UserService.DataTransferObjects
 {
     public class LibraryUserCreationDto
     {

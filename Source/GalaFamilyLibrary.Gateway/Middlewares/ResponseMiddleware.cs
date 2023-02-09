@@ -5,14 +5,14 @@ using Ocelot.Responder;
 
 namespace GalaFamilyLibrary.Gateway.Middlewares;
 
-public class ResponseMiddleware : OcelotMiddleware
+public class ResponseMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly IErrorsToHttpStatusCodeMapper _statusCodeMapper;
     private readonly IHttpResponder _httpResponder;
 
-    public ResponseMiddleware(IOcelotLogger logger, RequestDelegate next,
-        IErrorsToHttpStatusCodeMapper statusCodeMapper, IHttpResponder httpResponder) : base(logger)
+    public ResponseMiddleware(RequestDelegate next,
+        IErrorsToHttpStatusCodeMapper statusCodeMapper, IHttpResponder httpResponder)
     {
         _next = next;
         _statusCodeMapper = statusCodeMapper;
@@ -30,7 +30,7 @@ public class ResponseMiddleware : OcelotMiddleware
         var errors = httpContext.Items.Errors();
         if (errors.Any())
         {
-            Logger.LogWarning(errors.ToErrorString());
+            // Logger.LogWarning(errors.ToErrorString());
             var statusCode = _statusCodeMapper.Map(errors);
             var error = string.Join(',', errors.Select(e => e.Message));
             httpContext.Response.StatusCode = statusCode;

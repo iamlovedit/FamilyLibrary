@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.DynamoPackageService.DataTransferObjetcts;
+using GalaFamilyLibrary.DynamoPackageService.DataTransferObjects;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
