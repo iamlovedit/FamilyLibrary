@@ -46,33 +46,51 @@ public static class JwtAuthenticationSetup
                     challengeContext.Response.Headers.Add("Token-Error", challengeContext.ErrorDescription);
                     return Task.CompletedTask;
                 },
+
                 OnAuthenticationFailed = failedContext =>
                 {
                     var jwtHandler = new JwtSecurityTokenHandler();
                     var token = failedContext.Request.Headers["Authorization"].ObjToString().Replace("Bearer ", "");
-
-                    if (failedContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                    {
-                        failedContext.Response.Headers.Add("token-expired", "true");
-                    }
-
                     if (string.IsNullOrEmpty(token) || !jwtHandler.CanReadToken(token))
                     {
                         failedContext.Response.Headers.Add("token-error", "can not get token");
                         return Task.CompletedTask;
                     }
-
-                    var jwtToken = jwtHandler.ReadJwtToken(token);
-                    if (jwtToken.Issuer != issuer)
+                    if (failedContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
                     {
-                        failedContext.Response.Headers.Add("token-error-issuer", "issuer is wrong!");
+                        failedContext.Response.Headers.Add("token-expired", "true");
+                        return Task.CompletedTask;
                     }
 
-                    if (jwtToken.Audiences.FirstOrDefault() != audience)
+                    if (jwtHandler.CanReadToken(token))
                     {
-                        failedContext.Response.Headers.Add("token-error-audience", "audience is wrong!");
-                    }
+                        try
+                        {
+                            var jwtToken = jwtHandler.ReadJwtToken(token);
+                            if (jwtToken.Issuer != issuer)
+                            {
+                                failedContext.Response.Headers.Add("token-error-issuer", "issuer is wrong!");
+                                return Task.CompletedTask;
+                            }
 
+                            if (jwtToken.Audiences.FirstOrDefault() != audience)
+                            {
+                                failedContext.Response.Headers.Add("token-error-audience", "audience is wrong!");
+                                return Task.CompletedTask;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            failedContext.Response.Headers.Add("token-error-format", "toekn format is wrong!");
+                            return Task.CompletedTask;
+                        }
+
+                    }
+                    else
+                    {
+                        failedContext.Response.Headers.Add("token-error-format", "toekn format is wrong!");
+                        return Task.CompletedTask;
+                    }
                     return Task.CompletedTask;
                 }
             };
@@ -81,10 +99,10 @@ public static class JwtAuthenticationSetup
         services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = nameof(ApiResponseHandler);
-                options.DefaultForbidScheme = nameof(ApiResponseHandler);
+                options.DefaultChallengeScheme = nameof(ApiAuthenticationHandler);
+                options.DefaultForbidScheme = nameof(ApiAuthenticationHandler);
             })
             .AddJwtBearer(ConfigureJwtBearer)
-            .AddScheme<AuthenticationSchemeOptions, ApiResponseHandler>(nameof(ApiResponseHandler), options => { });
+            .AddScheme<AuthenticationSchemeOptions, ApiAuthenticationHandler>(nameof(ApiAuthenticationHandler), options => { });
     }
 }

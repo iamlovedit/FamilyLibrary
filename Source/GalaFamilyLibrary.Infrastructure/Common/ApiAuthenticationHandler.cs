@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
-public class ApiResponseHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class ApiAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public ApiResponseHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
+    public ApiAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
         UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
     {
     }
