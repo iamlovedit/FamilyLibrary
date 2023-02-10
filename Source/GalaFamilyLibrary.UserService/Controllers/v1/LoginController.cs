@@ -32,8 +32,13 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
             _userService = userService;
         }
 
+        /// <summary>
+        /// /api/v1/login/token
+        /// </summary>
+        /// <param name="loginUser"></param>
+        /// <returns></returns>
         [AllowAnonymous]
-        [HttpPost]
+        [HttpPost("token")]
         public async Task<MessageModel<string>> GetTokenAsync([FromBody] LoginUserDto loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
@@ -57,11 +62,14 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
                     {
                         return Failed<string>("用户名或者密码错误");
                     }
+                    user.LastLoginTime = DateTime.Now;
+                    await _userService.UpdateAsync(user);
+                    await _redis.Set(userKey, user, _permissionRequirement.Expiration);
 
                     var tokenKey = $"auth/token/{user.Id}";
                     if (await _redis.Exist(tokenKey))
                     {
-                        return Success(await _redis.Get<string>(tokenKey));
+                        return Success(await _redis.GetValue(tokenKey));
                     }
                     else
                     {
@@ -74,6 +82,7 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
                         else
                         {
                             roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
+                            await _redis.Set(roleKey, roleNames, _permissionRequirement.Expiration);
                         }
 
                         var claims = new List<Claim>()
@@ -84,9 +93,9 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
                             new(ClaimTypes.Expiration,
                                 DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
                         };
-                        user.LastLoginTime = DateTime.Now;
+
                         claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
-                        await _userService.UpdateAsync(user);
+
                         var token = GenerateToken(claims, _permissionRequirement);
                         await _redis.Set(tokenKey, token, _permissionRequirement.Expiration);
                         return Success(token);
@@ -97,6 +106,12 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
             return Failed<string>("用户名或者密码错误");
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        [HttpPost("refresh")]
         public async Task<MessageModel<string>> RefreshTokenAsync()
         {
             throw new NotImplementedException();

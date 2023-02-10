@@ -1,17 +1,10 @@
-using GalaFamilyLibrary.Gateway.Middlewares;
+using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using Microsoft.AspNetCore.Http;
 using Ocelot.DependencyInjection;
-using Ocelot.DownstreamRouteFinder.Middleware;
-using Ocelot.DownstreamUrlCreator.Middleware;
-using Ocelot.Errors.Middleware;
-using Ocelot.LoadBalancer.Middleware;
 using Ocelot.Middleware;
-using Ocelot.Multiplexer;
-using Ocelot.Provider.Consul;
-using Ocelot.Request.Middleware;
-using Ocelot.Requester.Middleware;
-using Ocelot.RequestId.Middleware;
-using Ocelot.Responder.Middleware;
+using System.Net;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
@@ -28,10 +21,11 @@ builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
     builder.AddFilter(null, LogLevel.Warning);
 });
 var services = builder.Services;
-services.AddOcelot()/*.AddConsul()*/;
+services.AddRedisCacheSetup(builder.Configuration);
 services.AddLogging();
 services.AddJwtAuthentication(builder.Configuration);
 
+services.AddOcelot()/*.AddConsul()*/;
 var app = builder.Build();
 app.UseAuthentication();
 app.UseOcelot().ConfigureAwait(true);
