@@ -30,4 +30,6 @@ public class Family
     public List<ushort> Versions { get; set; }
 
     public int CategoryId { get; set; }
+
+    public Guid FileId { get; set; }
 }

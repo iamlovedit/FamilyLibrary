@@ -50,6 +50,14 @@ public class DatabaseSeed
 
     public async void InitSeed<T>(string seedFile) where T : class, new()
     {
+        var setting = new JsonSerializerSettings();
+        JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() =>
+        {
+            setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
+            setting.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+            setting.NullValueHandling = NullValueHandling.Ignore;
+            return setting;
+        });
         if (string.IsNullOrEmpty(seedFile))
             throw new ArgumentException("Value cannot be null or empty.", nameof(seedFile));
         try

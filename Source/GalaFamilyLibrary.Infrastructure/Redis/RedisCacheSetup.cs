@@ -14,8 +14,8 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
             }
 
             services.AddTransient<IRedisBasketRepository, RedisBasketRepository>();
-
-            services.AddSingleton<ConnectionMultiplexer>(builder =>
+            services.AddSingleton<RedisRequirement>(provider => new RedisRequirement(TimeSpan.FromMinutes(30)));
+            services.AddSingleton<ConnectionMultiplexer>(provider =>
             {
                 var redisConnectionString = configuration.GetSection("Redis")["ConnectionString"];
                 var redisConfig = ConfigurationOptions.Parse(redisConnectionString, true);

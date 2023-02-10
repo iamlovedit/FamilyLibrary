@@ -10,10 +10,11 @@ public class FamilyCategoryService : ServiceBase<FamilyCategory>, IFamilyCategor
     {
     }
 
-    public async Task<IList<FamilyCategory>> GetCategoryTreeAsync()
+    public async Task<IList<FamilyCategory>> GetCategoryTreeAsync(int rootId)
     {
-        return await DAL.DbContext.Queryable<FamilyCategory>().
-            Includes(c=>c.Parent).
-            ToTreeAsync(t => t.Children, t => t.ParentId, null);
+        return await DAL.DbContext.Queryable<FamilyCategory>()
+            .Where(fc => fc.ParentId == rootId)
+            .Includes(c => c.Parent)
+            .ToTreeAsync(c => c.Children, t => t.ParentId, rootId);
     }
 }

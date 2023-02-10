@@ -24,5 +24,8 @@ app.UseInitSeed(dbSeed =>
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Families");
     dbSeed.InitSeed<Family>(file);
+
+    file = string.Format(seedFolder, "FamilyCategories");
+    dbSeed.InitSeed<FamilyCategory>(file);
 });
 app.UseGeneric();

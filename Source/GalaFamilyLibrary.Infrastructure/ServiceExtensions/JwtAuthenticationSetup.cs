@@ -81,14 +81,14 @@ public static class JwtAuthenticationSetup
                         }
                         catch (Exception)
                         {
-                            failedContext.Response.Headers.Add("token-error-format", "toekn format is wrong!");
+                            failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
                             return Task.CompletedTask;
                         }
 
                     }
                     else
                     {
-                        failedContext.Response.Headers.Add("token-error-format", "toekn format is wrong!");
+                        failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
                         return Task.CompletedTask;
                     }
                     return Task.CompletedTask;
