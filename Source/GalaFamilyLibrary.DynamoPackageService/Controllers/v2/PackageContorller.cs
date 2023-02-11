@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v2;
 
 [ApiVersion("2.0")]
+[Route("v{version:apiVersion}")]
 public class PackageController:ApiControllerBase
 {
     private readonly IPackageService _packageService;

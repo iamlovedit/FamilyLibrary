@@ -27,7 +27,7 @@ public class ConfigureSwaggerOptions : IConfigureNamedOptions<SwaggerGenOptions>
 
     public void Configure(string name, SwaggerGenOptions options)
     {
-        Configure(options);
+        Configure(options); 
     }
 
     private OpenApiInfo CreateVersionInfo(ApiVersionDescription description)

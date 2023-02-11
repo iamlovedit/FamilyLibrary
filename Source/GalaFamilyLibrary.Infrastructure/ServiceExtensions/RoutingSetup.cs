@@ -14,6 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddRouting(options =>
             {
                 options.LowercaseUrls = true;
+                options.LowercaseQueryStrings = true;
             });
         }
     }

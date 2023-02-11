@@ -19,27 +19,42 @@ public class ResponseMiddleware
         _httpResponder = httpResponder;
     }
 
-    public async Task Invoke(HttpContext httpContext)
+    public async Task InvokeAsync(HttpContext httpContext)
     {
-        await _next.Invoke(httpContext);
-        if (httpContext.Response.HasStarted)
+        string authHeader = httpContext.Request.Headers["Authorization"];
+        if (authHeader != null && authHeader.StartsWith("Bearer"))
         {
-            return;
-        }
+            // Verify the token
+            // ...
 
-        var errors = httpContext.Items.Errors();
-        if (errors.Any())
-        {
-            // Logger.LogWarning(errors.ToErrorString());
-            var statusCode = _statusCodeMapper.Map(errors);
-            var error = string.Join(',', errors.Select(e => e.Message));
-            httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsync(error);
+            // Continue processing the request
+            await _next(httpContext);
         }
         else
         {
-            var downstreamResponses = httpContext.Items.DownstreamResponse();
-            await _httpResponder.SetResponseOnHttpContext(httpContext, downstreamResponses);
+            // Return an unauthorized response
+            httpContext.Response.StatusCode = 401;
+            await httpContext.Response.WriteAsync("Unauthorized");
         }
+        // await _next.Invoke(httpContext);
+        // if (httpContext.Response.HasStarted)
+        // {
+        //     return;
+        // }
+        //
+        // var errors = httpContext.Items.Errors();
+        // if (errors.Any())
+        // {
+        //     // Logger.LogWarning(errors.ToErrorString());
+        //     var statusCode = _statusCodeMapper.Map(errors);
+        //     var error = string.Join(',', errors.Select(e => e.Message));
+        //     httpContext.Response.StatusCode = statusCode;
+        //     await httpContext.Response.WriteAsync(error);
+        // }
+        // else
+        // {
+        //     var downstreamResponses = httpContext.Items.DownstreamResponse();
+        //     await _httpResponder.SetResponseOnHttpContext(httpContext, downstreamResponses);
+        // }
     }
 }

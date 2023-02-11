@@ -8,7 +8,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -20,7 +20,6 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
-      // "ServiceName": "dynamo packages"
     },
     {
       "UpstreamPathTemplate": "/family/{url}",
@@ -30,7 +29,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -42,7 +41,6 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       }
-      // "ServiceName": "family library"
     },
     {
       "UpstreamPathTemplate": "/user/{url}",
@@ -52,7 +50,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/api/{url}",
+      "DownstreamPathTemplate": "/{url}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -69,13 +67,6 @@
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001",
     "RouteIsCaseSensitive": false,
-    "RequestIdKey": "ot-traceid",
-    //"ServiceDiscoveryProvider": {
-    //  "Scheme": "https",
-    //  "Host": "localhost",
-    //  "Port": 8500,
-    //  "Type": "Consul",
-    //  "PollingInterval": 100
-    //}
+    "RequestIdKey": "ot-traceid"
   }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using GalaFamilyLibrary.Infrastructure.Common;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
 
@@ -32,6 +33,7 @@ public static class SqlsugarSetup
             ConnectionString = configuration.GetConnectionString("MysqlConnection"),
             InitKeyType = InitKeyType.Attribute
         }, ConfigAction);
+        sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
         services.AddSingleton<ISqlSugarClient>(sqlsugar);
     }
 }

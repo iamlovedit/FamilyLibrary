@@ -28,4 +28,5 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "FamilyCategories");
     dbSeed.InitSeed<FamilyCategory>(file);
 });
+app.UseStaticFiles();
 app.UseGeneric();

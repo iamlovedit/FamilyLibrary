@@ -1,9 +1,10 @@
-﻿using SqlSugar;
+﻿using GalaFamilyLibrary.Infrastructure.Common;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.UserService.Models
 {
     [SugarTable("user_roles")]
-    public class UserRole
+    public class UserRole:IDeletable
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }

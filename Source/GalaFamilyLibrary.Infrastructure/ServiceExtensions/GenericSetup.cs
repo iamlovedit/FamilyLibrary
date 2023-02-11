@@ -1,9 +1,12 @@
 ﻿using System.Reflection;
+using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
@@ -20,6 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbSetup();
@@ -48,7 +52,6 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddSwaggerGen();
 
             services.AddAuthorizationSetup(configuration);
-
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.UserService.DataTransferObjects;
 using GalaFamilyLibrary.UserService.Models;
 

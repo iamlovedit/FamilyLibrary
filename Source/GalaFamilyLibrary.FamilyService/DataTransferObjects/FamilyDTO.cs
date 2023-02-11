@@ -17,5 +17,14 @@
         public DateTime CreateTime { get; set; }
 
         public string? Description { get; set; }
+
+        public string ImageUrl { get; set; }
+
+        public string FileId { get; set; }
+        
+        internal string GetImagePath(IWebHostEnvironment environment)
+        {
+            return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");
+        }
     }
 }

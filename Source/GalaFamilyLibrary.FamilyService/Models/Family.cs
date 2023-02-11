@@ -1,15 +1,15 @@
-﻿using SqlSugar;
+﻿using GalaFamilyLibrary.Infrastructure.Common;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.Models;
 
 [SugarTable("families")]
-public class Family
+public class Family : IDeletable
 {
     [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
     public int Id { get; set; }
 
-    [SugarColumn(IsNullable = false)]
-    public string Name { get; set; }
+    [SugarColumn(IsNullable = false)] public string Name { get; set; }
 
     public DateTime CreateTime { get; set; }
 
@@ -31,5 +31,17 @@ public class Family
 
     public int CategoryId { get; set; }
 
-    public Guid FileId { get; set; }
+    public string FileId { get; set; }
+
+    public bool IsDeleted { get; set; }
+
+    internal string GetFilePath(IWebHostEnvironment environment, ushort version)
+    {
+        return Path.Combine(environment.WebRootPath, "Families", $"{version}", $"{FileId}.rfa");
+    }
+
+    internal string GetImagePath(IWebHostEnvironment environment)
+    {
+        return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");
+    }
 }

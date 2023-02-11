@@ -15,6 +15,7 @@ using GalaFamilyLibrary.UserService.Models;
 namespace GalaFamilyLibrary.UserService.Controllers.v1
 {
     [ApiVersion("1.0")]
+    [Route("v{version:apiVersion}/authenticate")]
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;
@@ -33,7 +34,7 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
         }
 
         /// <summary>
-        /// /api/v1/login/token
+        /// v1/authenticate/token
         /// </summary>
         /// <param name="loginUser"></param>
         /// <returns></returns>
@@ -62,6 +63,7 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
                     {
                         return Failed<string>("用户名或者密码错误");
                     }
+
                     user.LastLoginTime = DateTime.Now;
                     await _userService.UpdateAsync(user);
                     await _redis.Set(userKey, user, _permissionRequirement.Expiration);
@@ -107,10 +109,9 @@ namespace GalaFamilyLibrary.UserService.Controllers.v1
         }
 
         /// <summary>
-        /// 
+        /// v1/authenticate/refresh
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         [HttpPost("refresh")]
         public async Task<MessageModel<string>> RefreshTokenAsync()
         {

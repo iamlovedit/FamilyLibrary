@@ -1,9 +1,10 @@
-﻿using SqlSugar;
+﻿using GalaFamilyLibrary.Infrastructure.Common;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.UserService.Models
 {
     [SugarTable("users")]
-    public class LibraryUser
+    public class LibraryUser:IDeletable
     {
         [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
         public int Id { get; set; }
@@ -28,7 +29,6 @@ namespace GalaFamilyLibrary.UserService.Models
 
         [SugarColumn(IsNullable = true)]
         public DateTime LastLoginTime { get; set; }
-
 
         public bool IsDeleted { get; set; }
 
