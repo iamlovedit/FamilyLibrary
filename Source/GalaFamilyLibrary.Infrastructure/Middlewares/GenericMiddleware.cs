@@ -13,12 +13,13 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
             {
                 throw new ArgumentNullException(nameof(app));
             }
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseVersionedSwaggerUI();
             }
-            
+
             app.UseConsul(app.Configuration);
 
             app.UseHttpsRedirection();

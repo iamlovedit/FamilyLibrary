@@ -1,29 +1,76 @@
 version: '3.4'
 
 services:
-  galafamilylibrary.dynamopackageservice:
-    image: ${DOCKER_REGISTRY-}galafamilylibrarydynamopackageservice
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
-
-  galafamilylibrary.familyservice:
-    image: ${DOCKER_REGISTRY-}galafamilylibraryfamilyservice
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
-
-
-  galafamilylibrary.userservice:
-    image: ${DOCKER_REGISTRY-}galafamilylibraryuserservice
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.UserService/Dockerfile
-
-
-  galafamilylibrary.gateway:
-    image: ${DOCKER_REGISTRY-}galafamilylibrarygateway
+  library_gateway:
+    networks:
+      - "family_library"
+    image: ${DOCKER_REGISTRY-}library_gateway
+    container_name: "library_gateway"
     build:
       context: .
       dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+  
+  dynamo_package:
+    networks:
+      - "family_library"
+    container_name: "dynamo_package"
+    image: ${DOCKER_REGISTRY-}dynamo_package
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
+    ports:
+      - "6000:80"
+      - "6001:443"
 
+  family_library:
+    networks:
+      - "family_library"
+    container_name: "family_library"
+    image: ${DOCKER_REGISTRY-}family_library
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
+    ports:
+      - "7000:80"
+      - "7001:443"
+
+  library_user:
+    networks:
+      - "family_library"
+    image: ${DOCKER_REGISTRY-}library_user
+    container_name: "library_user"
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.UserService/Dockerfile
+    ports:
+      - "8000:80"
+      - "8001:443"
+
+  mysql:
+    networks:
+      - "family_library"
+    restart: always
+    image: "mysql"
+    container_name: "mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: zy4318422
+    ports:
+      - "3306:3306"
+  
+  redis:
+    networks:
+      - "family_library"
+    restart: always
+    container_name: "redis"
+    image: "redis"
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass zy4318422
+
+networks:
+  family_library:
+    driver: bridge
+    external: true

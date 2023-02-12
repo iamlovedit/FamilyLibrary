@@ -9,6 +9,17 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:8001;http://localhost:8000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "publishAllPorts": true,
+      "useSSL": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_CONNECTION_STRING": "server=mysql;port=3306;database=LibraryUsers;userid=root;password=zy4318422;CharSet=utf8mb4",
+        "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
+      }
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

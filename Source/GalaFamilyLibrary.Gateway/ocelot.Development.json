@@ -16,9 +16,16 @@
           "Port": 6001
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+      //      "AuthenticationOptions": {
+      //        "AuthenticationProviderKey": "Bearer",
+      //        "AllowedScopes": []
+      //      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
       }
     },
     {
@@ -37,9 +44,16 @@
           "Port": 7001
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+      //      "AuthenticationOptions": {
+      //        "AuthenticationProviderKey": "Bearer",
+      //        "AllowedScopes": []
+      //      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
       }
     },
     {
@@ -58,15 +72,22 @@
           "Port": 8001
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
+      //      "AuthenticationOptions": {
+      //        "AuthenticationProviderKey": "Bearer",
+      //        "AllowedScopes": []
+      //      },
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
       }
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "https://localhost:5001",
     "RouteIsCaseSensitive": false,
-    "RequestIdKey": "ot-traceid"
+    "DangerousAcceptAnyServerCertificateValidator": true
   }
 }

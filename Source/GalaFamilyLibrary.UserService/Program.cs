@@ -7,7 +7,6 @@ using GalaFamilyLibrary.UserService.Models;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.
-
 services.AddScoped(typeof(IUserService), typeof(UserService));
 services.AddGenericSetup(builder.Configuration);
 
