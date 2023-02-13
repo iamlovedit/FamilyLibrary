@@ -1,0 +1,15 @@
+[
+  {
+    "Id": 1,
+    "Username": "superAdmin",
+    "Name": "超级管理员",
+    "Salt": "2d9f649bc7074e56965918cffec6eccf",
+    "Password": "a9b50deff9a033ecd1ee9e301fccdb7e",
+    "CreateTime": "\/Date(1546272000000+0800)\/",
+    "UpdateTime": "\/Date(1546272000000+0800)\/",
+    "LastLoginTime": "\/Date(1546272000000+0800)\/",
+    "Email": "superAdmin@163.com",
+    "ErrorCount": 0,
+    "IsDeleted": 0
+  }
+]

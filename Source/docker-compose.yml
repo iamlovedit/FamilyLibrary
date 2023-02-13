@@ -1,0 +1,63 @@
+version: '3.4'
+
+services:
+  library_gateway:
+    networks:
+      - "family_library"
+    image: ${DOCKER_REGISTRY-}library_gateway
+    container_name: "library_gateway"
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
+  
+  dynamo_package:
+    networks:
+      - "family_library"
+    container_name: "dynamo_package"
+    image: ${DOCKER_REGISTRY-}dynamo_package
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
+  
+  family_library:
+    networks:
+      - "family_library"
+    container_name: "family_library"
+    image: ${DOCKER_REGISTRY-}family_library
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
+  
+  library_user:
+    networks:
+      - "family_library"
+    image: ${DOCKER_REGISTRY-}library_user
+    container_name: "library_user"
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.UserService/Dockerfile
+
+  mysql:
+    networks:
+      - "family_library"
+    restart: always
+    image: "mysql"
+    container_name: "mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: zy4318422
+    ports:
+      - "3306:3306"
+  
+  redis:
+    networks:
+      - "family_library"
+    restart: always
+    container_name: "redis"
+    image: "redis"
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass zy4318422
+
+networks:
+  family_library:
+    driver: bridge

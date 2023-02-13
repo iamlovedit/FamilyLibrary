@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  library_gateway:
+    image: ${DOCKER_REGISTRY}/galaservices/library_gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  dynamo_package:
+    image: ${DOCKER_REGISTRY}/galaservices/dynamo_package
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  family_library:
+    image: ${DOCKER_REGISTRY}/galaservices/library_user
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  library_user:
+    image: ${DOCKER_REGISTRY}/galaservices/library_gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
