@@ -16,10 +16,10 @@
           "Port": 6001
         }
       ],
-//      "AuthenticationOptions": {
-//        "AuthenticationProviderKey": "Bearer",
-//        "AllowedScopes": []
-//      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "gateway",
+        "AllowedScopes": []
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -44,10 +44,10 @@
           "Port": 7001
         }
       ],
-//      "AuthenticationOptions": {
-//        "AuthenticationProviderKey": "Bearer",
-//        "AllowedScopes": []
-//      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "gateway",
+        "AllowedScopes": []
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -72,10 +72,10 @@
           "Port": 8001
         }
       ],
-//      "AuthenticationOptions": {
-//        "AuthenticationProviderKey": "Bearer",
-//        "AllowedScopes": []
-//      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "gateway",
+        "AllowedScopes": []
+      },
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -86,7 +86,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5001",
+    "BaseUrl": "https://localhost:5000",
     "RouteIsCaseSensitive": false,
     "DangerousAcceptAnyServerCertificateValidator": true
   }

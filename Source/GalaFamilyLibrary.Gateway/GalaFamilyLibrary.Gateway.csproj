@@ -13,6 +13,7 @@
       <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
       <PackageReference Include="Ocelot" Version="18.0.0" />
       <PackageReference Include="Ocelot.Provider.Consul" Version="18.0.0" />
+      <PackageReference Include="Ocelot.Provider.Polly" Version="18.0.0" />
     </ItemGroup>
 
     <ItemGroup>

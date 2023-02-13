@@ -9,9 +9,6 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
-    ports:
-      - "5000:80"
-      - "5001:443"
   
   dynamo_package:
     networks:
@@ -21,10 +18,7 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
-    ports:
-      - "6000:80"
-      - "6001:443"
-
+  
   family_library:
     networks:
       - "family_library"
@@ -33,10 +27,7 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
-    ports:
-      - "7000:80"
-      - "7001:443"
-
+  
   library_user:
     networks:
       - "family_library"
@@ -45,9 +36,6 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.UserService/Dockerfile
-    ports:
-      - "8000:80"
-      - "8001:443"
 
   mysql:
     networks:
@@ -73,4 +61,3 @@ services:
 networks:
   family_library:
     driver: bridge
-    external: true

@@ -5,7 +5,8 @@ using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System.Net;
 using System.Net.Http;
-using GalaFamilyLibrary.Gateway.Middlewares;
+using GalaFamilyLibrary.Infrastructure.Common;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
@@ -25,7 +26,6 @@ services.AddLogging(config =>
     config.AddFilter(null, LogLevel.Warning);
 });
 services.AddJwtAuthentication(builder.Configuration);
-
 services.AddOcelot() /*.AddConsul()*/;
 var app = builder.Build();
 app.UseAuthentication();

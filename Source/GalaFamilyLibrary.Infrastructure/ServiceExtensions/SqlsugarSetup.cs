@@ -30,7 +30,7 @@ public static class SqlsugarSetup
         {
             DbType = DbType.MySql,
             IsAutoCloseConnection = true,
-            ConnectionString = configuration.GetConnectionString("MysqlConnection"),
+            ConnectionString = configuration["DATABASE_CONNECTION_STRING"],
             InitKeyType = InitKeyType.Attribute
         }, ConfigAction);
         sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);

@@ -6,60 +6,46 @@ services:
       - mysql
       - redis
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryGateway;userid=root;password=zy4318422;CharSet=utf8mb4
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5000:80"
+
   dynamo_package:
     depends_on:
       - mysql
       - redis
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5001:80"
 
   family_library:
     depends_on:
       - mysql
       - redis
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
       - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=FamilyLibrary;userid=root;password=zy4318422;CharSet=utf8mb4
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5002:80"
 
   library_user:
     depends_on:
       - mysql
       - redis
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
+      #     - ASPNETCORE_URLS=https:http://+:80
       - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryUser;userid=root;password=zy4318422;CharSet=utf8mb4
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - "5003:80"
+
+networks:
+  family_library:
+    driver: bridge
