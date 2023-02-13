@@ -27,15 +27,15 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_gateway -f ./Source/GalaFamilyLibrary.Gateway/Dockerfile .
+          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_gateway -f ../Source/GalaFamilyLibrary.Gateway/Dockerfile .
           docker push "${{ secrets.aliyun_docker_register }}"/galaservices/library_gateway
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/dynamo_package -f ./Source/GalaFamilyLibrary.DynamoPackageService/Dockerfile .
+          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/dynamo_package -f ../Source/GalaFamilyLibrary.DynamoPackageService/Dockerfile .
           docker push "${{ secrets.aliyun_docker_register }}"/galaservices/dynamo_package
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/family_library -f ./Source/GalaFamilyLibrary.FamilyService/Dockerfile .
+          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/family_library -f ../Source/GalaFamilyLibrary.FamilyService/Dockerfile .
           docker push "${{ secrets.aliyun_docker_register }}"/galaservices/family_library
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_user -f ./Source/GalaFamilyLibrary.UserService/Dockerfile .
+          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_user -f ../Source/GalaFamilyLibrary.UserService/Dockerfile .
           docker push "${{ secrets.aliyun_docker_register }}"/galaservices/library_user
       
