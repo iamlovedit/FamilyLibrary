@@ -19,7 +19,7 @@ jobs:
       - name: Login to ACR
         uses: aliyun/acr-login@v1
         with:
-          login-server: "${{ secrets.aliyun_docker_register_server }}"
+          login-server: https://registry.cn-chengdu.aliyuncs.com
           username: "${{ secrets.aliyun_docker_register_username }}"
           password: "${{ secrets.aliyun_docker_register_password }}"
         
@@ -31,15 +31,15 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_gateway -f ./GalaFamilyLibrary.Gateway/Dockerfile .
-          docker push "${{ secrets.aliyun_docker_register }}"/galaservices/library_gateway
+          docker build -t registry.cn-chengdu.aliyuncs.com/galaservices/library_gateway -f ./GalaFamilyLibrary.Gateway/Dockerfile .
+          docker push registry.cn-chengdu.aliyuncs.com/galaservices/library_gateway
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/dynamo_package -f ./GalaFamilyLibrary.DynamoPackageService/Dockerfile .
-          docker push "${{ secrets.aliyun_docker_register }}"/galaservices/dynamo_package
+          docker build -t registry.cn-chengdu.aliyuncs.com/galaservices/dynamo_package -f ./GalaFamilyLibrary.DynamoPackageService/Dockerfile .
+          docker push registry.cn-chengdu.aliyuncs.com/galaservices/dynamo_package
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/family_library -f ./GalaFamilyLibrary.FamilyService/Dockerfile .
-          docker push "${{ secrets.aliyun_docker_register }}"/galaservices/family_library
+          docker build -t registry.cn-chengdu.aliyuncs.com/galaservices/family_library -f ./GalaFamilyLibrary.FamilyService/Dockerfile .
+          docker push registry.cn-chengdu.aliyuncs.com/galaservices/family_library
           
-          docker build -t "${{ secrets.aliyun_docker_register }}"/galaservices/library_user -f ./GalaFamilyLibrary.UserService/Dockerfile .
-          docker push "${{ secrets.aliyun_docker_register }}"/galaservices/library_user
+          docker build -t registry.cn-chengdu.aliyuncs.com/galaservices/library_user -f ./GalaFamilyLibrary.UserService/Dockerfile .
+          docker push registry.cn-chengdu.aliyuncs.com/galaservices/library_user
       
