@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
+using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+using GalaFamilyLibrary.IdentityService.Models;
+using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.UserService.DataTransferObjects;
-using GalaFamilyLibrary.UserService.Models;
-using GalaFamilyLibrary.UserService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GalaFamilyLibrary.UserService.Controllers.v1
+namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize]

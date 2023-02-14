@@ -1,7 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Common;
 using SqlSugar;
 
-namespace GalaFamilyLibrary.UserService.Models
+namespace GalaFamilyLibrary.IdentityService.Models
 {
     [SugarTable("user_roles")]
     public class UserRole:IDeletable

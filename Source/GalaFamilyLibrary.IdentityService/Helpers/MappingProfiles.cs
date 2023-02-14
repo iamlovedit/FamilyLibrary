@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.UserService.DataTransferObjects;
-using GalaFamilyLibrary.UserService.Models;
 
-namespace GalaFamilyLibrary.UserService.Helpers
+namespace GalaFamilyLibrary.IdentityService.Helpers
 {
     public class MappingProfiles : Profile
     {

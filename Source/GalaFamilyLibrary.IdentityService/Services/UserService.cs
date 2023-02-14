@@ -1,8 +1,8 @@
-﻿using GalaFamilyLibrary.Infrastructure.Repository;
+﻿using GalaFamilyLibrary.IdentityService.Models;
+using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Service;
-using GalaFamilyLibrary.UserService.Models;
 
-namespace GalaFamilyLibrary.UserService.Services
+namespace GalaFamilyLibrary.IdentityService.Services
 {
     public class UserService : ServiceBase<LibraryUser>, IUserService
     {

@@ -1,4 +1,4 @@
-﻿namespace GalaFamilyLibrary.UserService.DataTransferObjects
+﻿namespace GalaFamilyLibrary.IdentityService.DataTransferObjects
 {
     public class LoginUserDto
     {

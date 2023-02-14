@@ -9,15 +9,15 @@
         "Put"
       ],
       "DownstreamPathTemplate": "/{url}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 6001
+          "Port": 5001
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "gateway",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
       "RateLimitOptions": {
@@ -37,15 +37,15 @@
         "Put"
       ],
       "DownstreamPathTemplate": "/{url}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7001
+          "Port": 5002
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "gateway",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
       "RateLimitOptions": {
@@ -57,7 +57,8 @@
       }
     },
     {
-      "UpstreamPathTemplate": "/user/{url}",
+      "UpstreamPathTemplate": "/identity/{url}",
+      "Priority": 0,
       "UpstreamHttpMethod": [
         "Get",
         "Post",
@@ -65,17 +66,39 @@
         "Put"
       ],
       "DownstreamPathTemplate": "/{url}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 8001
+          "Port": 5003
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "gateway",
+        "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/identity/{version}/authenticate/token",
+      "Priority": 1,
+      "UpstreamHttpMethod": [
+        "Post"
+      ],
+      "DownstreamPathTemplate": "/{version}/authenticate/token",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
       "RateLimitOptions": {
         "ClientWhitelist": [],
         "EnableRateLimiting": true,
@@ -86,8 +109,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:5000",
-    "RouteIsCaseSensitive": false,
-    "DangerousAcceptAnyServerCertificateValidator": true
+    "BaseUrl": "http://localhost:5000",
+    "RouteIsCaseSensitive": false
   }
 }

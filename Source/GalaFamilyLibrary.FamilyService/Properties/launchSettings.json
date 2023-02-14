@@ -10,7 +10,7 @@
         "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7001;http://localhost:7000"
+      "applicationUrl": "http://localhost:5002;https://localhost:6002"
     },
     "Docker": {
       "commandName": "Docker",

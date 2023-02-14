@@ -1,9 +1,9 @@
+using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.UserService.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GalaFamilyLibrary.UserService.Controllers.v2;
+namespace GalaFamilyLibrary.IdentityService.Controllers.v2;
 
 [ApiVersion("1.0")]
 [Authorize]

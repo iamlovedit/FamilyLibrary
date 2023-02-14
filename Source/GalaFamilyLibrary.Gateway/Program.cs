@@ -20,11 +20,11 @@ builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
 });
 var services = builder.Services;
 services.AddRedisCacheSetup(builder.Configuration);
-services.AddLogging(config =>
-{
-    config.AddConsole();
-    config.AddFilter(null, LogLevel.Warning);
-});
+// services.AddLogging(config =>
+// {
+//     config.AddConsole();
+//     config.AddFilter(null, LogLevel.Warning);
+// });
 services.AddJwtAuthentication(builder.Configuration);
 services.AddOcelot() /*.AddConsul()*/;
 var app = builder.Build();

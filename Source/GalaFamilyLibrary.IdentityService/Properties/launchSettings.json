@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "GalaFamilyLibrary.UserService": {
+    "GalaFamilyLibrary.IdentityService": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
@@ -10,7 +10,7 @@
         "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:8001;http://localhost:8000"
+      "applicationUrl": "http://localhost:5003;https://localhost:6003"
     },
     "Docker": {
       "commandName": "Docker",

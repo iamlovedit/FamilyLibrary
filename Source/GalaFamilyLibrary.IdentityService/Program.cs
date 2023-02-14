@@ -1,8 +1,8 @@
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
-using GalaFamilyLibrary.UserService.Services;
+using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.UserService.Models;
+using GalaFamilyLibrary.IdentityService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
