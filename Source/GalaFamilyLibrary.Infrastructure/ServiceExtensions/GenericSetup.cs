@@ -23,14 +23,16 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-        
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbSetup();
 
-            services.AddConsulConfigSetup(configuration);
+            //services.AddConsulConfigSetup(configuration);
 
             services.AddRedisCacheSetup(configuration);
+
+            services.AddSeqSetup(configuration);
 
             //sqlsugar
             services.AddSqlsugarSetup(configuration);

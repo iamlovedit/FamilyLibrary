@@ -20,7 +20,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 app.UseVersionedSwaggerUI();
             }
 
-            app.UseConsul(app.Configuration);
+            //app.UseConsul(app.Configuration);
 
             app.UseHttpsRedirection();
 

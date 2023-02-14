@@ -94,7 +94,14 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --requirepass zy4318422
-
+    
+  seq:
+    networks:
+      - "family_library"
+    container_name: "seq"
+    image: "datalust/seq"
+    ports:
+      - "5341:80"
 networks:
   family_library:
     driver: bridge

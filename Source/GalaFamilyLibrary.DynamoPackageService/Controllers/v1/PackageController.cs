@@ -31,21 +31,19 @@ public class PackageController : ApiControllerBase
     [Route("{id}")]
     public async Task<MessageModel<PackageDTO>> GetPackageAsync(string id)
     {
+        _logger.LogInformation("query packages details by id {id}", id);
         var redisKey = $"packages/{id}";
         if (await _redis.Exist(redisKey))
         {
             return Success(await _redis.Get<PackageDTO>(redisKey));
         }
-        else
+
+        var package = await _packageService.GetDynamoPackageByIdAsync(id);
+        if (package != null)
         {
-            var package = await _packageService.GetDynamoPackageByIdAsync(id);
-            if (package != null)
-            {
-                _logger.LogInformation("query packages details by id {id}", id);
-                var packageDTO = _mapper.Map<PackageDTO>(package);
-                await _redis.Set(redisKey, packageDTO, _redisRequirement.CacheTime);
-                return Success(packageDTO);
-            }
+            var packageDto = _mapper.Map<PackageDTO>(package);
+            await _redis.Set(redisKey, packageDto, _redisRequirement.CacheTime);
+            return Success(packageDto);
         }
 
         return Failed<PackageDTO>("not found");
@@ -60,27 +58,46 @@ public class PackageController : ApiControllerBase
     }
 
     [HttpGet]
+    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(int pageIndex = 1,
+        int pageSize = 30, string orderField = "")
+    {
+        _logger.LogInformation("query packages by pageIndex: {pageIndex} pageSize: {pageSize} orderField: {orderField}",
+            pageIndex, pageSize, orderField);
+        var redisKey = $"?pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
+        if (await _redis.Exist(redisKey))
+        {
+            return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
+        }
+
+        var packagesPage = await _packageService.QueryPageAsync(p => !p.IsDeleted, pageIndex, pageSize,
+            string.IsNullOrEmpty(orderField) ? null : $"{orderField} desc");
+        var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
+        await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
+        return SucceedPage(result);
+    }
+
+    [HttpGet]
     [Route("packages")]
     public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(string keyword = "", int pageIndex = 1,
         int pageSize = 30, string orderField = "")
     {
         var redisKey = $"packages?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
-        _logger.LogInformation("query packages at page:{page} pageSize:{pageSize} keyword:{keyword}", pageIndex,
+        _logger.LogInformation(
+            "query packages by keyword: {keyword} page: {pageIndex} pageSize: {pageSize} keyword: {keyword}", keyword,
+            pageIndex,
             pageSize, keyword);
         if (await _redis.Exist(redisKey))
         {
             return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
         }
-        else
-        {
-            var hasKeyword = string.IsNullOrEmpty(keyword);
-            var hasField = string.IsNullOrEmpty(orderField);
-            var packagesPage = await _packageService.QueryPageAsync(
-                hasKeyword ? null : p => p.Name.Contains(keyword) && !p.IsDeleted, pageIndex, pageSize,
-                hasField ? "" : $"{orderField} desc");
-            var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
-            await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
-            return SucceedPage(result);
-        }
+
+        var hasKeyword = string.IsNullOrEmpty(keyword);
+        var hasField = string.IsNullOrEmpty(orderField);
+        var packagesPage = await _packageService.QueryPageAsync(
+            hasKeyword ? null : p => p.Name.Contains(keyword) && !p.IsDeleted, pageIndex, pageSize,
+            hasField ? null : $"{orderField} desc");
+        var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
+        await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
+        return SucceedPage(result);
     }
 }

@@ -77,7 +77,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
         }
 
         public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1,
-            int pageSize = 20, string orderByFields = null)
+            int pageSize = 20, string? orderByFields = null)
         {
             RefAsync<int> totalCount = 0;
             var list = await _db.Queryable<T>()
