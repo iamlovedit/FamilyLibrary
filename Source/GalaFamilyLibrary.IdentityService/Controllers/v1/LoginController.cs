@@ -60,12 +60,6 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 user.LastLoginTime = DateTime.Now;
                 await _userService.UpdateAsync(user);
 
-                var tokenKey = $"auth/token/{user.Id}";
-                if (await _redis.Exist(tokenKey))
-                {
-                    return Success(JsonConvert.DeserializeObject<TokenInfo>(await _redis.GetValue(tokenKey)));
-                }
-
                 var roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
                 var claims = new List<Claim>()
                 {
@@ -75,6 +69,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                     new(ClaimTypes.Expiration,
                         DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
                 };
+                var tokenKey = $"auth/token/{user.Id}";
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
                 var token = GenerateToken(claims, _permissionRequirement);
                 await _redis.Set(tokenKey, token, _permissionRequirement.Expiration);
@@ -93,7 +88,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         {
             if (string.IsNullOrEmpty(token))
             {
-                return Failed<TokenInfo>("token is invaild");
+                return Failed<TokenInfo>("token is invalid");
             }
 
             var jwtHandler = new JwtSecurityTokenHandler();

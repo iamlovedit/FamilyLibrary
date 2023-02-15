@@ -9,6 +9,7 @@
     <DockerServiceName>galafamilylibrary.dynamopackageservice</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="deploy.sh" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

@@ -1,12 +1,7 @@
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
-using Microsoft.AspNetCore.Http;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
-using System.Net;
-using System.Net.Http;
-using GalaFamilyLibrary.Infrastructure.Common;
-using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
@@ -20,7 +15,11 @@ builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
 });
 var services = builder.Services;
 services.AddRedisCacheSetup(builder.Configuration);
-services.AddSeqSetup(builder.Configuration);
+if (builder.Environment.IsProduction())
+{
+    services.AddSeqSetup(builder.Configuration);
+}
+builder.AddTraceOutputSetup();
 
 services.AddJwtAuthentication(builder.Configuration);
 services.AddOcelot() /*.AddConsul()*/;

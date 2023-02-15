@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
+	  <InternalsVisibleTo Include="Application.FunctionalTests" />
   </ItemGroup>
 
 </Project>
