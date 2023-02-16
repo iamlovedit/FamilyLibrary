@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6574F766
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.FunctionalTests", "Application.FunctionalTests\Application.FunctionalTests.csproj", "{E02EDADA-83A8-4BCB-8BE4-D396ED0B3288}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.FileStorageService", "GalaFamilyLibrary.FileStorageService\GalaFamilyLibrary.FileStorageService.csproj", "{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{E02EDADA-83A8-4BCB-8BE4-D396ED0B3288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E02EDADA-83A8-4BCB-8BE4-D396ED0B3288}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E02EDADA-83A8-4BCB-8BE4-D396ED0B3288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{6337B9F5-CCCB-4A3E-82A2-1EB80E88DA7B} = {AA98B495-5070-4848-A323-D8267B6BC3C8}
 		{F4E69E1B-56EC-46D1-A73A-9723DEA7D191} = {F49B823E-585A-4E6E-B6B0-4A00B650AD8A}
 		{E02EDADA-83A8-4BCB-8BE4-D396ED0B3288} = {6574F766-5D8E-4A07-9EDF-88F24DAFC49B}
+		{F693EAF5-F67F-4FAF-A7D0-1EA52622A1D3} = {F49B823E-585A-4E6E-B6B0-4A00B650AD8A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {301A9876-88C7-44C2-97BF-F2397A8B3A36}
