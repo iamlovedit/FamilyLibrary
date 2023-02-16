@@ -14,6 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(builder));
             }
+
             var configuration = builder.Configuration;
             var services = builder.Services;
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -30,6 +31,10 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 services.AddSeqSetup(configuration);
             }
+
+            services.AddAuthorizationSetup(configuration);
+
+            services.AddJwtAuthentication(configuration);
 
             //sqlsugar
             services.AddSqlsugarSetup(configuration);
@@ -49,8 +54,6 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();
-
-            services.AddAuthorizationSetup(configuration);
         }
     }
 }

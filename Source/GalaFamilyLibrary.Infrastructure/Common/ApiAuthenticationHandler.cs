@@ -16,7 +16,7 @@ public class ApiAuthenticationHandler : AuthenticationHandler<AuthenticationSche
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        return Task.FromResult(AuthenticateResult.NoResult());
+        throw new NotImplementedException();
     }
 
     protected override async Task HandleChallengeAsync(AuthenticationProperties properties)

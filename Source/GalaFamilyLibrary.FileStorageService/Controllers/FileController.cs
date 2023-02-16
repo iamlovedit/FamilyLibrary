@@ -15,7 +15,7 @@ public class FileController : ApiControllerBase
     }
 
     [HttpGet("{*path:file}")]
-    public IActionResult Get(string path)
+    public IActionResult Get(string path,string token)
     {
         var filePath = Path.Combine(_environment.WebRootPath, "Files", path);
         if (!System.IO.File.Exists(filePath))
@@ -28,7 +28,6 @@ public class FileController : ApiControllerBase
         {
             contentType = "application/octet-stream";
         }
-
 
         return PhysicalFile(filePath, contentType);
     }

@@ -16,6 +16,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("v{version:apiVersion}/authenticate")]
+    [Authorize(AuthenticationSchemes = "Bearer", Policy = "ElevatedRights")]
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;
@@ -32,6 +33,14 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             _redis = redis;
             _userService = userService;
         }
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
+        public IActionResult Test()
+        {
+            return Ok("HelloWorld");
+        }
+
 
         /// <summary>
         /// v1/authenticate/token

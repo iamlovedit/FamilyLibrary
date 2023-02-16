@@ -23,6 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
+        
             var audienceSection = configuration.GetSection("Audience");
             var key = audienceSection["Key"];
             var keyByteArray = Encoding.ASCII.GetBytes(key);
@@ -33,15 +34,13 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             var audience = audienceSection["Audience"];
             var expiration = audienceSection["Expiration"];
 
-            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, issuer, audience, TimeSpan.FromSeconds(expiration.ObjToInt()), signingCredentials));
+            services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, issuer, audience,
+                TimeSpan.FromSeconds(expiration.ObjToInt()), signingCredentials));
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("Consumer", policy => policy.RequireRole("Consumer").Build());
-                options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator").Build());
+                options.AddPolicy("ElevatedRights",
+                    policy => policy.RequireRole("Administrator", "Consumer").Build());
             });
-            //custom  authorization
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            // services.AddScoped<IAuthorizationHandler, PermissionHandler>();
         }
     }
 }

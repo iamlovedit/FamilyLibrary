@@ -19,11 +19,13 @@ if (builder.Environment.IsProduction())
 {
     services.AddSeqSetup(builder.Configuration);
 }
-builder.AddTraceOutputSetup();
 
+builder.AddTraceOutputSetup();
+services.AddAuthorizationSetup(builder.Configuration);
 services.AddJwtAuthentication(builder.Configuration);
 services.AddOcelot() /*.AddConsul()*/;
 var app = builder.Build();
+
 app.UseAuthentication();
 app.UseOcelot().ConfigureAwait(true);
 app.Run();

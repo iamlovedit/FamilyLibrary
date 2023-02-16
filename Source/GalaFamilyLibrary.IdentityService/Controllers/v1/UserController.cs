@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize]
+    [Authorize(Policy = "ElevatedRights")]
     [Route("v{version:apiVersion}")]
     public class UserController : ApiControllerBase
     {
@@ -18,13 +18,16 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
         private readonly IRedisBasketRepository _redis;
+        private readonly RedisRequirement _requirement;
 
-        public UserController(ILogger<UserController> logger, IUserService userService, IMapper mapper,IRedisBasketRepository redis)
+        public UserController(ILogger<UserController> logger, IUserService userService, IMapper mapper,
+            IRedisBasketRepository redis, RedisRequirement requirement)
         {
             _logger = logger;
             _userService = userService;
             _mapper = mapper;
             _redis = redis;
+            _requirement = requirement;
         }
 
         [HttpPost]
@@ -44,6 +47,26 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             }
 
             return Failed("注册失败");
+        }
+
+        [HttpGet("{id}")]
+        public async Task<MessageModel<LibraryUserDto>> Details(int id)
+        {
+            var redisKey = $"user/{id}";
+            if (await _redis.Exist(redisKey))
+            {
+                return Success(await _redis.Get<LibraryUserDto>(redisKey));
+            }
+
+            var user = await _userService.GetByIdAsync(id);
+            if (user is null)
+            {
+                return Failed<LibraryUserDto>("user not found");
+            }
+
+            var userDto = _mapper.Map<LibraryUserDto>(user);
+            await _redis.Set(redisKey, userDto, _requirement.CacheTime);
+            return Success(userDto);
         }
     }
 }

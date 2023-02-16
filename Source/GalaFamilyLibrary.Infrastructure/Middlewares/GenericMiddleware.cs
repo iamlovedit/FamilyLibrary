@@ -22,9 +22,11 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
 
             //app.UseConsul(app.Configuration);
 
-            app.UseHttpsRedirection();
-
             app.UseCorsService();
+
+            //app.UseAuthentication(); //ocelot已验证 微服务无需验证
+
+            app.UseRouting();
 
             app.UseAuthorization();
 
