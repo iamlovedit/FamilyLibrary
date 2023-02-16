@@ -108,8 +108,8 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             );
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            var expiration = TimeZoneInfo.ConvertTimeFromUtc(jwtToken.ValidTo, TimeZoneInfo.Local);
-            return new TokenInfo(token, expiration, JwtBearerDefaults.AuthenticationScheme);
+            return new TokenInfo(token, permissionRequirement.Expiration.TotalSeconds,
+                JwtBearerDefaults.AuthenticationScheme);
             ;
         }
     }

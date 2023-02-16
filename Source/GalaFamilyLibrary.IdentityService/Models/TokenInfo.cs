@@ -4,14 +4,14 @@ public class TokenInfo
 {
     public string Token { get; }
 
-    public DateTime ExpiredAt { get; }
+    public double ExpiredIn { get; }
 
     public string TokenType { get; }
 
-    public TokenInfo(string token,DateTime expiredAt,string tokenType)
+    public TokenInfo(string token,double expiredIn,string tokenType)
     {
         Token = token;
-        ExpiredAt = expiredAt;
+        ExpiredIn = expiredIn;
         TokenType = tokenType;
     }
 }
