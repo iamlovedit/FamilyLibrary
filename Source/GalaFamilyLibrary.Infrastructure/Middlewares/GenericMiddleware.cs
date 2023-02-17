@@ -1,6 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
@@ -22,6 +23,10 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
 
             //app.UseConsul(app.Configuration);
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             app.UseCorsService();
 
             //app.UseAuthentication(); //ocelot已验证 微服务无需验证

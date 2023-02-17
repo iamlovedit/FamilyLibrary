@@ -19,13 +19,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 5,
-        "Limit": 1
       }
     },
     {
@@ -47,13 +40,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 5,
-        "Limit": 1
       }
     },
     {
@@ -76,13 +62,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 5,
-        "Limit": 1
       }
     },
     {
@@ -98,18 +77,23 @@
           "Host": "localhost",
           "Port": 5003
         }
-      ],
-      "RateLimitOptions": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 5,
-        "Limit": 1
-      }
+      ]
     }
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5000",
-    "RouteIsCaseSensitive": false
+    "RouteIsCaseSensitive": false,
+    "RateLimitOptions": {
+      "ClientWhitelist": [],
+      "EnableRateLimiting": true,
+      "Period": "1s",
+      "PeriodTimespan": 5,
+      "Limit": 1
+    },
+    "QoSOptions": {
+      "ExceptionsAllowedBeforeBreaking": 3,
+      "DurationOfBreak": 1000,
+      "TimeoutValue": 5000
+    }
   }
 }

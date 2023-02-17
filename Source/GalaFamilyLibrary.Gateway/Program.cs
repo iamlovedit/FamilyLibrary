@@ -2,6 +2,7 @@ using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Ocelot.Provider.Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
@@ -23,7 +24,7 @@ if (builder.Environment.IsProduction())
 builder.AddTraceOutputSetup();
 services.AddAuthorizationSetup(builder.Configuration);
 services.AddJwtAuthentication(builder.Configuration);
-services.AddOcelot() /*.AddConsul()*/;
+services.AddOcelot().AddPolly();
 var app = builder.Build();
 
 app.UseAuthentication();
