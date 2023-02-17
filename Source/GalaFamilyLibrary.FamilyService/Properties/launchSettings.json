@@ -7,7 +7,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DATABASE_CONNECTION_STRING": "server=localhost;port=3306;database=FamilyLibrary;userid=root;password=zy4318422;CharSet=utf8mb4",
-        "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
+        "REDIS_CONNECTION_STRING": "localhost,password=zy4318422",
+        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5002;https://localhost:6002"
@@ -20,7 +21,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
         "DATABASE_CONNECTION_STRING": "server=mysql;port=3306;database=FamilyLibrary;userid=root;password=zy4318422;CharSet=utf8mb4",
-        "REDIS_CONNECTION_STRING": "redis,password=zy4318422"
+        "REDIS_CONNECTION_STRING": "redis,password=zy4318422",
+        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
       }
     }
   },

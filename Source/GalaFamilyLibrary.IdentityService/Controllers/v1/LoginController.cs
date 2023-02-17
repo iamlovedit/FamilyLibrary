@@ -53,7 +53,6 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                _logger.LogWarning("");
                 return Failed<TokenInfo>("用户名或者密码不能为空");
             }
 
@@ -66,6 +65,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                     return Failed<TokenInfo>("用户名或者密码错误");
                 }
 
+                _logger.LogInformation("user {user} logged in", user.Username);
                 user.LastLoginTime = DateTime.Now;
                 await _userService.UpdateAsync(user);
 
@@ -89,6 +89,16 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         }
 
         /// <summary>
+        /// v1/authenticate/logout
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("logout")]
+        public Task<MessageModel<bool>> LogoutAsync()
+        {
+            return Task.FromResult(Success(true));
+        }
+
+        /// <summary>
         /// v1/authenticate/refresh
         /// </summary>
         /// <returns></returns>
@@ -101,6 +111,17 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             }
 
             var jwtHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var jwtToken = jwtHandler.ReadJwtToken(token);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+
             throw new NotImplementedException();
         }
 

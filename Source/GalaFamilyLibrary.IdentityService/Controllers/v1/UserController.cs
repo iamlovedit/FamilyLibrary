@@ -30,9 +30,14 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             _requirement = requirement;
         }
 
-        [HttpPost]
+        /// <summary>
+        /// v1/user/register
+        /// </summary>
+        /// <param name="userCreationDto"></param>
+        /// <returns></returns>
+        [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<MessageModel<string>> Regsiter([FromBody] LibraryUserCreationDto userCreationDto)
+        public async Task<MessageModel<string>> CreateUser([FromBody] LibraryUserCreationDto userCreationDto)
         {
             if (await _userService.GetFirstByExpressionAsync(u => u.Username == userCreationDto.Username) != null)
             {
@@ -49,6 +54,12 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             return Failed("注册失败");
         }
 
+
+        /// <summary>
+        /// v1/user/{id}
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<MessageModel<LibraryUserDto>> Details(int id)
         {
