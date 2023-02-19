@@ -41,5 +41,5 @@ jobs:
           docker build -t $REGISTRY/family_library -f ./GalaFamilyLibrary.FamilyService/Dockerfile .
           docker push $REGISTRY/family_library
 
-          docker build -t $REGISTRY/library_user -f ./GalaFamilyLibrary.UserService/Dockerfile .
-          docker push $REGISTRY/library_user
+          docker build -t $REGISTRY/library_identity -f ./GalaFamilyLibrary.IdentityService/Dockerfile .
+          docker push $REGISTRY/library_identity
