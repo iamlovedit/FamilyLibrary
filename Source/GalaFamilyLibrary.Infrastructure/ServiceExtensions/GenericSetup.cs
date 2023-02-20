@@ -27,10 +27,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddRedisCacheSetup(configuration);
 
-            if (builder.Environment.IsProduction())
-            {
-                services.AddSeqSetup(configuration);
-            }
+            services.AddSeqSetup(configuration);
 
             services.AddAuthorizationSetup(configuration);
 

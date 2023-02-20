@@ -16,10 +16,8 @@ builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
 });
 var services = builder.Services;
 services.AddRedisCacheSetup(builder.Configuration);
-if (builder.Environment.IsProduction())
-{
-    services.AddSeqSetup(builder.Configuration);
-}
+
+services.AddSeqSetup(builder.Configuration);
 
 builder.AddTraceOutputSetup();
 services.AddAuthorizationSetup(builder.Configuration);
