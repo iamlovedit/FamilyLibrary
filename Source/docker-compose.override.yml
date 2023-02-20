@@ -13,7 +13,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5000:80"
-    image: ${DOCKER_REGISTRY-}library_gateway
+    image: ${DOCKER_REGISTRY}library_gateway
     build:
       context: .
       dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
@@ -30,11 +30,11 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5001:80"
-    image: ${DOCKER_REGISTRY-}dynamo_package
+    image: ${DOCKER_REGISTRY}dynamo_package
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
-        
+  
   family_library:
     container_name: "family_library"
     networks:
@@ -48,7 +48,7 @@ services:
     ports:
       - "5002:80"
     
-    image: ${DOCKER_REGISTRY-}family_library
+    image: ${DOCKER_REGISTRY}family_library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
@@ -66,7 +66,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5003:80"
-    image: ${DOCKER_REGISTRY-}library_identity
+    image: ${DOCKER_REGISTRY}library_identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
@@ -91,7 +91,24 @@ services:
     ports:
       - "6379:6379"
     command: redis-server --requirepass zy4318422
-
+  seqcli:
+    image: datalust/seqcli:latest
+    container_name: "seqcli"
+    command: apikey create -t newapikey --token tZSCDVnAbyYZB1s4twSl -s http://seq
+    depends_on:
+      - seq
+    restart: on-failure
+    networks:
+      - family_library
+  seq:
+    image: datalust/seq:latest
+    container_name: "seq"
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    networks:
+      - family_library
 networks:
   family_library:
     driver: bridge

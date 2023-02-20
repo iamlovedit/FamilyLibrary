@@ -13,7 +13,9 @@ docker rm $packagecontainer
 docker rm $familycontainer
 docker rm $identityContainer
 
-docker rmi ${DOCKER_REGISTRY-}library_gateway
-docker rmi ${DOCKER_REGISTRY-}dynamo_package
-docker rmi ${DOCKER_REGISTRY-}family_library
-docker rmi ${DOCKER_REGISTRY-}library_identity
+docker rmi ${DOCKER_REGISTRY}library_gateway
+docker rmi ${DOCKER_REGISTRY}dynamo_package
+docker rmi ${DOCKER_REGISTRY}family_library
+docker rmi ${DOCKER_REGISTRY}library_identity
+
+docker-compose -f docker-compose.prod.yml up -d
