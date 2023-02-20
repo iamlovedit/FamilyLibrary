@@ -129,7 +129,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5000",
+    "BaseUrl": "http://10.0.16.6:5000",
     "RouteIsCaseSensitive": false
   }
 }
