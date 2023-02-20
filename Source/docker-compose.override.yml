@@ -13,7 +13,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5000:80"
-    image: ${DOCKER_REGISTRY}library_gateway
+    image: library_gateway
     build:
       context: .
       dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
@@ -30,7 +30,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5001:80"
-    image: ${DOCKER_REGISTRY}dynamo_package
+    image: dynamo_package
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
@@ -48,7 +48,7 @@ services:
     ports:
       - "5002:80"
     
-    image: ${DOCKER_REGISTRY}family_library
+    image: family_library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
@@ -66,7 +66,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5003:80"
-    image: ${DOCKER_REGISTRY}library_identity
+    image: library_identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
