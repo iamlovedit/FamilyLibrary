@@ -2,6 +2,7 @@ version: '3.4'
 
 services:
   library_gateway:
+    restart: on-failure
     container_name: "library_gateway"
     networks:
       - "family_library"
@@ -20,6 +21,7 @@ services:
       dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
 
   dynamo_package:
+    restart: on-failure
     container_name: "dynamo_package"
     networks:
       - "family_library"
@@ -38,6 +40,7 @@ services:
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
   
   family_library:
+    restart: on-failure
     container_name: "family_library"
     networks:
       - "family_library"
@@ -57,6 +60,7 @@ services:
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
   library_identity:
+    restart: on-failure
     container_name: "library_identity"
     networks:
       - "family_library"
