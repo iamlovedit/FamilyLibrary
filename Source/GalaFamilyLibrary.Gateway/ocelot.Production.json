@@ -129,7 +129,7 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "https://openapi.youngala.com",
+    "BaseUrl": "http://localhost:5000",
     "RouteIsCaseSensitive": false
   }
 }
