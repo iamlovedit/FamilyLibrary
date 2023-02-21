@@ -21,7 +21,7 @@ services.AddSeqSetup(builder.Configuration);
 builder.AddTraceOutputSetup();
 services.AddAuthorizationSetup(builder.Configuration);
 services.AddJwtAuthentication(builder.Configuration);
-services.AddOcelot();
+services.AddOcelot().AddPolly();
 var app = builder.Build();
 
 app.UseAuthentication();
