@@ -1,23 +1,31 @@
 version: '3.4'
 
 services:
+  #  library_gateway:
+  #    container_name: "library_gateway"
+  #    networks:
+  #      - "family_library"
+  #    depends_on:
+  #      - mysql
+  #      - redis
+  #    environment:
+  #      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryGateway;userid=root;password=zy4318422;CharSet=utf8mb4
+  #      - REDIS_CONNECTION_STRING= redis,password=zy4318422
+  #    ports:
+  #      - "5000:80"
+  #    image: library_gateway
+  #    build:
+  #      context: .
+  #      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
   library_gateway:
     container_name: "library_gateway"
     networks:
       - "family_library"
-    depends_on:
-      - mysql
-      - redis
-    environment:
-      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryGateway;userid=root;password=zy4318422;CharSet=utf8mb4
-      - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5000:80"
-    image: library_gateway
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
-
+    image: envoyproxy/envoy:v1.22.7
+    volumes:
+      - ./Envoy:/etc/envoy
   dynamo_package:
     container_name: "dynamo_package"
     networks:
