@@ -9,7 +9,9 @@ services:
     image: envoyproxy/envoy:v1.11.1
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-          
+    ports:
+      - "5000:80"
+
   dynamo_package:
     restart: on-failure
     container_name: "dynamo_package"
