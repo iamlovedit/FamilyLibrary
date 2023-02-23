@@ -28,17 +28,48 @@ static_resources:
                             prefix: "/package"
                           route:
                             auto_host_rewrite: true
-                            prefix_rewrite: "/"
                             cluster: package
+
                         - name: "family"
                           match:
                             prefix: "/family"
                           route:
                             auto_host_rewrite: true
-                            prefix_rewrite: "/"
                             cluster: family
+
+                        - name: "identity"
+                          match:
+                            prefix: "/identity"
+                          route:
+                            auto_host_rewrite: true
+                            cluster: identity
+
+                        - name: "user"
+                          match:
+                            prefix: "/user"
+                          route:
+                            auto_host_rewrite: true
+                            cluster: identity
                 http_filters:
                   - name: envoy.router
+                access_log:
+                  - name: envoy.file_access_log
+                    filter:
+                      not_health_check_filter: { }
+                    config:
+                      json_format:
+                        time: "%START_TIME%"
+                        protocol: "%PROTOCOL%"
+                        duration: "%DURATION%"
+                        request_method: "%REQ(:METHOD)%"
+                        request_host: "%REQ(HOST)%"
+                        path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
+                        response_flags: "%RESPONSE_FLAGS%"
+                        route_name: "%ROUTE_NAME%"
+                        upstream_host: "%UPSTREAM_HOST%"
+                        upstream_cluster: "%UPSTREAM_CLUSTER%"
+                        upstream_local_address: "%UPSTREAM_LOCAL_ADDRESS%"
+                      path: "/tmp/access.log"
   clusters:
     - name: package
       connect_timeout: 0.25s
@@ -48,7 +79,7 @@ static_resources:
         - socket_address:
             address: dynamo_package
             port_value: 80
-            
+
     - name: family
       connect_timeout: 0.25s
       type: logical_dns
@@ -56,4 +87,13 @@ static_resources:
       hosts:
         - socket_address:
             address: family_library
+            port_value: 80
+
+    - name: identity
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      hosts:
+        - socket_address:
+            address: library_identity
             port_value: 80

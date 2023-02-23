@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 
 [ApiVersion("1.0")]
+[Route("package/v{version:apiVersion}")]
 public class WeatherForecastController : ApiControllerBase
 {
     private static readonly string[] Summaries = new[]

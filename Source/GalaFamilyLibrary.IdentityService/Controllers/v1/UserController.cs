@@ -11,7 +11,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize(Policy = "ElevatedRights")]
-    [Route("v{version:apiVersion}")]
+    [Route("user/v{version:apiVersion}")]
     public class UserController : ApiControllerBase
     {
         private readonly ILogger<UserController> _logger;

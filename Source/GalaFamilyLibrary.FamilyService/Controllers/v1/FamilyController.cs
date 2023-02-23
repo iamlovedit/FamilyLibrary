@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
 [ApiVersion("1.0")]
-[Route("v{version:apiVersion}")]
+[Route("family/v{version:apiVersion}")]
 public class FamilyController : ApiControllerBase
 {
     private readonly IFamilyService _familyService;
