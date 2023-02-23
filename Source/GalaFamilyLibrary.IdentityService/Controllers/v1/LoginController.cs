@@ -15,7 +15,7 @@ using GalaFamilyLibrary.Infrastructure.Redis;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Route("login/v{version:apiVersion}/authenticate")]
+    [Route("identity/v{version:apiVersion}/authenticate")]
     [Authorize(AuthenticationSchemes = "Bearer", Policy = "ElevatedRights")]
     public class LoginController : ApiControllerBase
     {

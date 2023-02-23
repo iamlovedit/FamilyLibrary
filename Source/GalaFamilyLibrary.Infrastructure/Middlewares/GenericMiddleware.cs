@@ -29,7 +29,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
             });
             app.UseCorsService();
 
-            //app.UseAuthentication(); //ocelot已验证 微服务无需验证
+            app.UseAuthentication();
 
             app.UseRouting();
 
