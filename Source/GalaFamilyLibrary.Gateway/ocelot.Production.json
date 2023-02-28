@@ -12,7 +12,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
+          "Host": "dynamo_package",
           "Port": 5001
         }
       ],
@@ -45,7 +45,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
+          "Host": "family_library",
           "Port": 5002
         }
       ],
@@ -79,7 +79,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
+          "Host": "library_identity",
           "Port": 5003
         }
       ],
@@ -110,7 +110,7 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
+          "Host": "library_identity",
           "Port": 5003
         }
       ],
