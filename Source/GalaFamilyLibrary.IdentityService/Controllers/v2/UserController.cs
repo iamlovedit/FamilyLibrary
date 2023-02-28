@@ -7,7 +7,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v2;
 
 [ApiVersion("1.0")]
 [Authorize]
-[Route("v{version:apiVersion}")]
+[Route("/identity/v{version:apiVersion}")]
 public class UserController : ApiControllerBase
 {
     private readonly IUserService _userService;
