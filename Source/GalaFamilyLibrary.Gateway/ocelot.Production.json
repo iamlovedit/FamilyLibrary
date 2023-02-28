@@ -12,7 +12,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "dynamo_package"
+          "Host": "dynamo_package",
+          "Port": 5001
         }
       ],
       "AuthenticationOptions": {
@@ -44,7 +45,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "family_library"
+          "Host": "family_library",
+          "Port": 5002
         }
       ],
       "AuthenticationOptions": {
@@ -77,7 +79,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "library_identity"
+          "Host": "library_identity",
+          "Port": 5003
         }
       ],
       "AuthenticationOptions": {
@@ -107,7 +110,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "library_identity"
+          "Host": "library_identity",
+          "Port": 5003
         }
       ],
       "QoSOptions": {
