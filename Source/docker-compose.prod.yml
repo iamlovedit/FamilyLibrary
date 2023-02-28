@@ -6,11 +6,19 @@ services:
     container_name: "library_gateway"
     networks:
       - "family_library"
-    image: envoyproxy/envoy:v1.11.1
-    volumes:
-      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryGateway;userid=root;password=zy4318422;CharSet=utf8mb4
+      - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5000:80"
+    image: ${DOCKER_REGISTRY}/library_gateway
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
 
   dynamo_package:
     restart: on-failure
