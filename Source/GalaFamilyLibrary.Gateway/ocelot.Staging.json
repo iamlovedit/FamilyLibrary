@@ -8,7 +8,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/{url}",
+      "DownstreamPathTemplate": "/package/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -41,7 +41,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/{url}",
+      "DownstreamPathTemplate": "/family/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -75,7 +75,7 @@
         "Delete",
         "Put"
       ],
-      "DownstreamPathTemplate": "/{url}",
+      "DownstreamPathTemplate": "/identity/{url}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -106,7 +106,7 @@
       "UpstreamHttpMethod": [
         "Post"
       ],
-      "DownstreamPathTemplate": "/{version}/authenticate/token",
+      "DownstreamPathTemplate": "/identity/{version}/authenticate/token",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
