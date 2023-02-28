@@ -1,5 +1,4 @@
 # This is a basic workflow to help you get started with Actions
-
 name: CI
 
 # Controls when the workflow will run
@@ -32,7 +31,10 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           REGISTRY: registry.cn-chengdu.aliyuncs.com/galaservices
         run: |
-          docker build -t $REGISTRY/dynamo_package -f ./GalaFamilyLibrary.DynamoPackageService/Dockerfile .
+          docker build -t $REGISTRY/library_gateway -f ./GalaFamilyLibrary.Gateway/Dockerfile .
+          docker push $REGISTRY/library_gateway
+
+          docker build -t $REGISTRY/dynamo_package -f ./GalaFamilyLibrary.Gateway/Dockerfile .
           docker push $REGISTRY/dynamo_package
 
           docker build -t $REGISTRY/family_library -f ./GalaFamilyLibrary.FamilyService/Dockerfile .
