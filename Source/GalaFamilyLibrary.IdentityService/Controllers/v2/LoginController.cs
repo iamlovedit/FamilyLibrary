@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v2;
 
 [ApiVersion("1.0")]
-[Route("v{version:apiVersion}/authenticate")]
+[Route("/identity/v{version:apiVersion}/authenticate")]
 public class LoginController : ApiControllerBase
 {
     private readonly PermissionRequirement _permissionRequirement;
