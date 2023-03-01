@@ -4,9 +4,11 @@ using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.IdentityService.Models;
 
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.
+
 services.AddScoped(typeof(IUserService), typeof(UserService));
 builder.AddGenericSetup();
 var app = builder.Build();

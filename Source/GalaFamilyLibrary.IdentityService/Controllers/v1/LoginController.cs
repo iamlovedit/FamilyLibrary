@@ -11,24 +11,28 @@ using GalaFamilyLibrary.IdentityService.DataTransferObjects;
 using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("identity/v{version:apiVersion}/authenticate")]
-    [Authorize(AuthenticationSchemes = "Bearer", Policy = "ElevatedRights")]
+    [Authorize(Policy = "ElevatedRights")]
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;
+        private readonly DataProtectionHelper _dataProtectionHelper;
         private readonly ILogger<LoginController> _logger;
         private readonly IRedisBasketRepository _redis;
         private readonly IUserService _userService;
 
-        public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
+        public LoginController(PermissionRequirement permissionRequirement,
+            DataProtectionHelper dataProtectionHelper, ILogger<LoginController> logger,
             IRedisBasketRepository redis,
             IUserService userService)
         {
             _permissionRequirement = permissionRequirement;
+            _dataProtectionHelper = dataProtectionHelper;
             _logger = logger;
             _redis = redis;
             _userService = userService;
@@ -49,11 +53,11 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<MessageModel<TokenInfo>> GetTokenAsync([FromBody] LoginUserDto loginUser)
+        public async Task<MessageModel<string>> GetTokenAsync([FromBody] LoginUserDto loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                return Failed<TokenInfo>("用户名或者密码不能为空");
+                return Failed<string>("用户名或者密码不能为空");
             }
 
             var user = await _userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
@@ -62,7 +66,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var password = loginUser.Password.MD5Encrypt32(user.Salt);
                 if (!password.Equals(user.Password))
                 {
-                    return Failed<TokenInfo>("用户名或者密码错误");
+                    return Failed<string>("用户名或者密码错误");
                 }
 
                 _logger.LogInformation("user {user} logged in", user.Username);
@@ -81,11 +85,12 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var tokenKey = $"auth/token/{user.Id}";
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
                 var token = GenerateToken(claims, _permissionRequirement);
-                await _redis.Set(tokenKey, token, _permissionRequirement.Expiration);
-                return Success(token);
+                var protectToken = _dataProtectionHelper.Encrypt(token.Token, "accessToken");
+                await _redis.Set(protectToken, token, _permissionRequirement.Expiration);
+                return Success(protectToken);
             }
 
-            return Failed<TokenInfo>("用户名或者密码错误");
+            return Failed<string>("用户名或者密码错误");
         }
 
         /// <summary>
