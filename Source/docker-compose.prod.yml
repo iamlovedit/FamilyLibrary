@@ -9,7 +9,6 @@ services:
     image: envoyproxy/envoy:v1.11.1
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
-          
   dynamo_package:
     restart: on-failure
     container_name: "dynamo_package"
@@ -24,7 +23,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5001:80"
-    image: ${DOCKER_REGISTRY}/dynamo_package
+    image: ${DOCKER_REGISTRY-}dynamo_package
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
@@ -44,7 +43,7 @@ services:
     ports:
       - "5002:80"
     
-    image: ${DOCKER_REGISTRY}/family_library
+    image: ${DOCKER_REGISTRY-}family_library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
@@ -63,7 +62,7 @@ services:
       - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5003:80"
-    image: ${DOCKER_REGISTRY}/library_identity
+    image: ${DOCKER_REGISTRY-}library_identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
@@ -78,6 +77,8 @@ services:
       MYSQL_ROOT_PASSWORD: zy4318422
     ports:
       - "3306:3306"
+    volumes:
+      - /usr/local/docker/nginx/mysql:/var/lib/mysql
   
   redis:
     networks:

@@ -32,9 +32,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           REGISTRY: registry.cn-chengdu.aliyuncs.com/galaservices
         run: |
-          docker build -t $REGISTRY/library_gateway -f ./GalaFamilyLibrary.Gateway/Dockerfile .
-          docker push $REGISTRY/library_gateway
-
           docker build -t $REGISTRY/dynamo_package -f ./GalaFamilyLibrary.DynamoPackageService/Dockerfile .
           docker push $REGISTRY/dynamo_package
 
