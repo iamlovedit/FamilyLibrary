@@ -81,7 +81,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - /usr/local/docker/nginx/mysql:/var/lib/mysql
+      - /usr/local/docker/mysql/mysql:/var/lib/mysql
   
   redis:
     networks:
