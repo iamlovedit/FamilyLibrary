@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
 [ApiVersion("1.0")]
+[Route("family/v{version:apiVersion}")]
 public class WeatherForecastController : ApiControllerBase
 {
     private static readonly string[] Summaries = new[]

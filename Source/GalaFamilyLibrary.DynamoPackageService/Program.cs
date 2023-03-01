@@ -1,7 +1,5 @@
 using GalaFamilyLibrary.DynamoPackageService.Models;
 using GalaFamilyLibrary.DynamoPackageService.Services;
-using GalaFamilyLibrary.Infrastructure.Consul;
-using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
@@ -11,7 +9,8 @@ var services = builder.Services;
 // Add services to the container.
 
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
-services.AddGenericSetup(builder.Configuration);
+builder.AddGenericSetup();
+
 services.AddHttpClient();
 var app = builder.Build();
 

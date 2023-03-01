@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "IsDeleted": 0,
+    "Name": "Administrator",
+    "Description": "管理员",
+    "CreateTime": "\/Date(1546272000000+0800)\/",
+    "ModifyTime": "\/Date(1546272000000+0800)\/"
+  },
+  {
+    "Id": 2,
+    "IsDeleted": 0,
+    "Name": "Consumer",
+    "Description": "普通用户",
+    "CreateTime": "\/Date(1546272000000+0800)\/",
+    "ModifyTime": "\/Date(1546272000000+0800)\/"
+  }
+]

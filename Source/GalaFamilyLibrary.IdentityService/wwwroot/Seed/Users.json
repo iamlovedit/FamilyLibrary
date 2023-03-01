@@ -1,0 +1,28 @@
+[
+  {
+    "Id": 1,
+    "Username": "admin",
+    "Name": "管理员",
+    "Salt": "2d9f649bc7074e56965918cffec6eccf",
+    "Password": "a9b50deff9a033ecd1ee9e301fccdb7e",
+    "CreateTime": "\/Date(1546272000000+0800)\/",
+    "UpdateTime": "\/Date(1546272000000+0800)\/",
+    "LastLoginTime": "\/Date(1546272000000+0800)\/",
+    "Email": "iamlovedit@163.com",
+    "ErrorCount": 0,
+    "IsDeleted": 0
+  },
+  {
+    "Id": 2,
+    "Username": "youngala",
+    "Name": "普通用户",
+    "Salt": "2d9f649bc7074e56965918cffec6eccf",
+    "Password": "a9b50deff9a033ecd1ee9e301fccdb7e",
+    "CreateTime": "\/Date(1546272000000+0800)\/",
+    "UpdateTime": "\/Date(1546272000000+0800)\/",
+    "LastLoginTime": "\/Date(1546272000000+0800)\/",
+    "Email": "iamlovedit@163.com",
+    "ErrorCount": 0,
+    "IsDeleted": 0
+  }
+]

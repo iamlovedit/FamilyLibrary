@@ -63,7 +63,7 @@ public abstract class ServiceBase<T> : IServiceBase<T> where T : class, new()
         return await DAL.UpdateAsync(entity);
     }
 
-    public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string orderByFields = null)
+    public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null)
     {
         return await DAL.QueryPageAsync(whereExpression, pageIndex, pageSize, orderByFields);
     }

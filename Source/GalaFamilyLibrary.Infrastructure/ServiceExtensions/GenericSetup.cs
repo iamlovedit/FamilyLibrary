@@ -1,36 +1,37 @@
-﻿using System.Reflection;
-using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.Infrastructure.Consul;
-using GalaFamilyLibrary.Infrastructure.Cors;
+﻿using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Microsoft.Extensions.Hosting;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
     public static class GenericSetup
     {
-        public static void AddGenericSetup(this IServiceCollection services, IConfiguration configuration)
+        public static void AddGenericSetup(this WebApplicationBuilder builder)
         {
-            if (services is null)
+            if (builder is null)
             {
-                throw new ArgumentNullException(nameof(services));
+                throw new ArgumentNullException(nameof(builder));
             }
 
-            if (configuration is null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
-        
+            var configuration = builder.Configuration;
+            var services = builder.Services;
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbSetup();
 
-            services.AddConsulConfigSetup(configuration);
+            builder.AddTraceOutputSetup();
+
+            //services.AddConsulConfigSetup(configuration);
 
             services.AddRedisCacheSetup(configuration);
+
+            services.AddSeqSetup(configuration);
+
+            services.AddAuthorizationSetup(configuration);
+
+            services.AddJwtAuthentication(configuration);
 
             //sqlsugar
             services.AddSqlsugarSetup(configuration);
@@ -50,8 +51,6 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();
-
-            services.AddAuthorizationSetup(configuration);
         }
     }
 }

@@ -9,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
-services.AddGenericSetup(builder.Configuration);
+builder.AddGenericSetup();
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

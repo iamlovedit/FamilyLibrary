@@ -35,6 +35,15 @@ public static class JwtAuthenticationSetup
             ClockSkew = TimeSpan.FromSeconds(30),
             RequireExpirationTime = true,
         };
+        services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = nameof(ApiAuthenticationHandler);
+                options.DefaultForbidScheme = nameof(ApiAuthenticationHandler);
+            })
+            .AddJwtBearer(ConfigureJwtBearer)
+            .AddScheme<AuthenticationSchemeOptions, ApiAuthenticationHandler>(nameof(ApiAuthenticationHandler),
+                options => { });
 
         void ConfigureJwtBearer(JwtBearerOptions options)
         {
@@ -56,6 +65,7 @@ public static class JwtAuthenticationSetup
                         failedContext.Response.Headers.Add("token-error", "can not get token");
                         return Task.CompletedTask;
                     }
+
                     if (failedContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
                     {
                         failedContext.Response.Headers.Add("token-expired", "true");
@@ -84,25 +94,16 @@ public static class JwtAuthenticationSetup
                             failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
                             return Task.CompletedTask;
                         }
-
                     }
                     else
                     {
                         failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
                         return Task.CompletedTask;
                     }
+
                     return Task.CompletedTask;
                 }
             };
         }
-
-        services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = nameof(ApiAuthenticationHandler);
-                options.DefaultForbidScheme = nameof(ApiAuthenticationHandler);
-            })
-            .AddJwtBearer(ConfigureJwtBearer)
-            .AddScheme<AuthenticationSchemeOptions, ApiAuthenticationHandler>(nameof(ApiAuthenticationHandler), options => { });
     }
 }

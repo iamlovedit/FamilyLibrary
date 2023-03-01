@@ -4,7 +4,7 @@ using GalaFamilyLibrary.Infrastructure.Transaction;
 using Newtonsoft.Json.Linq;
 using Quartz;
 
-namespace GalaFamilyLibrary.DynamoPackageService.Tasks
+namespace GalaFamilyLibrary.DynamoPackageService.Jobs
 {
     public class FetchPackagesJob : IJob
     {

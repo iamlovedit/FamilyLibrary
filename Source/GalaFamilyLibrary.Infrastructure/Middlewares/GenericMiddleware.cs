@@ -1,6 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
@@ -20,11 +21,18 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 app.UseVersionedSwaggerUI();
             }
 
-            app.UseConsul(app.Configuration);
+            //app.UseConsul(app.Configuration);
 
-            app.UseHttpsRedirection();
+            // app.UseForwardedHeaders(new ForwardedHeadersOptions
+            // {
+            //     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            // });
 
             app.UseCorsService();
+
+            app.UseAuthentication();
+
+            app.UseRouting();
 
             app.UseAuthorization();
 
