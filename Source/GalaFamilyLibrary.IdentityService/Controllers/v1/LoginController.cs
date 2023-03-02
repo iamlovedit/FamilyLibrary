@@ -1,18 +1,14 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.IdentityService.Helpers;
+﻿using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+using GalaFamilyLibrary.IdentityService.Models;
+using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using SqlSugar.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using GalaFamilyLibrary.IdentityService.DataTransferObjects;
-using GalaFamilyLibrary.IdentityService.Models;
-using GalaFamilyLibrary.IdentityService.Services;
-using GalaFamilyLibrary.Infrastructure.Redis;
-using Microsoft.AspNetCore.DataProtection;
-
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
@@ -21,18 +17,15 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;
-        private readonly DataProtectionHelper _dataProtectionHelper;
         private readonly ILogger<LoginController> _logger;
         private readonly IRedisBasketRepository _redis;
         private readonly IUserService _userService;
 
-        public LoginController(PermissionRequirement permissionRequirement,
-            DataProtectionHelper dataProtectionHelper, ILogger<LoginController> logger,
+        public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
             IRedisBasketRepository redis,
             IUserService userService)
         {
             _permissionRequirement = permissionRequirement;
-            _dataProtectionHelper = dataProtectionHelper;
             _logger = logger;
             _redis = redis;
             _userService = userService;
@@ -85,7 +78,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var tokenKey = $"auth/token/{user.Id}";
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
                 var token = GenerateToken(claims, _permissionRequirement);
-                var protectToken = _dataProtectionHelper.Encrypt(token.Token, "accessToken");
+                var protectToken = token.Token.ExcryptAES();
                 await _redis.Set(protectToken, token, _permissionRequirement.Expiration);
                 return Success(protectToken);
             }

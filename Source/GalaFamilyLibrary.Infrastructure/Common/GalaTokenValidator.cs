@@ -11,11 +11,9 @@ public class GalaTokenValidator : ISecurityTokenValidator
         return true;
     }
 
-    public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters,
-        out SecurityToken validatedToken)
+    public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
     {
-        ClaimsPrincipal principal =
-            new JwtSecurityTokenHandler().ValidateToken(securityToken, validationParameters, out validatedToken);
+        var principal = new JwtSecurityTokenHandler().ValidateToken(securityToken, validationParameters, out validatedToken);
         return principal;
     }
 

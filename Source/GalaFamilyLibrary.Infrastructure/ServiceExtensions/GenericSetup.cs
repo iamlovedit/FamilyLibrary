@@ -1,6 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
@@ -25,6 +26,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
                 EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
                 ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
             });
+            services.Configure<AESEncryptionOption>(configuration.GetSection(nameof(AESEncryptionOption)));
 
             services.AddSingleton<DataProtectionHelper>();
 
