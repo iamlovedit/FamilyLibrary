@@ -3,10 +3,13 @@ using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
+
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
+services.AddFileStorageClientSetup(builder.Configuration);
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 builder.AddGenericSetup();

@@ -4,31 +4,59 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace GalaFamilyLibrary.FileStorageService.Controllers;
 
+[ApiController]
 [Route("files")]
-public class FileController : ApiControllerBase
+public class FileController : ControllerBase
 {
     private readonly IWebHostEnvironment _environment;
+    private readonly DataProtectionHelper _dataProtectionHelper;
 
-    public FileController(IWebHostEnvironment webHostEnvironment)
+    public FileController(IWebHostEnvironment webHostEnvironment, DataProtectionHelper dataProtectionHelper)
     {
         _environment = webHostEnvironment;
+        _dataProtectionHelper = dataProtectionHelper;
     }
 
-    [HttpGet("{*path:file}")]
-    public IActionResult Get(string path,string token)
+    [HttpGet]
+    [Route("{*path}")]
+    public Task<IActionResult> Download(string path, string token)
     {
-        var filePath = Path.Combine(_environment.WebRootPath, "Files", path);
-        if (!System.IO.File.Exists(filePath))
+        return Task.Run<IActionResult>(() =>
         {
-            return NotFound();
-        }
+            if (string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+            //var unprotectionToken = _dataProtectionHelper.Decrypt(token, "fileKey");
+            var filePath = Path.Combine(_environment.ContentRootPath, "Files", path);
+            if (!System.IO.File.Exists(filePath))
+            {
+                return NotFound();
+            }
 
-        var provider = new FileExtensionContentTypeProvider();
-        if (!provider.TryGetContentType(filePath, out var contentType))
+            var provider = new FileExtensionContentTypeProvider();
+            if (!provider.TryGetContentType(filePath, out var contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+
+            return PhysicalFile(filePath, contentType);
+        });
+    }
+
+    [HttpPost]
+    [Route("{*path}")]
+    public Task<IActionResult> Upload(string path, string token, IFormFile file)
+    {
+        return Task.Run<IActionResult>(() =>
         {
-            contentType = "application/octet-stream";
-        }
+            //var unprotectionToken = _dataProtectionHelper.Decrypt(token, "fileKey");
+            if (string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
 
-        return PhysicalFile(filePath, contentType);
+            return Ok();
+        });
     }
 }
