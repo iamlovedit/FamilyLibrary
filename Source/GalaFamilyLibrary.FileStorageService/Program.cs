@@ -1,4 +1,5 @@
-using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
+using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDataProtectionSetup();
-
+builder.Services.AddAESEncryptionSetup(builder.Configuration);
+builder.Services.AddFileSecurityOptionSetup(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

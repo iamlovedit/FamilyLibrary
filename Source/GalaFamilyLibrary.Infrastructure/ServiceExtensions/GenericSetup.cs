@@ -1,6 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +19,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             var configuration = builder.Configuration;
             var services = builder.Services;
 
-            services.Configure<AESEncryptionOption>(configuration.GetSection(nameof(AESEncryptionOption)));
+            services.AddAESEncryptionSetup(configuration);
 
             services.AddDataProtectionSetup();
 

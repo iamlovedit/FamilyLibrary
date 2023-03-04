@@ -6,9 +6,11 @@ using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Security.Policy;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v2;
 
@@ -22,14 +24,14 @@ public class FamilyController : ApiControllerBase
     private readonly IMapper _mapper;
     private readonly IRedisBasketRepository _redis;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly DataProtectionHelper _dataProtectionHelper;
+    //private readonly IDataProtectionHelper _dataProtectionHelper;
     private readonly RedisRequirement _redisRequirement;
     private readonly FileStorageClient _fileStorageClient;
 
     public FamilyController(IFamilyService familyService, IFamilyCategoryService categoryService,
         ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis,
-        IWebHostEnvironment webHostEnvironment, DataProtectionHelper dataProtectionHelper,
-        RedisRequirement redisRequirement, IOptionsMonitor<FileStorageClient> optionsMonitor)
+        IWebHostEnvironment webHostEnvironment, IDataProtectionHelper dataProtectionHelper,
+        RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
     {
         _familyService = familyService;
         _categoryService = categoryService;
@@ -38,39 +40,35 @@ public class FamilyController : ApiControllerBase
         _redis = redis;
         _redisRequirement = redisRequirement;
         _webHostEnvironment = webHostEnvironment;
-        _dataProtectionHelper = dataProtectionHelper;
-        _fileStorageClient = optionsMonitor.CurrentValue;
+        //_dataProtectionHelper = dataProtectionHelper;
+        _fileStorageClient = fileStorageClient;
     }
 
     [HttpGet]
     [Route("{id:int}/{familyVersion:int}")]
-    public async Task<IActionResult> DownloadFamilyAsync(int id, ushort familyVersion)
+    public Task<IActionResult> DownloadFamilyAsync(int id, ushort familyVersion)
     {
-        var redisKey = $"family/{id}/{familyVersion}";
-        var family = default(Family);
-        if (await _redis.Exist(redisKey))
+        return Task.Run<IActionResult>(async () =>
         {
-            family = await _redis.Get<Family>(redisKey);
-        }
-        else
-        {
-            family = await _familyService.GetByIdAsync(id);
-            await _redis.Set(redisKey, family, _redisRequirement.CacheTime);
-        }
-
-        if (family?.IsDeleted ?? true)
-        {
-            return NotFound("family not exist");
-        }
-
-        var filePath = family.GetFilePath(_webHostEnvironment, familyVersion);
-        if (!System.IO.File.Exists(filePath))
-        {
-            return NotFound();
-        }
-
-        var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
-        return File(fileBytes, "application/stream", $"{family.Name}.rfa");
+            var redisKey = $"family/{id}/{familyVersion}";
+            var family = default(Family);
+            if (await _redis.Exist(redisKey))
+            {
+                family = await _redis.Get<Family>(redisKey);
+            }
+            else
+            {
+                family = await _familyService.GetByIdAsync(id);
+                await _redis.Set(redisKey, family, _redisRequirement.CacheTime);
+            }
+            if (family is null)
+            {
+                return NotFound("file not exist");
+            }
+            var familyPath = family.GetFilePath(familyVersion);
+            var url = _fileStorageClient.GetFileUrl(familyPath);
+            return Redirect(url);
+        });
     }
 
     [HttpGet]
@@ -171,58 +169,5 @@ public class FamilyController : ApiControllerBase
             await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
             return SucceedPage(familyPageDto);
         }
-    }
-
-    [HttpPost("upload")]
-    public async Task<MessageModel<int>> CreateFamilyAsync(IFormFile familyFile, IFormFile imageFile,
-        [FromForm] FamilyCreationDTO familyCreationDto)
-    {
-        var fileExtension = Path.GetExtension(familyFile.FileName);
-        if (fileExtension.ToLower() != ".rfa")
-        {
-            return Failed<int>("error family file format");
-        }
-
-        var imageExtension = Path.GetExtension(imageFile.FileName);
-        if (imageExtension.ToLower() != ".png")
-        {
-            return Failed<int>("error image file format");
-        }
-
-        using (var memoryStream = new MemoryStream())
-        {
-            await familyFile.OpenReadStream().CopyToAsync(memoryStream);
-            var fileBytes = memoryStream.ToArray();
-            if (familyCreationDto.MD5 == fileBytes.EncryptMD5())
-            {
-                var family = _mapper.Map<Family>(familyCreationDto);
-                await System.IO.File.WriteAllBytesAsync(
-                    family.GetFilePath(_webHostEnvironment, familyCreationDto.Version), fileBytes);
-                await memoryStream.FlushAsync();
-                await imageFile.OpenReadStream().CopyToAsync(memoryStream);
-                var imageBytes = memoryStream.ToArray();
-                await System.IO.File.WriteAllBytesAsync(family.GetImagePath(_webHostEnvironment), imageBytes);
-                var id = await _familyService.AddAsync(family);
-                if (id > 0)
-                {
-                    family.Id = id;
-                    await _redis.Set($"family/{id}", family, TimeSpan.FromMinutes(30));
-                    return Success(id);
-                }
-                else
-                {
-                    return Failed<int>("upload failed");
-                }
-            }
-        }
-
-        return Failed<int>("upload failed");
-    }
-
-    [HttpGet("uploadUrl")]
-    [Route("{*path:file}")]
-    public async Task<MessageModel<string>> GetFamilyUploadUrl(string path)
-    {
-        throw new NotImplementedException();
     }
 }

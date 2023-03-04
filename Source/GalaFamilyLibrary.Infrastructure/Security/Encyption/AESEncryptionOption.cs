@@ -1,4 +1,4 @@
-﻿namespace GalaFamilyLibrary.Infrastructure.Security
+﻿namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
 {
     public class AESEncryptionOption
     {

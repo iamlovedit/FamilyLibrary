@@ -1,28 +1,30 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
+using Microsoft.Extensions.Configuration;
 
 namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {
     public class FileStorageClient
     {
-        private readonly DataProtectionHelper _dataProtectionHelper;
-
-        public string Endpoint { get; set; }
-
-        public string Bucket { get; set; }
-
-        public FileStorageClient(DataProtectionHelper dataProtectionHelper)
+        private readonly IAESEncryptionService _aesEncryptionService;
+        private readonly FileSecurityOption _securityOption;
+        public FileStorageClient(IConfiguration configuration, IAESEncryptionService aesEncryptionService, FileSecurityOption fileSecurityOption)
         {
-            _dataProtectionHelper = dataProtectionHelper;
+            _aesEncryptionService = aesEncryptionService;
+            _securityOption = fileSecurityOption;
+            var section = configuration.GetSection(nameof(FileStorageClient));
+            Endpoint = section[nameof(Endpoint)];
+            Bucket = section[nameof(Bucket)];
         }
+        public string Endpoint { get; }
 
-        public string GetCreateUploadUrl(string path)
-        {
-            return string.Empty;
-        }
+        public string Bucket { get; }
 
-        public string GetDownloadUrl(string path)
+        public string GetFileUrl(string path)
         {
-            return string.Empty;
+            var url = Path.Combine(Endpoint, Bucket, path);
+            var token = _securityOption.GetAccessToken();
+            var protectedToken = _aesEncryptionService.Encrypt(token);
+            return url += $"?token={protectedToken}";
         }
     }
 }

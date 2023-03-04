@@ -1,6 +1,8 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Infrastructure.FileStorage;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Options;
 
 namespace GalaFamilyLibrary.FileStorageService.Controllers;
 
@@ -9,12 +11,13 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers;
 public class FileController : ControllerBase
 {
     private readonly IWebHostEnvironment _environment;
-    private readonly DataProtectionHelper _dataProtectionHelper;
-
-    public FileController(IWebHostEnvironment webHostEnvironment, DataProtectionHelper dataProtectionHelper)
+    private readonly IAESEncryptionService _aESEncryptionService;
+    private readonly FileSecurityOption _fileSecurityOption;
+    public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService, FileSecurityOption fileSecurityOption)
     {
         _environment = webHostEnvironment;
-        _dataProtectionHelper = dataProtectionHelper;
+        _aESEncryptionService = aESEncryptionService;
+        _fileSecurityOption = fileSecurityOption;
     }
 
     [HttpGet]
@@ -25,9 +28,18 @@ public class FileController : ControllerBase
         {
             if (string.IsNullOrEmpty(token))
             {
-                return NotFound();
+                return BadRequest();
             }
-            //var unprotectionToken = _dataProtectionHelper.Decrypt(token, "fileKey");
+            var unprotectionToken = _aESEncryptionService.Decrypt(token);
+            var options = FileSecurityOption.GetOption(unprotectionToken);
+            if (options is null)
+            {
+                return BadRequest();
+            }
+            if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+            {
+                return BadRequest();
+            }
             var filePath = Path.Combine(_environment.ContentRootPath, "Files", path);
             if (!System.IO.File.Exists(filePath))
             {

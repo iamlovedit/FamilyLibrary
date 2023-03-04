@@ -40,6 +40,15 @@ public class Family : IDeletable
         return Path.Combine(environment.WebRootPath, "Families", $"{version}", $"{FileId}.rfa");
     }
 
+    internal string GetFilePath(ushort version)
+    {
+        return Path.Combine("Families", $"{version}", $"{FileId}.rfa");
+    }
+    internal string GetImagePath(ushort version)
+    {
+        return Path.Combine("Images", $"{FileId}.png");
+    }
+
     internal string GetImagePath(IWebHostEnvironment environment)
     {
         return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");

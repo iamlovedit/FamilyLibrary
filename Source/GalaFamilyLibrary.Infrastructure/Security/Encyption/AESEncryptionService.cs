@@ -1,14 +1,14 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Common;
 using Microsoft.Extensions.Options;
 
-namespace GalaFamilyLibrary.Infrastructure.Security
+namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
 {
     public class AESEncryptionService : IAESEncryptionService
     {
         private readonly AESEncryptionOption _encryptionOption;
-        public AESEncryptionService(IOptionsMonitor<AESEncryptionOption> optionsMonitor)
+        public AESEncryptionService(AESEncryptionOption aESEncryptionOption)
         {
-            _encryptionOption = optionsMonitor.CurrentValue;
+            _encryptionOption = aESEncryptionOption;
         }
 
         public string Decrypt(string source, string? passPhrase = null, string? iv = null)

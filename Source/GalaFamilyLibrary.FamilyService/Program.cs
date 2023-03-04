@@ -9,7 +9,9 @@ using GalaFamilyLibrary.Infrastructure.FileStorage;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
+services.AddFileSecurityOptionSetup(builder.Configuration);
 services.AddFileStorageClientSetup(builder.Configuration);
+
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 builder.AddGenericSetup();

@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
@@ -20,7 +20,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security
                 EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
                 ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
             });
-            services.AddSingleton<DataProtectionHelper>();
+            services.AddSingleton<IDataProtectionHelper, DataProtectionHelper>();
         }
     }
 }
