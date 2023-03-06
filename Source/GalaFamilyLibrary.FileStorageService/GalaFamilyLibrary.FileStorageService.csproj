@@ -9,15 +9,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="files\Families\**" />
+      <Compile Remove="files\Images\**" />
       <Compile Remove="wwwroot\**" />
+      <Content Remove="files\Families\**" />
+      <Content Remove="files\Images\**" />
       <Content Remove="wwwroot\**" />
+      <EmbeddedResource Remove="files\Families\**" />
+      <EmbeddedResource Remove="files\Images\**" />
       <EmbeddedResource Remove="wwwroot\**" />
+      <None Remove="files\Families\**" />
+      <None Remove="files\Images\**" />
       <None Remove="wwwroot\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="Files\test.png" />
-      <Content Include="Files\test.rfa" />
     </ItemGroup>
 
     <ItemGroup>

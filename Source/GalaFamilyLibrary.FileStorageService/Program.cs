@@ -1,15 +1,17 @@
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Infrastructure.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var services = builder.Services;
 // Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddAESEncryptionSetup(builder.Configuration);
-builder.Services.AddFileSecurityOptionSetup(builder.Configuration);
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+services.AddCorsSetup();
+services.AddHttpClient();
+services.AddAESEncryptionSetup(builder.Configuration);
+services.AddFileSecurityOptionSetup(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

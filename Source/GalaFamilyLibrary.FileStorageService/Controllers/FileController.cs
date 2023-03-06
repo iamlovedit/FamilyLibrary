@@ -1,74 +1,161 @@
-﻿using GalaFamilyLibrary.Infrastructure.FileStorage;
+﻿using GalaFamilyLibrary.FileStorageService.Models;
+using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System.Net;
 
-namespace GalaFamilyLibrary.FileStorageService.Controllers;
-
-[ApiController]
-[Route("files")]
-public class FileController : ControllerBase
+namespace GalaFamilyLibrary.FileStorageService.Controllers
 {
-    private readonly IWebHostEnvironment _environment;
-    private readonly IAESEncryptionService _aESEncryptionService;
-    private readonly FileSecurityOption _fileSecurityOption;
-    public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService, FileSecurityOption fileSecurityOption)
+    [ApiController]
+    [Route("files")]
+    public class FileController : ControllerBase
     {
-        _environment = webHostEnvironment;
-        _aESEncryptionService = aESEncryptionService;
-        _fileSecurityOption = fileSecurityOption;
-    }
-
-    [HttpGet]
-    [Route("{*path}")]
-    public Task<IActionResult> Download(string path, string token)
-    {
-        return Task.Run<IActionResult>(() =>
+        private readonly IAESEncryptionService _aESEncryptionService;
+        private readonly ILogger<FileController> _logger;
+        private readonly FileSecurityOption _fileSecurityOption;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _fileFolder;
+        public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService, ILogger<FileController> logger, FileSecurityOption fileSecurityOption, IHttpClientFactory httpClientFactory)
         {
+            _aESEncryptionService = aESEncryptionService;
+            _logger = logger;
+            _fileSecurityOption = fileSecurityOption;
+            _httpClientFactory = httpClientFactory;
+            _fileFolder = Path.Combine(webHostEnvironment.ContentRootPath, "files");
+        }
+
+        [HttpGet]
+        [Route("{*path:file}")]
+        public async Task<IActionResult> Download(string path, string token)
+        {
+            return await Task.Run<IActionResult>(() =>
+            {
+                if (string.IsNullOrEmpty(token))
+                {
+                    return Unauthorized();
+                }
+                var unprotectionToken = _aESEncryptionService.Decrypt(token);
+                if (string.IsNullOrEmpty(unprotectionToken))
+                {
+                    return Unauthorized();
+                }
+                try
+                {
+                    var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
+                    if (options is null)
+                    {
+                        return Unauthorized();
+                    }
+                    if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+                    {
+                        _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
+                        return Unauthorized();
+                    }
+                    var filePath = Path.Combine(_fileFolder, path);
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        _logger.LogWarning("download file {filename} failed,file not exist", options.Filename);
+                        return NotFound("file not exist");
+                    }
+
+                    var provider = new FileExtensionContentTypeProvider();
+                    if (!provider.TryGetContentType(filePath, out var contentType))
+                    {
+                        contentType = "application/octet-stream";
+                    }
+
+                    return PhysicalFile(filePath, contentType, options.Filename);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    return BadRequest();
+                }
+            });
+        }
+
+        [HttpPost]
+        [Route("{*path:file}")]
+        public async Task<IActionResult> Upload(string path, string token, IFormFile file, [FromForm] CallbackInfo callback)
+        {
+            var fileExtension = Path.GetExtension(file.FileName).ToLower();
+            if (fileExtension != ".rfa" || fileExtension != ".png")
+            {
+                return Problem("error file format");
+            }
+
             if (string.IsNullOrEmpty(token))
             {
-                return BadRequest();
+                return Unauthorized();
             }
             var unprotectionToken = _aESEncryptionService.Decrypt(token);
-            var options = FileSecurityOption.GetOption(unprotectionToken);
-            if (options is null)
+            if (string.IsNullOrEmpty(unprotectionToken))
             {
-                return BadRequest();
+                return Unauthorized();
             }
-            if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+            try
             {
-                return BadRequest();
+                var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
+                if (options is null)
+                {
+                    return Unauthorized();
+                }
+                if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+                {
+                    _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
+                    return Unauthorized();
+                }
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.OpenReadStream().CopyToAsync(memoryStream);
+                    var fileBytes = memoryStream.ToArray();
+                    if (fileBytes.EncryptMD5() == callback.MD5)
+                    {
+                        var filePath = Path.Combine(_fileFolder, path);
+                        await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
+                        await memoryStream.FlushAsync();
+                        if (fileExtension != ".png")
+                        {
+                            using (var httpClient = _httpClientFactory.CreateClient())
+                            using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, callback.CallbackUrl))
+                            {
+                                var keyValues = new KeyValuePair<string, string>[]
+                                {
+                                   new KeyValuePair<string, string>("name",callback.Name),
+                                   new KeyValuePair<string, string>("categoryId",callback.CategoryId.ToString()),
+                                   new KeyValuePair<string, string>("version",callback.Version.ToString()),
+                                   new KeyValuePair<string, string>("uploaderId",callback.UploaderId.ToString()),
+                                   new KeyValuePair<string, string>("fileId",callback.FileId)
+                                };
+                                var formContent = new FormUrlEncodedContent(keyValues);
+                                httpRequest.Content = formContent;
+                                var httpResponse = await httpClient.SendAsync(httpRequest);
+                                if (httpResponse.StatusCode == HttpStatusCode.OK)
+                                {
+                                    return Ok();
+                                }
+                                else
+                                {
+                                    return Problem();
+                                }
+                            }
+                        }
+                        return Ok("upload succeed");
+                    }
+                    else
+                    {
+                        return Problem();
+                    }
+                }
             }
-            var filePath = Path.Combine(_environment.ContentRootPath, "Files", path);
-            if (!System.IO.File.Exists(filePath))
+            catch (Exception e)
             {
-                return NotFound();
+                _logger.LogError(e.Message);
+                return Problem();
             }
-
-            var provider = new FileExtensionContentTypeProvider();
-            if (!provider.TryGetContentType(filePath, out var contentType))
-            {
-                contentType = "application/octet-stream";
-            }
-
-            return PhysicalFile(filePath, contentType);
-        });
-    }
-
-    [HttpPost]
-    [Route("{*path}")]
-    public Task<IActionResult> Upload(string path, string token, IFormFile file)
-    {
-        return Task.Run<IActionResult>(() =>
-        {
-            //var unprotectionToken = _dataProtectionHelper.Decrypt(token, "fileKey");
-            if (string.IsNullOrEmpty(token))
-            {
-                return NotFound();
-            }
-
-            return Ok();
-        });
+        }
     }
 }
