@@ -78,19 +78,19 @@ public static class EncryptHelper
 
     public static string EncryptAES(string plainText, string passPhrase, string iv)
     {
-        if (plainText == null)
+        if (string.IsNullOrEmpty(plainText))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(plainText)}”不能为 null 或空。", nameof(plainText));
         }
 
-        if (passPhrase == null)
+        if (string.IsNullOrEmpty(passPhrase))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(passPhrase)}”不能为 null 或空。", nameof(passPhrase));
         }
 
-        if (iv == null)
+        if (string.IsNullOrEmpty(iv))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(iv)}”不能为 null 或空。", nameof(iv));
         }
 
         var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -103,14 +103,10 @@ public static class EncryptHelper
             symmetricKey.Padding = PaddingMode.PKCS7;
             using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivBytes))
             {
-                // 加密后的输出流
                 using (var memoryStream = new MemoryStream())
                 {
-                    // 将加密后的目标流（encryptStream）与加密转换（encryptTransform）相连接
                     using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
                     {
-
-                        // 将一个字节序列写入当前 CryptoStream （完成加密的过程）
                         cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length);
                         cryptoStream.FlushFinalBlock();
                         var cipherTextBytes = memoryStream.ToArray();
@@ -121,42 +117,39 @@ public static class EncryptHelper
         }
     }
 
+    /// <remarks>https://stackoverflow.com/questions/69911084/problem-updating-to-net-6-encrypting-string</remarks>
     public static string DecryptAES(string cipherText, string passPhrase, string iv)
     {
         if (string.IsNullOrEmpty(cipherText))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(cipherText)}”不能为 null 或空。", nameof(cipherText));
         }
 
-        if (passPhrase == null)
+        if (string.IsNullOrEmpty(passPhrase))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(passPhrase)}”不能为 null 或空。", nameof(passPhrase));
         }
 
-        if (iv == null)
+        if (string.IsNullOrEmpty(iv))
         {
-            return null;
+            throw new ArgumentException($"“{nameof(iv)}”不能为 null 或空。", nameof(iv));
         }
 
         var cipherTextBytes = Convert.FromBase64String(cipherText);
-        var keyBytes = System.Text.Encoding.UTF8.GetBytes(passPhrase);
-        var ivBytes = System.Text.Encoding.UTF8.GetBytes(iv);
+        var keyBytes = Encoding.UTF8.GetBytes(passPhrase);
+        var ivBytes = Encoding.UTF8.GetBytes(iv);
         using (var symmetricKey = Aes.Create())
         {
             symmetricKey.Mode = CipherMode.CBC;
             symmetricKey.Padding = PaddingMode.PKCS7;
-            // 用当前的 Key 属性和初始化向量 IV 创建对称解密器对象
             using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivBytes))
             {
-                // 解密后的输出流
                 using (var memoryStream = new MemoryStream(cipherTextBytes))
                 {
-                    // 解密后的输出流
                     using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                    using (var plainTextReader = new StreamReader(cryptoStream))
                     {
-                        var plainTextBytes = new byte[cipherTextBytes.Length];
-                        var decryptedByteCount = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length);
-                        return System.Text.Encoding.UTF8.GetString(plainTextBytes, 0, decryptedByteCount);
+                        return plainTextReader.ReadToEnd();
                     }
                 }
             }

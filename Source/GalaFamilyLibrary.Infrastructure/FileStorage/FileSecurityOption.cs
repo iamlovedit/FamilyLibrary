@@ -6,40 +6,33 @@ namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {
     public class FileSecurityOption
     {
+        [JsonConstructor]
+        public FileSecurityOption() { }
         public FileSecurityOption(IConfiguration configuration)
         {
             var section = configuration.GetSection(nameof(FileSecurityOption));
 
-            Expiration = section[nameof(Expiration)].ObjToDate();
             Timespan = (uint)section[nameof(Timespan)].ObjToInt();
             AccessKey = section[nameof(AccessKey)];
         }
 
-        public DateTime Expiration { get; }
+        public DateTime Expiration { get; set; }
 
-        public uint Timespan { get; }
+        public uint Timespan { get; set; }
 
-        public string AccessKey { get; }
+        public string AccessKey { get; set; }
 
-        public string GetAccessToken()
+        public string Filename { get; set; }
+
+        public string GetAccessToken(string filename)
         {
             var token = new
             {
                 expiration = DateTime.Now.AddSeconds(Timespan),
                 accessKey = AccessKey,
+                filename = filename
             };
             return JsonConvert.SerializeObject(token);
-        }
-        public static FileSecurityOption GetOption(string accessToken)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<FileSecurityOption>(accessToken);
-            }
-            catch (Exception)
-            {
-                return default;
-            }
         }
     }
 }

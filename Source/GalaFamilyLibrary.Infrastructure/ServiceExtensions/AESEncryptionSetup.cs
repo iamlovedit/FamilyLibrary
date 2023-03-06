@@ -18,7 +18,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            services.Configure<AESEncryptionOption>(configuration.GetSection(nameof(AESEncryptionOption)));
+            //services.Configure<AESEncryptionOption>(configuration.GetSection(nameof(AESEncryptionOption)));
             services.AddSingleton<AESEncryptionOption>();
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
         }

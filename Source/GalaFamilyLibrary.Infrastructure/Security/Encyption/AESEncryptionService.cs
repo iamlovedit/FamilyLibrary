@@ -17,15 +17,8 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
             {
                 return null;
             }
-            if (string.IsNullOrEmpty(passPhrase))
-            {
-                passPhrase = _encryptionOption.SecretParameterEncryptKey;
-            }
-            if (!string.IsNullOrEmpty(iv))
-            {
-                iv = _encryptionOption.SecretParameterIV;
-            }
-            return EncryptHelper.DecryptAES(source, passPhrase, iv);
+
+            return EncryptHelper.DecryptAES(source, passPhrase ?? _encryptionOption.SecretParameterEncryptKey, iv ?? _encryptionOption.SecretParameterIV);
         }
 
         public string Encrypt(string source, string? passPhrase = null, string? iv = null)
@@ -34,15 +27,8 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
             {
                 return null;
             }
-            if (string.IsNullOrEmpty(passPhrase))
-            {
-                passPhrase = _encryptionOption.SecretParameterEncryptKey;
-            }
-            if (!string.IsNullOrEmpty(iv))
-            {
-                iv = _encryptionOption.SecretParameterIV;
-            }
-            return EncryptHelper.EncryptAES(source, passPhrase, iv);
+
+            return EncryptHelper.EncryptAES(source, passPhrase ?? _encryptionOption.SecretParameterEncryptKey, iv ?? _encryptionOption.SecretParameterIV);
         }
     }
 }

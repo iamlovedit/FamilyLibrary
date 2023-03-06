@@ -1,5 +1,6 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.Extensions.Configuration;
+using System.Web;
 
 namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {
@@ -19,12 +20,19 @@ namespace GalaFamilyLibrary.Infrastructure.FileStorage
 
         public string Bucket { get; }
 
-        public string GetFileUrl(string path)
+        /// <remarks>https://stackoverflow.com/questions/5450190/how-to-encode-the-plus-symbol-in-a-url</remarks>
+        public string GetFileUrl(string filename,string path)
         {
             var url = Path.Combine(Endpoint, Bucket, path);
-            var token = _securityOption.GetAccessToken();
+            var token = _securityOption.GetAccessToken(filename);
             var protectedToken = _aesEncryptionService.Encrypt(token);
-            return url += $"?token={protectedToken}";
+            var values = HttpUtility.ParseQueryString(string.Empty);
+            values["token"] = protectedToken;
+            var uriBuilder = new UriBuilder(url)
+            {
+                Query = values.ToString()
+            };
+            return uriBuilder.ToString();
         }
     }
 }
