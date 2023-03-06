@@ -13,6 +13,8 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
             CreateMap<FamilyCreationDTO, Family>()
                 .ForMember(f => f.CreateTime, options => options.MapFrom(c => DateTime.Now))
                 .ForMember(f => f.FileId, options => { options.MapFrom(f => Guid.NewGuid().ToString("D")); });
+            CreateMap<FamilyCallbackCreationDTO, Family>().
+                ForMember(f => f.CreateTime, options => options.MapFrom(c => DateTime.Now));
         }
     }
 }

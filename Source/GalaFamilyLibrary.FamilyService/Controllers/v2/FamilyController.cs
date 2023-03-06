@@ -24,14 +24,12 @@ public class FamilyController : ApiControllerBase
     private readonly IMapper _mapper;
     private readonly IRedisBasketRepository _redis;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    //private readonly IDataProtectionHelper _dataProtectionHelper;
     private readonly RedisRequirement _redisRequirement;
     private readonly FileStorageClient _fileStorageClient;
 
     public FamilyController(IFamilyService familyService, IFamilyCategoryService categoryService,
         ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis,
-        IWebHostEnvironment webHostEnvironment, IDataProtectionHelper dataProtectionHelper,
-        RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
+        IWebHostEnvironment webHostEnvironment, RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
     {
         _familyService = familyService;
         _categoryService = categoryService;
@@ -50,7 +48,7 @@ public class FamilyController : ApiControllerBase
     {
         return Task.Run<IActionResult>(async () =>
         {
-            var redisKey = $"family/{id}/{familyVersion}";
+            var redisKey = $"family/{id}";
             var family = default(Family);
             if (await _redis.Exist(redisKey))
             {
@@ -66,9 +64,33 @@ public class FamilyController : ApiControllerBase
                 return NotFound("file not exist");
             }
             var familyPath = family.GetFilePath(familyVersion);
-            var url = _fileStorageClient.GetFileUrl(familyPath);
+            var url = _fileStorageClient.GetFileUrl(family.Name, familyPath);
             return Redirect(url);
         });
+    }
+
+    [HttpGet]
+    [Route("uploadUrl")]
+    public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync([FromBody] FamilyCreationDTO familyCreationDto)
+    {
+        var family = _mapper.Map<Family>(familyCreationDto);
+        var redisKey = $"family/{family.FileId}";
+        var dictionary = default(Dictionary<string, string>);
+        if (await _redis.Exist(redisKey))
+        {
+            dictionary = await _redis.Get<Dictionary<string, string>>(redisKey);
+        }
+        else
+        {
+            var familyUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetFilePath(familyCreationDto.Version));
+            var imageUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetImagePath());
+            dictionary = new Dictionary<string, string>
+                {
+                    {"family",familyUrl },
+                    {"image", imageUrl}
+                };
+        }
+        return Success(dictionary);
     }
 
     [HttpGet]
@@ -145,8 +167,7 @@ public class FamilyController : ApiControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync(
-        [FromQuery] CategoryKeywordQuery categoryKeywordQuery)
+    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] CategoryKeywordQuery categoryKeywordQuery)
     {
         var redisKey =
             $"families?keyword={categoryKeywordQuery.Keyword}&categoryId={categoryKeywordQuery.CategoryId}&pageIndex={categoryKeywordQuery.PageIndex}" +
@@ -170,4 +191,20 @@ public class FamilyController : ApiControllerBase
             return SucceedPage(familyPageDto);
         }
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromForm] FamilyCallbackCreationDTO familyCreation)
+    {
+        var family = _mapper.Map<Family>(familyCreation);
+        var id = await _familyService.AddAsync(family);
+        if (id > 0)
+        {
+            return Ok();
+        }
+        else
+        {
+            return Problem();
+        }
+    }
+
 }
