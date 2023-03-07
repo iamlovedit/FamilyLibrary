@@ -76,6 +76,9 @@ csharp_style_allow_blank_lines_between_consecutive_braces_experimental = true:si
 csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:silent
 csharp_style_prefer_switch_expression = true:suggestion
 
+# CS8602: 解引用可能出现空引用。
+dotnet_diagnostic.CS8602.severity = silent
+
 [*.vb]
 #### 命名样式 ####
 
