@@ -25,7 +25,7 @@ public class FamilyController : ApiControllerBase
 
     public FamilyController(IFamilyService familyService, IFamilyCategoryService categoryService,
         ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis,
-        IWebHostEnvironment webHostEnvironment, RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
+        RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
     {
         _familyService = familyService;
         _categoryService = categoryService;

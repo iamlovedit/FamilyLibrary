@@ -21,9 +21,9 @@ namespace GalaFamilyLibrary.Infrastructure.FileStorage
         public string Bucket { get; }
 
         /// <remarks>https://stackoverflow.com/questions/5450190/how-to-encode-the-plus-symbol-in-a-url</remarks>
-        public string GetFileUrl(string filename,string path)
+        public string GetFileUrl(string filename, string path)
         {
-            var url = Path.Combine(Endpoint, Bucket, path);
+            var url = $"{Endpoint}/files/{Bucket}/{path}";
             var token = _securityOption.GetAccessToken(filename);
             var protectedToken = _aesEncryptionService.Encrypt(token);
             var values = HttpUtility.ParseQueryString(string.Empty);
