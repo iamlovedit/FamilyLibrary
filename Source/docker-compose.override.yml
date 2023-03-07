@@ -81,7 +81,18 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
-  
+
+  file_storage:
+    container_name: "file_storage"
+    ports:
+      - "5004:80"
+    networks:
+      - family_library
+    image: file_storage
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
+
   mysql:
     networks:
       - "family_library"
@@ -120,6 +131,7 @@ services:
       - "5341:80"
     networks:
       - family_library
+
 networks:
   family_library:
     driver: bridge

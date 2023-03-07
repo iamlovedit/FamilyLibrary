@@ -9,7 +9,7 @@
         "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:9000;https://localhost:9001"
+      "applicationUrl": "http://localhost:5004;https://localhost:6004"
     },
     "Docker": {
       "commandName": "Docker",
