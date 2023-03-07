@@ -1,7 +1,5 @@
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-using Ocelot.Cache;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
@@ -76,7 +74,7 @@ public static class EncryptHelper
         }
     }
 
-    public static string EncryptAES(string plainText, string passPhrase, string iv)
+    public static string? EncryptAES(string plainText, string passPhrase, string iv)
     {
         if (string.IsNullOrEmpty(plainText))
         {
@@ -118,7 +116,7 @@ public static class EncryptHelper
     }
 
     /// <remarks>https://stackoverflow.com/questions/69911084/problem-updating-to-net-6-encrypting-string</remarks>
-    public static string DecryptAES(string cipherText, string passPhrase, string iv)
+    public static string? DecryptAES(string cipherText, string passPhrase, string iv)
     {
         if (string.IsNullOrEmpty(cipherText))
         {
@@ -134,26 +132,33 @@ public static class EncryptHelper
         {
             throw new ArgumentException($"“{nameof(iv)}”不能为 null 或空。", nameof(iv));
         }
-
-        var cipherTextBytes = Convert.FromBase64String(cipherText);
-        var keyBytes = Encoding.UTF8.GetBytes(passPhrase);
-        var ivBytes = Encoding.UTF8.GetBytes(iv);
-        using (var symmetricKey = Aes.Create())
+        try
         {
-            symmetricKey.Mode = CipherMode.CBC;
-            symmetricKey.Padding = PaddingMode.PKCS7;
-            using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivBytes))
+            var cipherTextBytes = Convert.FromBase64String(cipherText);
+            var keyBytes = Encoding.UTF8.GetBytes(passPhrase);
+            var ivBytes = Encoding.UTF8.GetBytes(iv);
+            using (var symmetricKey = Aes.Create())
             {
-                using (var memoryStream = new MemoryStream(cipherTextBytes))
+                symmetricKey.Mode = CipherMode.CBC;
+                symmetricKey.Padding = PaddingMode.PKCS7;
+                using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivBytes))
                 {
-                    using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-                    using (var plainTextReader = new StreamReader(cryptoStream))
+                    using (var memoryStream = new MemoryStream(cipherTextBytes))
                     {
-                        return plainTextReader.ReadToEnd();
+                        using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                        using (var plainTextReader = new StreamReader(cryptoStream))
+                        {
+                            return plainTextReader.ReadToEnd();
+                        }
                     }
                 }
             }
         }
+        catch (Exception)
+        {
+            return null;
+        }
+
     }
 
     public static string DecryptAES(this string source)

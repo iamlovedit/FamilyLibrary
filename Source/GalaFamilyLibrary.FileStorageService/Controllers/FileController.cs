@@ -82,80 +82,82 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
         public async Task<IActionResult> Upload(string path, string token, IFormFile file, [FromForm] CallbackInfo callback)
         {
             var fileExtension = Path.GetExtension(file.FileName).ToLower();
-            if (fileExtension != ".rfa" || fileExtension != ".png")
+            if (fileExtension == ".rfa" || fileExtension == ".png")
             {
-                return Problem("error file format");
-            }
-
-            if (string.IsNullOrEmpty(token))
-            {
-                return Unauthorized();
-            }
-            var unprotectionToken = _aESEncryptionService.Decrypt(token);
-            if (string.IsNullOrEmpty(unprotectionToken))
-            {
-                return Unauthorized();
-            }
-            try
-            {
-                var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
-                if (options is null)
+                if (string.IsNullOrEmpty(token))
                 {
                     return Unauthorized();
                 }
-                if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+                var unprotectionToken = _aESEncryptionService.Decrypt(token);
+                if (string.IsNullOrEmpty(unprotectionToken))
                 {
-                    _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
                     return Unauthorized();
                 }
-                using (var memoryStream = new MemoryStream())
+                try
                 {
-                    await file.OpenReadStream().CopyToAsync(memoryStream);
-                    var fileBytes = memoryStream.ToArray();
-                    if (fileBytes.EncryptMD5() == callback.MD5)
+                    var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
+                    if (options is null)
                     {
-                        var filePath = Path.Combine(_fileFolder, path);
-                        await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
-                        await memoryStream.FlushAsync();
-                        if (fileExtension != ".png")
+                        return Unauthorized();
+                    }
+                    if (options.AccessKey == _fileSecurityOption.AccessKey || options.Expiration < DateTime.Now)
+                    {
+                        _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
+                        return Unauthorized();
+                    }
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.OpenReadStream().CopyToAsync(memoryStream);
+                        var fileBytes = memoryStream.ToArray();
+                        if (fileBytes.EncryptMD5() == callback.MD5)
                         {
-                            using (var httpClient = _httpClientFactory.CreateClient())
-                            using (var httpRequest = new HttpRequestMessage(HttpMethod.Post, callback.CallbackUrl))
+                            var filePath = Path.Combine(_fileFolder, path);
+                            if (fileExtension != ".png")
                             {
-                                var keyValues = new KeyValuePair<string, string>[]
+                                using (var httpClient = _httpClientFactory.CreateClient())
                                 {
-                                   new KeyValuePair<string, string>("name",callback.Name),
-                                   new KeyValuePair<string, string>("categoryId",callback.CategoryId.ToString()),
-                                   new KeyValuePair<string, string>("version",callback.Version.ToString()),
-                                   new KeyValuePair<string, string>("uploaderId",callback.UploaderId.ToString()),
-                                   new KeyValuePair<string, string>("fileId",callback.FileId)
-                                };
-                                var formContent = new FormUrlEncodedContent(keyValues);
-                                httpRequest.Content = formContent;
-                                var httpResponse = await httpClient.SendAsync(httpRequest);
-                                if (httpResponse.StatusCode == HttpStatusCode.OK)
-                                {
-                                    return Ok();
-                                }
-                                else
-                                {
-                                    return Problem();
+                                    var keyValues = new KeyValuePair<string, string>[]
+                                    {
+                                        new KeyValuePair<string, string>("name",callback.Name),
+                                        new KeyValuePair<string, string>("categoryId",callback.CategoryId.ToString()),
+                                        new KeyValuePair<string, string>("version",callback.Version.ToString()),
+                                        new KeyValuePair<string, string>("uploaderId",callback.UploaderId.ToString()),
+                                        new KeyValuePair<string, string>("fileId",callback.FileId),
+                                    };
+                                    var formContent = new FormUrlEncodedContent(keyValues);
+                                    var httpResponse = await httpClient.PostAsync(callback.CallbackUrl, formContent);
+                                    if (httpResponse.StatusCode == HttpStatusCode.OK)
+                                    {
+                                        await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
+                                        await memoryStream.FlushAsync();
+                                        return Ok("upload succeed");
+                                    }
+                                    else
+                                    {
+                                        return Problem("upload failed");
+                                    }
                                 }
                             }
+                            else
+                            {
+                                await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
+                                await memoryStream.FlushAsync();
+                                return Ok("upload succeed");
+                            }
                         }
-                        return Ok("upload succeed");
-                    }
-                    else
-                    {
-                        return Problem();
+                        else
+                        {
+                            return Problem();
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                    return Problem(e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
-                return Problem();
-            }
+            return BadRequest("error file format");
         }
     }
 }

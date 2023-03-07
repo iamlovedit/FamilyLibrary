@@ -10,6 +10,7 @@ var services = builder.Services;
 // Add services to the container.
 
 services.AddScoped(typeof(IUserService), typeof(UserService));
+services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.AddGenericSetup();
 var app = builder.Build();
 // Configure the HTTP request pipeline.

@@ -6,11 +6,8 @@ using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Security.Policy;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v2;
 
@@ -38,7 +35,6 @@ public class FamilyController : ApiControllerBase
         _redis = redis;
         _redisRequirement = redisRequirement;
         _webHostEnvironment = webHostEnvironment;
-        //_dataProtectionHelper = dataProtectionHelper;
         _fileStorageClient = fileStorageClient;
     }
 
@@ -87,8 +83,10 @@ public class FamilyController : ApiControllerBase
             dictionary = new Dictionary<string, string>
                 {
                     {"family",familyUrl },
-                    {"image", imageUrl}
+                    {"image", imageUrl},
+                    {"fileId",family.FileId }
                 };
+            await _redis.Set(redisKey, dictionary, TimeSpan.FromMinutes(5));
         }
         return Success(dictionary);
     }
@@ -130,10 +128,6 @@ public class FamilyController : ApiControllerBase
                 string.IsNullOrEmpty(keywordQuery.Keyword) ? null : f => f.Name.Contains(keywordQuery.Keyword),
                 keywordQuery.PageIndex, keywordQuery.PageSize, $"{keywordQuery.OrderField} DESC");
             var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            familyPageDto.Data.ForEach(f =>
-            {
-                f.ImageUrl = f.GetImagePath(_webHostEnvironment);
-            });
             await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
             return SucceedPage(familyPageDto);
         }
@@ -156,10 +150,6 @@ public class FamilyController : ApiControllerBase
                 categoryQuery.CategoryId == 0 ? null : f => f.CategoryId == categoryQuery.CategoryId,
                 categoryQuery.PageIndex, categoryQuery.PageSize, $"{categoryQuery.OrderField} DESC");
             var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            familyPageDto.Data.ForEach(f =>
-            {
-                f.ImageUrl = f.GetImagePath(_webHostEnvironment);
-            });
             await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
             return SucceedPage(familyPageDto);
         }
@@ -183,10 +173,6 @@ public class FamilyController : ApiControllerBase
                 categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize,
                 $"{categoryKeywordQuery.OrderField} DESC");
             var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            familyPageDto.Data.ForEach(f =>
-            {
-                f.ImageUrl = f.GetImagePath(_webHostEnvironment);
-            });
             await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
             return SucceedPage(familyPageDto);
         }
@@ -195,16 +181,23 @@ public class FamilyController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromForm] FamilyCallbackCreationDTO familyCreation)
     {
-        var family = _mapper.Map<Family>(familyCreation);
-        var id = await _familyService.AddAsync(family);
-        if (id > 0)
+        try
         {
-            return Ok();
+            var family = _mapper.Map<Family>(familyCreation);
+            var id = await _familyService.AddAsync(family);
+            if (id > 0)
+            {
+                return Ok();
+            }
+            else
+            {
+                return Problem();
+            }
         }
-        else
+        catch (Exception e)
         {
-            return Problem();
+            _logger.LogError(e, e.Message);
+            return Problem(e.Message);
         }
     }
-
 }

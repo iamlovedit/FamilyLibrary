@@ -1,5 +1,4 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Common;
-using Microsoft.Extensions.Options;
 
 namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
 {
@@ -11,7 +10,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
             _encryptionOption = aESEncryptionOption;
         }
 
-        public string Decrypt(string source, string? passPhrase = null, string? iv = null)
+        public string? Decrypt(string source, string? passPhrase = null, string? iv = null)
         {
             if (string.IsNullOrEmpty(source))
             {
@@ -21,7 +20,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
             return EncryptHelper.DecryptAES(source, passPhrase ?? _encryptionOption.SecretParameterEncryptKey, iv ?? _encryptionOption.SecretParameterIV);
         }
 
-        public string Encrypt(string source, string? passPhrase = null, string? iv = null)
+        public string? Encrypt(string source, string? passPhrase = null, string? iv = null)
         {
             if (string.IsNullOrEmpty(source))
             {

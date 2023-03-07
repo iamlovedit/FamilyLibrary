@@ -9,6 +9,7 @@ var services = builder.Services;
 // Add services to the container.
 
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
+services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.AddGenericSetup();
 
 services.AddHttpClient();

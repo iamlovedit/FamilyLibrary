@@ -21,10 +21,10 @@
         public string ImageUrl { get; set; }
 
         public string FileId { get; set; }
-        
+
         internal string GetImagePath(IWebHostEnvironment environment)
         {
-            return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");
+            return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
         }
     }
 }

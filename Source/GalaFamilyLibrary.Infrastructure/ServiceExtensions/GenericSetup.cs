@@ -1,7 +1,6 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +22,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddDataProtectionSetup();
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
             services.AddDbSetup();
 
