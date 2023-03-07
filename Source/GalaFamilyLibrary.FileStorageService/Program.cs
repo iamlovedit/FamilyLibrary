@@ -4,6 +4,7 @@ using GalaFamilyLibrary.Infrastructure.Cors;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+services.AddSeqSetup(builder.Configuration);
 // Add services to the container.
 services.AddControllers();
 services.AddEndpointsApiExplorer();
@@ -20,6 +21,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseRouting();
 
 app.MapControllers();

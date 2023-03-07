@@ -18,7 +18,9 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
         private readonly FileSecurityOption _fileSecurityOption;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _fileFolder;
-        public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService, ILogger<FileController> logger, FileSecurityOption fileSecurityOption, IHttpClientFactory httpClientFactory)
+
+        public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService,
+            ILogger<FileController> logger, FileSecurityOption fileSecurityOption, IHttpClientFactory httpClientFactory)
         {
             _aESEncryptionService = aESEncryptionService;
             _logger = logger;
@@ -37,11 +39,13 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                 {
                     return Unauthorized();
                 }
+
                 var unprotectionToken = _aESEncryptionService.Decrypt(token);
                 if (string.IsNullOrEmpty(unprotectionToken))
                 {
                     return Unauthorized();
                 }
+
                 try
                 {
                     var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
@@ -49,11 +53,13 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     {
                         return Unauthorized();
                     }
+
                     if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
                     {
                         _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
                         return Unauthorized();
                     }
+
                     var filePath = Path.Combine(_fileFolder, path);
                     if (!System.IO.File.Exists(filePath))
                     {
@@ -67,6 +73,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                         contentType = "application/octet-stream";
                     }
 
+                    _logger.LogInformation("download file {filename} succeed", options.Filename);
                     return PhysicalFile(filePath, contentType, options.Filename);
                 }
                 catch (Exception e)
@@ -79,7 +86,8 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
 
         [HttpPost]
         [Route("{*path:file}")]
-        public async Task<IActionResult> Upload(string path, string token, IFormFile file, [FromForm] CallbackInfo callback)
+        public async Task<IActionResult> Upload(string path, string token, IFormFile file,
+            [FromForm] CallbackInfo callback)
         {
             var fileExtension = Path.GetExtension(file.FileName).ToLower();
             if (fileExtension == ".rfa" || fileExtension == ".png")
@@ -88,11 +96,13 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                 {
                     return Unauthorized();
                 }
+
                 var unprotectionToken = _aESEncryptionService.Decrypt(token);
                 if (string.IsNullOrEmpty(unprotectionToken))
                 {
                     return Unauthorized();
                 }
+
                 try
                 {
                     var options = JsonConvert.DeserializeObject<FileSecurityOption>(unprotectionToken);
@@ -100,11 +110,15 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     {
                         return Unauthorized();
                     }
+
                     if (options.AccessKey == _fileSecurityOption.AccessKey || options.Expiration < DateTime.Now)
                     {
-                        _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
+                        _logger.LogWarning(
+                            "upload file {filename},file id {fileId},file extension {fileExtension} failed,access denied",
+                            options.Filename, callback.FileId, fileExtension);
                         return Unauthorized();
                     }
+
                     using (var memoryStream = new MemoryStream())
                     {
                         await file.OpenReadStream().CopyToAsync(memoryStream);
@@ -118,11 +132,11 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                                 {
                                     var keyValues = new KeyValuePair<string, string>[]
                                     {
-                                        new KeyValuePair<string, string>("name",callback.Name),
-                                        new KeyValuePair<string, string>("categoryId",callback.CategoryId.ToString()),
-                                        new KeyValuePair<string, string>("version",callback.Version.ToString()),
-                                        new KeyValuePair<string, string>("uploaderId",callback.UploaderId.ToString()),
-                                        new KeyValuePair<string, string>("fileId",callback.FileId),
+                                        new KeyValuePair<string, string>("name", callback.Name),
+                                        new KeyValuePair<string, string>("categoryId", callback.CategoryId.ToString()),
+                                        new KeyValuePair<string, string>("version", callback.Version.ToString()),
+                                        new KeyValuePair<string, string>("uploaderId", callback.UploaderId.ToString()),
+                                        new KeyValuePair<string, string>("fileId", callback.FileId),
                                     };
                                     var formContent = new FormUrlEncodedContent(keyValues);
                                     var httpResponse = await httpClient.PostAsync(callback.CallbackUrl, formContent);
@@ -130,6 +144,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                                     {
                                         await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
                                         await memoryStream.FlushAsync();
+                                        _logger.LogInformation("upload succeed,file name {filename} file extension {fileExtension}",callback.Name,fileExtension);
                                         return Ok("upload succeed");
                                     }
                                     else
@@ -157,6 +172,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     return Problem(e.Message);
                 }
             }
+
             return BadRequest("error file format");
         }
     }

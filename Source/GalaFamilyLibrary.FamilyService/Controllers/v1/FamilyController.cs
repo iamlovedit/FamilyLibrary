@@ -53,19 +53,25 @@ public class FamilyController : ApiControllerBase
                 family = await _familyService.GetByIdAsync(id);
                 await _redis.Set(redisKey, family, _redisRequirement.CacheTime);
             }
+
             if (family is null)
             {
+                _logger.LogWarning("download family by id: {id} version:{version} failed", id, familyVersion);
                 return NotFound("file not exist");
             }
+
             var familyPath = family.GetFilePath(familyVersion);
             var url = _fileStorageClient.GetFileUrl(family.Name, familyPath);
+            _logger.LogInformation("download family by id: {id} version:{version} succeed,file url is {url}", id,
+                familyVersion, url);
             return Redirect(url);
         });
     }
 
     [HttpGet]
     [Route("uploadUrl")]
-    public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync([FromBody] FamilyCreationDTO familyCreationDto)
+    public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync(
+        [FromBody] FamilyCreationDTO familyCreationDto)
     {
         var family = _mapper.Map<Family>(familyCreationDto);
         var redisKey = $"family/{family.FileId}";
@@ -79,13 +85,15 @@ public class FamilyController : ApiControllerBase
             var familyUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetFilePath(familyCreationDto.Version));
             var imageUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetImagePath());
             dictionary = new Dictionary<string, string>
-                {
-                    {"family",familyUrl },
-                    {"image", imageUrl},
-                    {"fileId",family.FileId }
-                };
+            {
+                { "family", familyUrl },
+                { "image", imageUrl },
+                { "fileId", family.FileId }
+            };
             await _redis.Set(redisKey, dictionary, TimeSpan.FromMinutes(5));
         }
+
+        _logger.LogInformation("create upload url succeed,file id {fileId}", family.FileId);
         return Success(dictionary);
     }
 
@@ -122,6 +130,8 @@ public class FamilyController : ApiControllerBase
         }
         else
         {
+            _logger.LogInformation("query families by keyword {keyword} at page {page}", keywordQuery.Keyword,
+                keywordQuery.PageIndex);
             var familyPage = await _familyService.QueryPageAsync(
                 string.IsNullOrEmpty(keywordQuery.Keyword) ? null : f => f.Name.Contains(keywordQuery.Keyword),
                 keywordQuery.PageIndex, keywordQuery.PageSize, $"{keywordQuery.OrderField} DESC");
@@ -144,6 +154,8 @@ public class FamilyController : ApiControllerBase
         }
         else
         {
+            _logger.LogInformation("query families by category {category} at page {page}", categoryQuery.CategoryId,
+                categoryQuery.PageIndex);
             var familyPage = await _familyService.QueryPageAsync(
                 categoryQuery.CategoryId == 0 ? null : f => f.CategoryId == categoryQuery.CategoryId,
                 categoryQuery.PageIndex, categoryQuery.PageSize, $"{categoryQuery.OrderField} DESC");
@@ -155,7 +167,8 @@ public class FamilyController : ApiControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] CategoryKeywordQuery categoryKeywordQuery)
+    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync(
+        [FromQuery] CategoryKeywordQuery categoryKeywordQuery)
     {
         var redisKey =
             $"families?keyword={categoryKeywordQuery.Keyword}&categoryId={categoryKeywordQuery.CategoryId}&pageIndex={categoryKeywordQuery.PageIndex}" +
@@ -166,6 +179,8 @@ public class FamilyController : ApiControllerBase
         }
         else
         {
+            _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
+                categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
             var familyPage = await _familyService.QueryPageAsync(
                 f => f.Name.Contains(categoryKeywordQuery.Keyword) && f.CategoryId == categoryKeywordQuery.CategoryId,
                 categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize,
@@ -185,10 +200,12 @@ public class FamilyController : ApiControllerBase
             var id = await _familyService.AddAsync(family);
             if (id > 0)
             {
+                _logger.LogInformation("create family succeed,family id {familyId}", family.Id);
                 return Ok();
             }
             else
             {
+                _logger.LogWarning("create family failed,file id {fileId}", family.FileId);
                 return Problem();
             }
         }
