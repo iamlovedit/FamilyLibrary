@@ -5,7 +5,6 @@ EXPOSE 80
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-COPY files /app/files
 WORKDIR /src
 COPY ["GalaFamilyLibrary.FileStorageService/GalaFamilyLibrary.FileStorageService.csproj", "GalaFamilyLibrary.FileStorageService/"]
 COPY ["GalaFamilyLibrary.Infrastructure/GalaFamilyLibrary.Infrastructure.csproj", "GalaFamilyLibrary.Infrastructure/"]
