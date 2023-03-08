@@ -63,7 +63,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     var filePath = Path.Combine(_fileFolder, path);
                     if (!System.IO.File.Exists(filePath))
                     {
-                        _logger.LogWarning("download file {filename} failed,file not exist,current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
+                        _logger.LogWarning("download file {filename} failed,file not exist", options.Filename);
                         return NotFound("file not exist");
                     }
 
@@ -73,7 +73,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                         contentType = "application/octet-stream";
                     }
 
-                    _logger.LogInformation("download file {filename} succeed current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
+                    _logger.LogInformation("download file {filename} succeed", options.Filename);
                     return PhysicalFile(filePath, contentType, options.Filename);
                 }
                 catch (Exception e)
@@ -144,12 +144,11 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                                     {
                                         await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
                                         await memoryStream.FlushAsync();
-                                        _logger.LogInformation("upload succeed,current root path {folder},file path {filePath}", _fileFolder, filePath);
+                                        _logger.LogInformation("upload succeed,file name {filename} file extension {fileExtension}",callback.Name,fileExtension);
                                         return Ok("upload succeed");
                                     }
                                     else
                                     {
-                                        _logger.LogInformation("upload failed,current root path {folder},file path {filePath}", _fileFolder, filePath);
                                         return Problem("upload failed");
                                     }
                                 }
