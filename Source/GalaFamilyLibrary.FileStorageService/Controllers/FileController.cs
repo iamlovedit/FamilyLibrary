@@ -1,4 +1,7 @@
-﻿using GalaFamilyLibrary.FileStorageService.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using GalaFamilyLibrary.FileStorageService.Models;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
@@ -6,6 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Newtonsoft.Json;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace GalaFamilyLibrary.FileStorageService.Controllers
 {
@@ -74,7 +82,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     }
 
                     _logger.LogInformation("download file {filename} succeed current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
-                    return PhysicalFile(filePath, contentType, options.Filename);
+                    return PhysicalFile(filePath, contentType, Path.GetFileName(path));
                 }
                 catch (Exception e)
                 {
