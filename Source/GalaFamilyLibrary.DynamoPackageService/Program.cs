@@ -1,6 +1,9 @@
+using AutoMapper;
+using GalaFamilyLibrary.DynamoPackageService.Helpers;
 using GalaFamilyLibrary.DynamoPackageService.Models;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
@@ -11,6 +14,13 @@ var services = builder.Services;
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.AddGenericSetup();
+
+services.AddSingleton(provider => new MapperConfiguration(config =>
+{
+    var profile = new MappingProfiles(provider.GetService<IAESEncryptionService>());
+    config.AddProfile(profile);
+}).CreateMapper());
+
 
 services.AddHttpClient();
 var app = builder.Build();

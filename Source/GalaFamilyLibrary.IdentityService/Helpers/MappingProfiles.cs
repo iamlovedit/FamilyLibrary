@@ -2,12 +2,13 @@
 using GalaFamilyLibrary.IdentityService.DataTransferObjects;
 using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 
 namespace GalaFamilyLibrary.IdentityService.Helpers
 {
     public class MappingProfiles : Profile
     {
-        public MappingProfiles()
+        public MappingProfiles(IAESEncryptionService aESEncryptionService)
         {
             CreateMap<LibraryUser, LibraryUserDto>();
             CreateMap<LibraryUserCreationDto, LibraryUser>()

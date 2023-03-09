@@ -1,4 +1,5 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Cors;
+using GalaFamilyLibrary.Infrastructure.Filters;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
@@ -49,7 +50,10 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             //api version
             services.AddApiVersionSetup();
 
-            services.AddControllers().AddProduceJsonSetup();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(GlobalExceptionsFilter));
+            }).AddProduceJsonSetup();
 
             services.AddVersionedApiExplorerSetup();
 
