@@ -14,7 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
             {
                 if (!context.ExceptionHandled)
                 {
-                    var message = new MessageModel<Exception>(false, context.Exception.Message);
+                    var message = new MessageModel<Exception>(false, context.Exception.Message, 500);
 
                     context.Result = new ContentResult
                     {
@@ -23,6 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
                         Content = JsonConvert.SerializeObject(message)
                     };
                 }
+
                 //不再继续传递异常
                 context.ExceptionHandled = true;
             });
