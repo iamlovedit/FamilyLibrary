@@ -80,7 +80,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                             foreach (var package in oldPackages)
                             {
                                 var newPackage = newPacakges.FirstOrDefault(p => p.Id == package.Id);
-                                if (newPacakges is null)
+                                if (newPackage is null)
                                 {
                                     package.IsDeleted = true;
                                     await packageDb.UpdateAsync(package);
