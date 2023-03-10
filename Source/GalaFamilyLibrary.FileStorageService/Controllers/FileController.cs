@@ -82,7 +82,9 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     }
 
                     _logger.LogInformation("download file {filename} succeed current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
-                    return PhysicalFile(filePath, contentType, Path.GetFileName(path));
+                    var extension = Path.GetExtension(path).ToLower();
+                    var fileName = $"{options.Filename}{extension}";
+                    return PhysicalFile(filePath, contentType,fileName);
                 }
                 catch (Exception e)
                 {
