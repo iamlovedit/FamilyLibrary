@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using GalaFamilyLibrary.DynamoPackageService.DataTransferObjects;
+using GalaFamilyLibrary.DynamoPackageService.Models;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
@@ -51,51 +53,32 @@ public class PackageController : ApiControllerBase
 
     [HttpGet]
     [Route("{id}/{packageVersion}")]
-    public async Task<IActionResult> Download(string id, string packageVersion)
+    public Task<IActionResult> Download(string id, string packageVersion)
     {
-        _logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
-        return await Task.FromResult(Redirect($"https://dynamopackages.com/download/{id}/{packageVersion}"));
-    }
-
-    [HttpGet]
-    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(int pageIndex = 1,
-        int pageSize = 30, string orderField = "")
-    {
-        _logger.LogInformation("query packages by pageIndex: {pageIndex} pageSize: {pageSize} orderField: {orderField}",
-            pageIndex, pageSize, orderField);
-        var redisKey = $"?pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
-        if (await _redis.Exist(redisKey))
+        return Task.Run<IActionResult>(() =>
         {
-            return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
-        }
-
-        var packagesPage = await _packageService.QueryPageAsync(p => !p.IsDeleted, pageIndex, pageSize,
-            string.IsNullOrEmpty(orderField) ? null : $"{orderField} desc");
-        var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
-        await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
-        return SucceedPage(result);
+            _logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
+            return Redirect($"https://dynamopackages.com/download/{id}/{packageVersion}");
+        });
     }
 
     [HttpGet]
     [Route("packages")]
-    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(string keyword = "", int pageIndex = 1,
-        int pageSize = 30, string orderField = "")
+    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(string? keyword = null, int pageIndex = 1,
+        int pageSize = 30, string? orderField = "downloads")
     {
-        var redisKey = $"packages?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
         _logger.LogInformation(
-            "query packages by keyword: {keyword} page: {pageIndex} pageSize: {pageSize} keyword: {keyword}", keyword,
-            pageIndex,
-            pageSize, keyword);
+            "query packages by keyword: {keyword} pageIndex: {pageIndex} pageSize: {pageSize} orderField: {orderField}",
+            keyword,
+            pageIndex, pageSize, orderField);
+        var redisKey = $"?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
         if (await _redis.Exist(redisKey))
         {
             return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
         }
 
-        var hasKeyword = string.IsNullOrEmpty(keyword);
-        var hasField = string.IsNullOrEmpty(orderField);
-        var packagesPage = await _packageService.QueryPageAsync(
-            hasKeyword ? null : p => p.Name.Contains(keyword) && !p.IsDeleted, pageIndex, pageSize,
-            hasField ? null : $"{orderField} desc");
+        var packagesPage = await _packageService.QueryPageAsync(p => p.Name.Contains(keyword) && !p.IsDeleted,
+            pageIndex, pageSize, orderField ?? $"{orderField} desc");
         var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
         await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
         return SucceedPage(result);
