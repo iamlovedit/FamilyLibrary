@@ -77,8 +77,11 @@ public class PackageController : ApiControllerBase
             return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
         }
 
-        var packagesPage = await _packageService.QueryPageAsync(p => p.Name.Contains(keyword) && !p.IsDeleted,
-            pageIndex, pageSize, orderField ?? $"{orderField} desc");
+        Expression<Func<DynamoPackage, bool>> expression = string.IsNullOrEmpty(keyword)
+            ? p => !p.IsDeleted
+            : p => p.Name.Contains(keyword) && !p.IsDeleted;
+        var packagesPage = await _packageService.QueryPageAsync(expression,
+            pageIndex, pageSize, string.IsNullOrEmpty(orderField) ? null : $"{orderField} desc");
         var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
         await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
         return SucceedPage(result);
