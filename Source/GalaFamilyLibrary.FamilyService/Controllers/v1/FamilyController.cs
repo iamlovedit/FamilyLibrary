@@ -98,25 +98,24 @@ public class FamilyController : ApiControllerBase
     }
 
     [HttpGet]
-    [Route("categories/{id:int}")]
+    [Route("categories")]
     [AllowAnonymous]
-    public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync(int id = 0)
+    public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery]int? parentId = null)
     {
-        _logger.LogInformation("query child categories by parent {parentId}", id);
-        var redisKey = $"family/categories/{id}";
+        _logger.LogInformation("query child categories by parent {parentId}", parentId);
+        var redisKey =parentId==null? $"family/categories":$"family/categories?parentId={parentId}";
         if (await _redis.Exist(redisKey))
         {
             return Success(await _redis.Get<List<FamilyCategoryDTO>>(redisKey));
         }
-        else
-        {
-            var categories = await _categoryService.GetCategoryTreeAsync(id);
-            var categoriesDto = _mapper.Map<List<FamilyCategoryDTO>>(categories);
-            await _redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
-            return Success(categoriesDto);
-        }
+        var categories = await _categoryService.GetCategoryTreeAsync(parentId);
+        var categoriesDto = _mapper.Map<List<FamilyCategoryDTO>>(categories);
+        await _redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
+        return Success(categoriesDto);
     }
-
+    
+    
+    
     [HttpGet]
     [Route("keyword")]
     [AllowAnonymous]
@@ -128,17 +127,14 @@ public class FamilyController : ApiControllerBase
         {
             return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
         }
-        else
-        {
-            _logger.LogInformation("query families by keyword {keyword} at page {page}", keywordQuery.Keyword,
-                keywordQuery.PageIndex);
-            var familyPage = await _familyService.QueryPageAsync(
-                string.IsNullOrEmpty(keywordQuery.Keyword) ? null : f => f.Name.Contains(keywordQuery.Keyword),
-                keywordQuery.PageIndex, keywordQuery.PageSize, $"{keywordQuery.OrderField} DESC");
-            var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
-            return SucceedPage(familyPageDto);
-        }
+        _logger.LogInformation("query families by keyword {keyword} at page {page}", keywordQuery.Keyword,
+            keywordQuery.PageIndex);
+        var familyPage = await _familyService.QueryPageAsync(
+            string.IsNullOrEmpty(keywordQuery.Keyword) ? null : f => f.Name.Contains(keywordQuery.Keyword),
+            keywordQuery.PageIndex, keywordQuery.PageSize, $"{keywordQuery.OrderField} DESC");
+        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
+        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
+        return SucceedPage(familyPageDto);
     }
 
     [HttpGet]
@@ -152,17 +148,14 @@ public class FamilyController : ApiControllerBase
         {
             return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
         }
-        else
-        {
-            _logger.LogInformation("query families by category {category} at page {page}", categoryQuery.CategoryId,
-                categoryQuery.PageIndex);
-            var familyPage = await _familyService.QueryPageAsync(
-                categoryQuery.CategoryId == 0 ? null : f => f.CategoryId == categoryQuery.CategoryId,
-                categoryQuery.PageIndex, categoryQuery.PageSize, $"{categoryQuery.OrderField} DESC");
-            var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
-            return SucceedPage(familyPageDto);
-        }
+        _logger.LogInformation("query families by category {category} at page {page}", categoryQuery.CategoryId,
+            categoryQuery.PageIndex);
+        var familyPage = await _familyService.QueryPageAsync(
+            categoryQuery.CategoryId == 0 ? null : f => f.CategoryId == categoryQuery.CategoryId,
+            categoryQuery.PageIndex, categoryQuery.PageSize, $"{categoryQuery.OrderField} DESC");
+        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
+        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
+        return SucceedPage(familyPageDto);
     }
 
     [HttpGet]
@@ -177,18 +170,15 @@ public class FamilyController : ApiControllerBase
         {
             return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
         }
-        else
-        {
-            _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
-                categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
-            var familyPage = await _familyService.QueryPageAsync(
-                f => f.Name.Contains(categoryKeywordQuery.Keyword) && f.CategoryId == categoryKeywordQuery.CategoryId,
-                categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize,
-                $"{categoryKeywordQuery.OrderField} DESC");
-            var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-            await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
-            return SucceedPage(familyPageDto);
-        }
+        _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
+            categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
+        var familyPage = await _familyService.QueryPageAsync(
+            f => f.Name.Contains(categoryKeywordQuery.Keyword) && f.CategoryId == categoryKeywordQuery.CategoryId,
+            categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize,
+            $"{categoryKeywordQuery.OrderField} DESC");
+        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
+        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
+        return SucceedPage(familyPageDto);
     }
 
     [HttpPost]
@@ -203,11 +193,8 @@ public class FamilyController : ApiControllerBase
                 _logger.LogInformation("create family succeed,family id {familyId}", family.Id);
                 return Ok();
             }
-            else
-            {
-                _logger.LogWarning("create family failed,file id {fileId}", family.FileId);
-                return Problem();
-            }
+            _logger.LogWarning("create family failed,file id {fileId}", family.FileId);
+            return Problem();
         }
         catch (Exception e)
         {
