@@ -24,12 +24,12 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             var httpClient = _httpClientFactory.CreateClient();
-            var responseMessage = await httpClient.GetAsync("https://dynamopackages.com/");
-
+            var responseMessage = await httpClient.GetAsync("https://dynamopackages.com/packages");
+            _logger.LogInformation("start a task for update dynamo packages");
             if (responseMessage.IsSuccessStatusCode)
             {
                 //TODO:update database
-                var json = await responseMessage.Content.ReadAsStringAsync();
+                var json = await responseMessage?.Content?.ReadAsStringAsync();
                 if (!string.IsNullOrEmpty(json))
                 {
                     try
@@ -38,7 +38,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                         var content = jObject["content"];
                         if (!string.IsNullOrEmpty(content?.ToString()))
                         {
-                            var newPacakges = content.ToObject<List<DynamoPackage>>();
+                            var newPackages = content.ToObject<List<DynamoPackage>>();
                             var packageDb = _appDbContext.GetEntityDB<DynamoPackage>();
                             var packageVersionDb = _appDbContext.GetEntityDB<PackageVersion>();
                             var oldPackages = await packageDb.GetListAsync();
@@ -47,7 +47,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                             var addedPackages = new List<DynamoPackage>();
                             var addedPackageVersions = new List<PackageVersion>();
                             var newPackageVersions = new List<PackageVersion>();
-                            foreach (var package in newPacakges)
+                            foreach (var package in newPackages)
                             {
                                 var oldPackage = oldPackages.FirstOrDefault(p => p.Id == package.Id);
                                 if (oldPackage is null)
@@ -73,13 +73,13 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                                     newPackageVersions.Add(pVersion);
                                 }
                             }
-
+                            _logger.LogInformation("added new package count {added},added new version count {addedverson}",addedPackages.Count,addedPackageVersions.Count);
                             await packageDb.InsertRangeAsync(addedPackages);
                             await packageVersionDb.InsertRangeAsync(addedPackageVersions);
 
                             foreach (var package in oldPackages)
                             {
-                                var newPackage = newPacakges.FirstOrDefault(p => p.Id == package.Id);
+                                var newPackage = newPackages.FirstOrDefault(p => p.Id == package.Id);
                                 if (newPackage is null)
                                 {
                                     package.IsDeleted = true;
