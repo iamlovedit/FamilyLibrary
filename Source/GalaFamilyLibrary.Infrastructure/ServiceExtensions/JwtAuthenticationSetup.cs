@@ -1,6 +1,8 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +24,7 @@ public static class JwtAuthenticationSetup
         var key = new SymmetricSecurityKey(buffer);
         var issuer = section["Issuer"];
         var audience = section["Audience"];
-
+        var serviceProvider = services.BuildServiceProvider();
         var tokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
@@ -48,6 +50,8 @@ public static class JwtAuthenticationSetup
         void ConfigureJwtBearer(JwtBearerOptions options)
         {
             options.TokenValidationParameters = tokenValidationParameters;
+            options.SecurityTokenValidators.Clear();
+            options.SecurityTokenValidators.Add(new GalaTokenValidator(serviceProvider.GetService<IAESEncryptionService>()));
             options.Events = new JwtBearerEvents()
             {
                 OnChallenge = challengeContext =>
