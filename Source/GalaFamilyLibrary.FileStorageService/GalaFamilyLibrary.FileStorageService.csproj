@@ -12,16 +12,12 @@
     <ItemGroup>
       <Compile Remove="files\Families\**" />
       <Compile Remove="files\Images\**" />
-      <Compile Remove="wwwroot\**" />
       <Content Remove="files\Families\**" />
       <Content Remove="files\Images\**" />
-      <Content Remove="wwwroot\**" />
       <EmbeddedResource Remove="files\Families\**" />
       <EmbeddedResource Remove="files\Images\**" />
-      <EmbeddedResource Remove="wwwroot\**" />
       <None Remove="files\Families\**" />
       <None Remove="files\Images\**" />
-      <None Remove="wwwroot\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -32,6 +28,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>
