@@ -25,7 +25,7 @@ services.AddQuartz(options =>
     {
         config.ForJob(jobKey)
             .WithIdentity("update packages")
-            .WithCronSchedule("0 0 0 1/1 * ? *", x => x.InTimeZone(TimeZoneInfo.Local);
+            .WithCronSchedule("0 0 0 1/1 * ? *", x => x.InTimeZone(TimeZoneInfo.Local));
     });
 });
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
