@@ -14,6 +14,7 @@ var services = builder.Services;
 // Add services to the container.
 
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
+services.AddScoped(typeof(IVersionService), typeof(VersionService));
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.AddGenericSetup();
 services.AddQuartz(options =>
@@ -25,7 +26,7 @@ services.AddQuartz(options =>
     {
         config.ForJob(jobKey)
             .WithIdentity("update packages")
-            .WithCronSchedule("0 0 0 1/1 * ? *", x => x.InTimeZone(TimeZoneInfo.Local));
+            .WithCronSchedule("0 0 0 1/1 * ? *", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai")));
     });
 });
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
@@ -47,6 +48,7 @@ app.UseInitSeed(dbSeed =>
     {
         return;
     }
+
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Packages");
     dbSeed.InitSeed<DynamoPackage>(file);
