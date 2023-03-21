@@ -18,8 +18,9 @@ public class DynamoPackage : IDeletable
     [JsonProperty("latest_version_update")]
     public DateTime UpdateTime { get; set; }
 
+    [SugarColumn(IsNullable = true, Length = 65535)]
     public string Description { get; set; }
-    
+
     [SugarColumn(IsNullable = true, Length = 10000)]
     public string? License { get; set; }
 
