@@ -1,4 +1,5 @@
 ﻿using GalaFamilyLibrary.DynamoPackageService.Models;
+using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.Transaction;
 using Newtonsoft.Json.Linq;
@@ -10,13 +11,16 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
     {
         private readonly AppDbContext _appDbContext;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IRedisBasketRepository _redis;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<FetchPackagesJob> _logger;
 
-        public FetchPackagesJob(AppDbContext appDbContext, IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory, ILogger<FetchPackagesJob> logger)
+        public FetchPackagesJob(AppDbContext appDbContext, IUnitOfWork unitOfWork, IRedisBasketRepository redis,
+            IHttpClientFactory httpClientFactory, ILogger<FetchPackagesJob> logger)
         {
             _appDbContext = appDbContext;
             _unitOfWork = unitOfWork;
+            _redis = redis;
             _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
@@ -38,6 +42,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                         {
                             return;
                         }
+
                         var newPackages = content.ToObject<List<DynamoPackage>>();
                         var packageDb = _appDbContext.GetEntityDB<DynamoPackage>();
                         var packageVersionDb = _appDbContext.GetEntityDB<PackageVersion>();
@@ -62,7 +67,8 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                             foreach (var pVersion in package.Versions)
                             {
                                 pVersion.PackageId = package.Id;
-                                var oldPackageVersion = oldPackageVersions.FirstOrDefault(pv => pv.PackageId == package.Id && pv.Version == pVersion.Version);
+                                var oldPackageVersion = oldPackageVersions.FirstOrDefault(pv =>
+                                    pv.PackageId == package.Id && pv.Version == pVersion.Version);
                                 if (oldPackageVersion is null)
                                 {
                                     addedPackageVersions.Add(pVersion);
@@ -71,9 +77,11 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                                 {
                                     await packageVersionDb.UpdateAsync(pVersion);
                                 }
+
                                 newPackageVersions.Add(pVersion);
                             }
                         }
+
                         await packageDb.InsertRangeAsync(addedPackages);
                         await packageVersionDb.InsertRangeAsync(addedPackageVersions);
 
@@ -86,17 +94,23 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                                 await packageDb.UpdateAsync(package);
                             }
                         }
+
                         foreach (var pVersion in oldPackageVersions)
                         {
-                            var newVersion = newPackageVersions.FirstOrDefault(pv => pv.PackageId == pVersion.PackageId && pv.Version == pVersion.Version);
+                            var newVersion = newPackageVersions.FirstOrDefault(pv =>
+                                pv.PackageId == pVersion.PackageId && pv.Version == pVersion.Version);
                             if (newVersion is null)
                             {
                                 pVersion.IsDeleted = true;
                                 await packageVersionDb.UpdateAsync(pVersion);
                             }
                         }
-                        _logger.LogInformation("added new package count {added},added new version count {addedverson}", addedPackages.Count, addedPackageVersions.Count);
+
+                        _logger.LogInformation(
+                            "update succeed,added new package count {added},added new version count {addedverson}",
+                            addedPackages.Count, addedPackageVersions.Count);
                         _unitOfWork.CommitTransaction();
+                        await _redis.Clear();
                     }
                     catch (Exception e)
                     {
@@ -105,7 +119,10 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                     }
                 }
             }
-            _logger.LogError("request error,http status code : {code}", responseMessage.StatusCode);
+            else
+            {
+                _logger.LogError("request error,http status code : {code}", responseMessage.StatusCode);
+            }
         }
     }
 }
