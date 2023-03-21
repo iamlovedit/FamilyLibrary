@@ -22,7 +22,7 @@ public class PackageController : ApiControllerBase
     private readonly ILogger<PackageController> _logger;
     private readonly IRedisBasketRepository _redis;
     private readonly IMapper _mapper;
-    private readonly RedisRequirement _redisRequirement;
+    private readonly TimeSpan _cacheTime;
 
     public PackageController(IPackageService packageService, ILogger<PackageController> logger,
         IRedisBasketRepository redis, IMapper mapper, RedisRequirement redisRequirement)
@@ -31,30 +31,28 @@ public class PackageController : ApiControllerBase
         _logger = logger;
         _redis = redis;
         _mapper = mapper;
-        _redisRequirement = redisRequirement;
+        _cacheTime = TimeSpan.FromDays(1);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<MessageModel<PackageDTO>> GetPackageAsync(string id)
+    public async Task<MessageModel<PageModel<PackageVersionDTO>>> GetVersionAsync([FromRoute] string id,
+        [FromServices] IVersionService versionService, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        _logger.LogInformation("query packages details by id {id}", id);
-        var redisKey = $"packages/{id}";
+        _logger.LogInformation("query package versions by id {id}", id);
+        var redisKey = $"package/versions/{id}?pageIndex={pageIndex}&pageSize={pageSize}";
         if (await _redis.Exist(redisKey))
         {
-            return Success(await _redis.Get<PackageDTO>(redisKey));
+            return SucceedPage(await _redis.Get<PageModel<PackageVersionDTO>>(redisKey));
         }
 
-        var package = await _packageService.GetDynamoPackageByIdAsync(id);
-        if (package != null)
-        {
-            var packageDto = _mapper.Map<PackageDTO>(package);
-            await _redis.Set(redisKey, packageDto, _redisRequirement.CacheTime);
-            return Success(packageDto);
-        }
-
-        return Failed<PackageDTO>("not found");
+        var versionPage =
+            await versionService.QueryPageAsync(pv => pv.PackageId == id && !pv.IsDeleted, pageIndex, pageSize);
+        var result = versionPage.ConvertTo<PackageVersionDTO>(_mapper);
+        await _redis.Set(redisKey, result, _cacheTime);
+        return SucceedPage(result);
     }
+
 
     [HttpGet]
     [Route("{id}/{packageVersion}")]
@@ -88,13 +86,14 @@ public class PackageController : ApiControllerBase
         var packagesPage = await _packageService.QueryPageAsync(expression,
             pageIndex, pageSize, string.IsNullOrEmpty(orderField) ? null : $"{orderField} desc");
         var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
-        await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
+        await _redis.Set(redisKey, result, _cacheTime);
         return SucceedPage(result);
     }
 
     [HttpPost]
     [Authorize(Roles = "Administrator")]
-    public async Task<MessageModel<string>> UpdateAsync([FromServices] IHttpClientFactory clientFactory, [FromServices] AppDbContext appDbContext, [FromServices] IUnitOfWork unitOfWork)
+    public async Task<MessageModel<string>> UpdateAsync([FromServices] IHttpClientFactory clientFactory,
+        [FromServices] AppDbContext appDbContext, [FromServices] IUnitOfWork unitOfWork)
     {
         var httpClient = clientFactory.CreateClient();
         var responseMessage = await httpClient.GetAsync("https://dynamopackages.com/packages");
@@ -111,6 +110,7 @@ public class PackageController : ApiControllerBase
                     {
                         return Failed<string>("获取原网站数据失败");
                     }
+
                     var newPackages = content.ToObject<List<DynamoPackage>>();
                     var packageDb = appDbContext.GetEntityDB<DynamoPackage>();
                     var packageVersionDb = appDbContext.GetEntityDB<PackageVersion>();
@@ -135,7 +135,8 @@ public class PackageController : ApiControllerBase
                         foreach (var pVersion in package.Versions)
                         {
                             pVersion.PackageId = package.Id;
-                            var oldPackageVersion = oldPackageVersions.FirstOrDefault(pv => pv.PackageId == package.Id && pv.Version == pVersion.Version);
+                            var oldPackageVersion = oldPackageVersions.FirstOrDefault(pv =>
+                                pv.PackageId == package.Id && pv.Version == pVersion.Version);
                             if (oldPackageVersion is null)
                             {
                                 addedPackageVersions.Add(pVersion);
@@ -144,6 +145,7 @@ public class PackageController : ApiControllerBase
                             {
                                 await packageVersionDb.UpdateAsync(pVersion);
                             }
+
                             newPackageVersions.Add(pVersion);
                         }
                     }
@@ -160,16 +162,20 @@ public class PackageController : ApiControllerBase
                             await packageDb.UpdateAsync(package);
                         }
                     }
+
                     foreach (var pVersion in oldPackageVersions)
                     {
-                        var newVersion = newPackageVersions.FirstOrDefault(pv => pv.PackageId == pVersion.PackageId && pv.Version == pVersion.Version);
+                        var newVersion = newPackageVersions.FirstOrDefault(pv =>
+                            pv.PackageId == pVersion.PackageId && pv.Version == pVersion.Version);
                         if (newVersion is null)
                         {
                             pVersion.IsDeleted = true;
                             await packageVersionDb.UpdateAsync(pVersion);
                         }
                     }
-                    _logger.LogInformation("added new package count {added},added new version count {addedverson}", addedPackages.Count, addedPackageVersions.Count);
+
+                    _logger.LogInformation("added new package count {added},added new version count {addedverson}",
+                        addedPackages.Count, addedPackageVersions.Count);
                     unitOfWork.CommitTransaction();
                 }
                 catch (Exception e)
@@ -178,9 +184,11 @@ public class PackageController : ApiControllerBase
                     _logger.LogError(e, e.Message);
                     return Failed(e.Message);
                 }
+
                 return Success("更新完成");
             }
         }
+
         return Failed($"request failed,http status code {responseMessage.StatusCode}");
     }
 }
