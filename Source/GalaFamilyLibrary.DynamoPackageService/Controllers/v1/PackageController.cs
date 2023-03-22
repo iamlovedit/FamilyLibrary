@@ -47,7 +47,8 @@ public class PackageController : ApiControllerBase
         }
 
         var versionPage =
-            await versionService.QueryPageAsync(pv => pv.PackageId == id && !pv.IsDeleted, pageIndex, pageSize);
+            await versionService.QueryPageAsync(pv => pv.PackageId == id && !pv.IsDeleted, pageIndex, pageSize,
+                "createTime desc");
         var result = versionPage.ConvertTo<PackageVersionDTO>(_mapper);
         await _redis.Set(redisKey, result, _cacheTime);
         return SucceedPage(result);
