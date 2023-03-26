@@ -7,6 +7,7 @@ using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using Polly;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,7 +27,8 @@ services.AddQuartz(options =>
     {
         config.ForJob(jobKey)
             .WithIdentity("update packages")
-            .WithCronSchedule("0 0 0 1/1 * ? *", x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai")));
+            .WithCronSchedule("0 0 5 1/1 * ? *",
+                x => x.InTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Asia/Shanghai")));
     });
 });
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
@@ -36,7 +38,8 @@ services.AddSingleton(provider => new MapperConfiguration(config =>
     config.AddProfile(profile);
 }).CreateMapper());
 
-services.AddHttpClient();
+services.AddHttpClient<FetchPackagesJob>().AddTransientHttpErrorPolicy(
+    policy => policy.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3, retryAttempt))));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
