@@ -97,13 +97,32 @@ public class FamilyController : ApiControllerBase
         return Success(dictionary);
     }
 
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("all")]
+    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] PageQueryBase pageQuery)
+    {
+        _logger.LogInformation("query families by page index {pageIndex},page size {pageSize},order field {orderField}", pageQuery.PageIndex, pageQuery.PageSize, pageQuery.OrderField);
+        var redisKey = $"family/pageIndex={pageQuery.PageIndex}&pageSize={pageQuery.PageSize}&orderField={pageQuery.OrderField}";
+        if (await _redis.Exist(redisKey))
+        {
+            var page = await _redis.Get<PageModel<FamilyDTO>>(redisKey);
+            return SucceedPage(page);
+        }
+        var familyPage = await _familyService.QueryPageAsync(null, pageQuery.PageIndex, pageQuery.PageSize, pageQuery.OrderField);
+        var dtoPage = familyPage.ConvertTo<FamilyDTO>(_mapper);
+        await _redis.Set(redisKey, dtoPage, _redisRequirement.CacheTime);
+        return SucceedPage(dtoPage);
+    }
+
+
     [HttpGet]
     [Route("categories")]
     [AllowAnonymous]
-    public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery]int? parentId = null)
+    public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery] int? parentId = null)
     {
         _logger.LogInformation("query child categories by parent {parentId}", parentId);
-        var redisKey =parentId==null? $"family/categories":$"family/categories?parentId={parentId}";
+        var redisKey = parentId == null ? $"family/categories" : $"family/categories?parentId={parentId}";
         if (await _redis.Exist(redisKey))
         {
             return Success(await _redis.Get<List<FamilyCategoryDTO>>(redisKey));
@@ -113,13 +132,11 @@ public class FamilyController : ApiControllerBase
         await _redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
         return Success(categoriesDto);
     }
-    
-    
-    
+
     [HttpGet]
     [Route("keyword")]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] KeywordQuery keywordQuery)
+    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageByKeywordAsync([FromQuery] KeywordQuery keywordQuery)
     {
         var redisKey =
             $"families?keyword={keywordQuery.Keyword}&pageIndex={keywordQuery.PageIndex}&pageSize={keywordQuery.PageSize}&orderField={keywordQuery.OrderField}";
@@ -140,7 +157,7 @@ public class FamilyController : ApiControllerBase
     [HttpGet]
     [Route("category")]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] CategoryQuery categoryQuery)
+    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageByCategoryAsync([FromQuery] CategoryQuery categoryQuery)
     {
         var redisKey =
             $"families?categoryId={categoryQuery.CategoryId}&pageIndex={categoryQuery.PageIndex}&pageSize={categoryQuery.PageSize}&orderField={categoryQuery.OrderField}";
