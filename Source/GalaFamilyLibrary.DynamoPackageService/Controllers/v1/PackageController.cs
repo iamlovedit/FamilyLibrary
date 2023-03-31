@@ -1,5 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Net.Http;
+using System.Text;
+using System.Xml;
 using AutoMapper;
 using GalaFamilyLibrary.DynamoPackageService.DataTransferObjects;
 using GalaFamilyLibrary.DynamoPackageService.Models;
@@ -25,7 +27,7 @@ public class PackageController : ApiControllerBase
     private readonly TimeSpan _cacheTime;
 
     public PackageController(IPackageService packageService, ILogger<PackageController> logger,
-        IRedisBasketRepository redis, IMapper mapper, RedisRequirement redisRequirement)
+        IRedisBasketRepository redis, IMapper mapper)
     {
         _packageService = packageService;
         _logger = logger;
@@ -191,5 +193,41 @@ public class PackageController : ApiControllerBase
         }
 
         return Failed($"request failed,http status code {responseMessage.StatusCode}");
+    }
+
+    [HttpPost]
+    [Route("parser")]
+    [Consumes("multipart/form-data")]
+    public async Task<MessageModel<string>> ParseXmlAsync(IFormFile xmlFile, [FromServices] IWebHostEnvironment webHostEnvironment)
+    {
+        var fileExtension = Path.GetExtension(xmlFile.FileName);
+        if (fileExtension.ToLower() != ".xml")
+        {
+            return Failed("请上传xml文件");
+        }
+        using (var memoryStream = new MemoryStream())
+        {
+            await xmlFile.OpenReadStream().CopyToAsync(memoryStream);
+            var fileBytes = memoryStream.ToArray();
+            var md5 = fileBytes.EncryptMD5();
+            var redisKey = $"package/xml/{md5}";
+            if (await _redis.Exist(redisKey))
+            {
+                var str = await _redis.GetValue(redisKey);
+                return Success(str);
+            }
+            else
+            {
+                var folder = webHostEnvironment.WebRootPath;
+                var xmlPath = Path.Combine(folder, xmlFile.FileName);
+                await System.IO.File.WriteAllBytesAsync(xmlPath, fileBytes);
+                var xmldoc = new XmlDocument();
+                xmldoc.Load(xmlPath);
+                var str = xmldoc.OuterXml;
+                await _redis.Set(redisKey, str, _cacheTime);
+                System.IO.File.Delete(xmlPath);
+                return Success(str);
+            }
+        }
     }
 }
