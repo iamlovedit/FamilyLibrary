@@ -15,6 +15,8 @@ public class Family : IDeletable
 
     public DateTime UpdateTime { get; set; }
 
+    public int Stars { get; set; }
+    
     //[Navigate(NavigateType.OneToOne, nameof(UploaderId))]
     //public LibraryUser User { get; set; }
 

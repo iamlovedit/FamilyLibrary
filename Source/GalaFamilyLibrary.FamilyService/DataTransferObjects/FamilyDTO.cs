@@ -11,7 +11,9 @@
         public ushort Version { get; set; }
 
         public int UploaderId { get; set; }
-
+        
+        public int Stars { get; set; }
+        
         public FamilyCategoryDTO Category { get; set; }
 
         public DateTime CreateTime { get; set; }
