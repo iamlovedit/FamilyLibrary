@@ -13,7 +13,9 @@
         public int UploaderId { get; set; }
         
         public int Stars { get; set; }
-        
+
+        public uint Downloads { get; set; }
+
         public FamilyCategoryDTO Category { get; set; }
 
         public DateTime CreateTime { get; set; }
