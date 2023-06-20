@@ -15,7 +15,7 @@ public class KeywordQuery : PageQueryBase
 
 public class CategoryKeywordQuery : PageQueryBase
 {
-    [JsonProperty(Order = 1)] public string Keyword { get; set; }
+    [JsonProperty(Order = 1)] public string? Keyword { get; set; }
     
-    [JsonProperty(Order = 2)] public int CategoryId { get; set; }
+    [JsonProperty(Order = 2)] public int? CategoryId { get; set; }
 }

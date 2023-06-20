@@ -8,6 +8,7 @@ using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
@@ -97,25 +98,6 @@ public class FamilyController : ApiControllerBase
         return Success(dictionary);
     }
 
-    [AllowAnonymous]
-    [HttpGet]
-    [Route("all")]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync([FromQuery] PageQueryBase pageQuery)
-    {
-        _logger.LogInformation("query families by page index {pageIndex},page size {pageSize},order field {orderField}", pageQuery.PageIndex, pageQuery.PageSize, pageQuery.OrderField);
-        var redisKey = $"family/pageIndex={pageQuery.PageIndex}&pageSize={pageQuery.PageSize}&orderField={pageQuery.OrderField}";
-        if (await _redis.Exist(redisKey))
-        {
-            var page = await _redis.Get<PageModel<FamilyDTO>>(redisKey);
-            return SucceedPage(page);
-        }
-        var familyPage = await _familyService.QueryPageAsync(null, pageQuery.PageIndex, pageQuery.PageSize, pageQuery.OrderField);
-        var dtoPage = familyPage.ConvertTo<FamilyDTO>(_mapper);
-        await _redis.Set(redisKey, dtoPage, _redisRequirement.CacheTime);
-        return SucceedPage(dtoPage);
-    }
-
-
     [HttpGet]
     [Route("categories")]
     [AllowAnonymous]
@@ -134,54 +116,12 @@ public class FamilyController : ApiControllerBase
     }
 
     [HttpGet]
-    [Route("keyword")]
-    [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageByKeywordAsync([FromQuery] KeywordQuery keywordQuery)
-    {
-        var redisKey =
-            $"families?keyword={keywordQuery.Keyword}&pageIndex={keywordQuery.PageIndex}&pageSize={keywordQuery.PageSize}&orderField={keywordQuery.OrderField}";
-        if (await _redis.Exist(redisKey))
-        {
-            return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
-        }
-        _logger.LogInformation("query families by keyword {keyword} at page {page}", keywordQuery.Keyword,
-            keywordQuery.PageIndex);
-        var familyPage = await _familyService.QueryPageAsync(
-            string.IsNullOrEmpty(keywordQuery.Keyword) ? null : f => f.Name.Contains(keywordQuery.Keyword),
-            keywordQuery.PageIndex, keywordQuery.PageSize, $"{keywordQuery.OrderField} DESC");
-        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
-        return SucceedPage(familyPageDto);
-    }
-
-    [HttpGet]
-    [Route("category")]
-    [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageByCategoryAsync([FromQuery] CategoryQuery categoryQuery)
-    {
-        var redisKey =
-            $"families?categoryId={categoryQuery.CategoryId}&pageIndex={categoryQuery.PageIndex}&pageSize={categoryQuery.PageSize}&orderField={categoryQuery.OrderField}";
-        if (await _redis.Exist(redisKey))
-        {
-            return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
-        }
-        _logger.LogInformation("query families by category {category} at page {page}", categoryQuery.CategoryId,
-            categoryQuery.PageIndex);
-        var familyPage = await _familyService.QueryPageAsync(
-            categoryQuery.CategoryId == 0 ? null : f => f.CategoryId == categoryQuery.CategoryId,
-            categoryQuery.PageIndex, categoryQuery.PageSize, $"{categoryQuery.OrderField} DESC");
-        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
-        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
-        return SucceedPage(familyPageDto);
-    }
-
-    [HttpGet]
     [AllowAnonymous]
     public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync(
         [FromQuery] CategoryKeywordQuery categoryKeywordQuery)
     {
         var redisKey =
-            $"families?keyword={categoryKeywordQuery.Keyword}&categoryId={categoryKeywordQuery.CategoryId}&pageIndex={categoryKeywordQuery.PageIndex}" +
+            $"families?keyword={categoryKeywordQuery.Keyword ?? "null"}&categoryId={categoryKeywordQuery.CategoryId}&pageIndex={categoryKeywordQuery.PageIndex}" +
             $"&pageSize={categoryKeywordQuery.PageSize}&orderField={categoryKeywordQuery.OrderField}";
         if (await _redis.Exist(redisKey))
         {
@@ -189,10 +129,12 @@ public class FamilyController : ApiControllerBase
         }
         _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
             categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
-        var familyPage = await _familyService.QueryPageAsync(
-            f => f.Name.Contains(categoryKeywordQuery.Keyword) && f.CategoryId == categoryKeywordQuery.CategoryId,
-            categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize,
-            $"{categoryKeywordQuery.OrderField} DESC");
+        var expression = Expressionable.Create<Family>()
+            .AndIF(categoryKeywordQuery.CategoryId != null, f => f.CategoryId == categoryKeywordQuery.CategoryId)
+            .AndIF(categoryKeywordQuery.Keyword != null, f => f.Name.Contains(categoryKeywordQuery.Keyword))
+            .ToExpression();
+
+        var familyPage = await _familyService.QueryPageAsync(expression, categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize, $"{categoryKeywordQuery.OrderField} DESC");
         var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
         await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
         return SucceedPage(familyPageDto);
