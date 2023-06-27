@@ -5,5 +5,5 @@ namespace GalaFamilyLibrary.FamilyService.Services;
 
 public interface IFamilyService:IServiceBase<Family>
 {
-    
+    Task<Family> GetFamilyDetails(int id);
 }

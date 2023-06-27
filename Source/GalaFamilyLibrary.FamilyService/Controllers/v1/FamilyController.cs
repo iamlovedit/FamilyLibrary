@@ -70,6 +70,28 @@ public class FamilyController : ApiControllerBase
     }
 
     [HttpGet]
+    [Route("{id:int}")]
+    public async Task<MessageModel<FamilyDTO>> GetFamilyDetailAsync(int id)
+    {
+        var redisKey = $"familyDetails/{id}";
+        if (await _redis.Exist(redisKey))
+        {
+            return Success(await _redis.Get<FamilyDTO>(redisKey));
+        }
+        var family = await GetFamilyDetailAsync(id);
+        if (family is null)
+        {
+            _logger.LogWarning("query family details failed id: {id} ,family not existed", id);
+            return Failed<FamilyDTO>("资源不存在", 404);
+        }
+        _logger.LogInformation("query family details succeed id: {id}", id);
+        var familyDto = _mapper.Map<FamilyDTO>(family);
+        await _redis.Set(redisKey, familyDto, _redisRequirement.CacheTime);
+        return Success(familyDto);
+    }
+
+
+    [HttpGet]
     [Route("uploadUrl")]
     public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync(
         [FromBody] FamilyCreationDTO familyCreationDto)

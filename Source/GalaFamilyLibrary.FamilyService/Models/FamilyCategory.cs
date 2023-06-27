@@ -5,16 +5,16 @@ namespace GalaFamilyLibrary.FamilyService.Models
     [SugarTable("family_categories")]
     public class FamilyCategory
     {
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true,ColumnName ="category_id")]
         public int Id { get; set; }
 
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(IsNullable = false, ColumnName = "category_name")]
         public string Name { get; set; }
 
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(IsNullable = false, ColumnName = "category_code")]
         public string Code { get; set; }
 
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(IsNullable = true, ColumnName = "category_parent")]
         public int ParentId { get; set; }
 
         [SugarColumn(IsIgnore = true)]

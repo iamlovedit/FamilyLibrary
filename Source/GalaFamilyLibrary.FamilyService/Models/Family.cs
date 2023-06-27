@@ -6,22 +6,28 @@ namespace GalaFamilyLibrary.FamilyService.Models;
 [SugarTable("families")]
 public class Family : IDeletable
 {
-    [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
+    [SugarColumn(IsIdentity = true, IsPrimaryKey = true, ColumnName = "family_id")]
     public int Id { get; set; }
 
-    [SugarColumn(IsNullable = false)] public string Name { get; set; }
+    [SugarColumn(IsNullable = false, ColumnName = "family_name")]
+    public string Name { get; set; }
 
+    [SugarColumn(IsNullable = false, ColumnName = "family_createTime")]
     public DateTime CreateTime { get; set; }
 
+    [SugarColumn(ColumnName = "family_updateTime")]
     public DateTime UpdateTime { get; set; }
 
+    [SugarColumn(ColumnName = "family_stars")]
     public int Stars { get; set; }
 
+    [SugarColumn(ColumnName = "family_downloads")]
     public uint Downloads { get; set; }
 
     //[Navigate(NavigateType.OneToOne, nameof(UploaderId))]
     //public LibraryUser User { get; set; }
 
+    [SugarColumn(ColumnName = "family_uploaderId")]
     public int UploaderId { get; set; }
 
     [Navigate(NavigateType.OneToOne, nameof(CategoryId))]
@@ -30,13 +36,16 @@ public class Family : IDeletable
     [Navigate(NavigateType.OneToMany, nameof(FamilyParameter.FamilyId))]
     public List<FamilyParameter> Parameters { get; set; }
 
-    [SugarColumn(ColumnDataType = "varchar(4000)", IsJson = true)]
+    [SugarColumn(ColumnDataType = "varchar(4000)", IsJson = true, ColumnName = "family_versions")]
     public List<ushort> Versions { get; set; }
 
+    [SugarColumn(ColumnName = "family_categoryId")]
     public int CategoryId { get; set; }
 
+    [SugarColumn(ColumnName = "family_fileId")]
     public string FileId { get; set; }
 
+    [SugarColumn(ColumnName = "family_isDeleted")]
     public bool IsDeleted { get; set; }
 
     internal string GetFilePath(IWebHostEnvironment environment, ushort version)

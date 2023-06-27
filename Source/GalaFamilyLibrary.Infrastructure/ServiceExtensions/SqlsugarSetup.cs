@@ -25,13 +25,17 @@ public static class SqlsugarSetup
             client.Aop.OnLogExecuting = (sql, paras) => { Console.WriteLine(sql); };
 #endif
         }
-
         var sqlsugar = new SqlSugarScope(new ConnectionConfig()
         {
-            DbType = DbType.MySql,
+            DbType = DbType.PostgreSQL,
             IsAutoCloseConnection = true,
             ConnectionString = configuration["DATABASE_CONNECTION_STRING"],
-            InitKeyType = InitKeyType.Attribute
+            InitKeyType = InitKeyType.Attribute,
+            MoreSettings=new ConnMoreSettings
+            {
+                PgSqlIsAutoToLower=false,
+                PgSqlIsAutoToLowerCodeFirst=false
+            }
         }, ConfigAction);
         sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
         services.AddSingleton<ISqlSugarClient>(sqlsugar);
