@@ -6,7 +6,7 @@ namespace GalaFamilyLibrary.FamilyService.Models
     [SugarTable("family_parameters")]
     public class FamilyParameter:IDeletable
     {
-        [SugarColumn(ColumnName = "parameter_id")]
+        [SugarColumn(ColumnName = "parameter_id",IsPrimaryKey =true,IsIdentity =true)]
         public int Id { get; set; }
 
         [SugarColumn(ColumnName = "parameter_name")]
@@ -15,10 +15,16 @@ namespace GalaFamilyLibrary.FamilyService.Models
         [SugarColumn(ColumnName = "parameter_value")]
         public string Value { get; set; }
 
-        [SugarColumn(ColumnName = "parameter_definitionId")]
-        public int DefinitionId { get; set; }
+        [SugarColumn(ColumnName ="parameter_stoargeType")]
+        public StorageType StorageType { get; set; }
 
-        [SugarColumn(ColumnName = "parameter_familyId")]
+        [SugarColumn(ColumnName ="parameter_groupId")]
+        public int GroupId { get; set; }
+
+        [Navigate(NavigateType.OneToOne,nameof(GroupId))]
+        public ParameterGroup Group { get; set; }
+
+        [SugarColumn(ColumnName ="parameter_familyId")]
         public int FamilyId { get; set; }
 
         [SugarColumn(ColumnName = "parameter_isDeleted")]

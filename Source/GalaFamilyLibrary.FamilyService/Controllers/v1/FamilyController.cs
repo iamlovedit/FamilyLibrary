@@ -82,7 +82,7 @@ public class FamilyController : ApiControllerBase
         if (family is null)
         {
             _logger.LogWarning("query family details failed id: {id} ,family not existed", id);
-            return Failed<FamilyDTO>("资源不存在", 404);
+            return Failed<FamilyDTO>("family not exist", 404);
         }
         _logger.LogInformation("query family details succeed id: {id}", id);
         var familyDto = _mapper.Map<FamilyDTO>(family);

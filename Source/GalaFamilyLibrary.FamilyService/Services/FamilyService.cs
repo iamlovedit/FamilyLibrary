@@ -15,7 +15,7 @@ public class FamilyService : ServiceBase<Family>, IFamilyService
     {
         return await DAL.DbContext.Queryable<Family>().
                Includes(f => f.Category).
-               Includes(f => f.Parameters).
+               Includes(f => f.Parameters, p => p.Group).
                InSingleAsync(id);
     }
 }

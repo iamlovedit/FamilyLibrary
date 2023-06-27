@@ -1,4 +1,4 @@
-namespace GalaFamilyLibrary.FamilyService.Models;
+namespace GalaFamilyLibrary.FamilyService.DataTransferObjects;
 
 public class FamilyCreationDTO
 {
