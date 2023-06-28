@@ -45,7 +45,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             }
 
             var user = _mapper.Map<LibraryUser>(userCreationDto);
-            var id = await _userService.AddAsync(user);
+            var id = await _userService.AddSnowflakeAsync(user);
             if (id > 0)
             {
                 return Success("注册成功");

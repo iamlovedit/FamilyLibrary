@@ -59,12 +59,14 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var password = loginUser.Password.MD5Encrypt32(user.Salt);
                 if (!password.Equals(user.Password))
                 {
+                    await _userService.UpdateUserLoginErrorCountAsync(user);
                     return Failed<string>("用户名或者密码错误");
                 }
 
+
                 _logger.LogInformation("user {user} logged in", user.Username);
                 user.LastLoginTime = DateTime.Now;
-                await _userService.UpdateAsync(user);
+                await _userService.UpdateUserLastLoginAsync(user);
 
                 var roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
                 var claims = new List<Claim>()
