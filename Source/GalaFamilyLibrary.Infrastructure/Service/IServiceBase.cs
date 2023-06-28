@@ -26,6 +26,10 @@ public interface IServiceBase<T> where T : class, new()
 
     Task<int> AddAsync(IList<T> entities);
 
+    Task<long> AddSnowflakeAsync(T entity);
+
+    Task<IList<long>> AddSnowflakesAsync(IList<T> entities);
+
     Task<bool> DeleteByIdAsync(object id);
 
     Task<bool> DeleteAsync(T entity);

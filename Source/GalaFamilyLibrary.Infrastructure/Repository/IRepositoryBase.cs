@@ -19,6 +19,10 @@ public interface IRepositoryBase<T> where T : class, new()
 
     Task<int> AddAsync(T entity);
 
+    Task<long> AddSnowflakeAsync(T entity);
+
+    Task<IList<long>> AddSnowflakesAsync(IList<T> entities);
+
     Task<int> AddAsync(IList<T> entities);
 
     Task<bool> DeleteByIdAsync(object id);

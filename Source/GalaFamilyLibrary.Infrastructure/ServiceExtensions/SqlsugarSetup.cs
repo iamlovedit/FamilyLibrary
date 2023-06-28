@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;
+using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
@@ -19,6 +20,9 @@ public static class SqlsugarSetup
             throw new ArgumentNullException(nameof(configuration));
         }
 
+        var workId = configuration.GetSection("SnowFlake")["WorkId"].ObjToInt();
+        SnowFlakeSingle.WorkId = workId;
+
         void ConfigAction(SqlSugarClient client)
         {
 #if DEBUG
@@ -31,10 +35,10 @@ public static class SqlsugarSetup
             IsAutoCloseConnection = true,
             ConnectionString = configuration["DATABASE_CONNECTION_STRING"],
             InitKeyType = InitKeyType.Attribute,
-            MoreSettings=new ConnMoreSettings
+            MoreSettings = new ConnMoreSettings
             {
-                PgSqlIsAutoToLower=false,
-                PgSqlIsAutoToLowerCodeFirst=false
+                PgSqlIsAutoToLower = false,
+                PgSqlIsAutoToLowerCodeFirst = false
             }
         }, ConfigAction);
         sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
