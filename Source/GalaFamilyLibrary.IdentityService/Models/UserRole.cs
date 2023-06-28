@@ -6,11 +6,11 @@ namespace GalaFamilyLibrary.IdentityService.Models
     [SugarTable("library_user_roles")]
     public class UserRole : IDeletable
     {
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true, ColumnName = "user_roles_id")]
-        public int Id { get; set; }
+        [SugarColumn(IsPrimaryKey = true, ColumnName = "user_roles_id")]
+        public long Id { get; set; }
 
         [SugarColumn(ColumnName = "user_roles_userId")]
-        public int UserId { get; set; }
+        public long UserId { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         [Navigate(NavigateType.OneToOne, nameof(UserId))]
@@ -21,10 +21,10 @@ namespace GalaFamilyLibrary.IdentityService.Models
         public LibraryRole Role { get; set; }
 
         [SugarColumn(ColumnName = "user_roles_roleId")]
-        public int RoleId { get; set; }
+        public long RoleId { get; set; }
 
         [SugarColumn(ColumnName = "user_roles_createId")]
-        public int CreateId { get; set; }
+        public long CreateId { get; set; }
 
         [SugarColumn(ColumnName = "user_roles_createTime")]
         public DateTime CreateTime { get; set; }

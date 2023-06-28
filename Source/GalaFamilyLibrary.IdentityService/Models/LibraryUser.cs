@@ -6,8 +6,8 @@ namespace GalaFamilyLibrary.IdentityService.Models
     [SugarTable("library_users")]
     public class LibraryUser:IDeletable
     {
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true,ColumnName ="user_id")]
-        public int Id { get; set; }
+        [SugarColumn(IsPrimaryKey = true,ColumnName ="user_id")]
+        public long Id { get; set; }
 
         [SugarColumn(IsNullable = false, Length = 5, ColumnName = "user_name")]
         public string Name { get; set; }
