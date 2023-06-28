@@ -3,35 +3,40 @@ using SqlSugar;
 
 namespace GalaFamilyLibrary.IdentityService.Models
 {
-    [SugarTable("users")]
+    [SugarTable("library_users")]
     public class LibraryUser:IDeletable
     {
-        [SugarColumn(IsPrimaryKey = true, IsIdentity = true)]
+        [SugarColumn(IsPrimaryKey = true, IsIdentity = true,ColumnName ="user_id")]
         public int Id { get; set; }
 
-        [SugarColumn(IsNullable = false, Length = 5)]
+        [SugarColumn(IsNullable = false, Length = 5, ColumnName = "user_name")]
         public string Name { get; set; }
 
+        [SugarColumn(ColumnName = "user_email")]
         public string Email { get; set; }
 
-        [SugarColumn(IsNullable = false, Length = 16)]
+        [SugarColumn(IsNullable = false, Length = 16, ColumnName = "user_username")]
         public string Username { get; set; }
 
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(IsNullable = false, ColumnName = "user_password")]
         public string Password { get; set; }
 
-        [SugarColumn(IsNullable = false)]
+        [SugarColumn(IsNullable = false, ColumnName = "user_salt")]
         public string Salt { get; set; }
 
+        [SugarColumn(ColumnName = "user_registerTime")]
         public DateTime CreateTime { get; set; }
 
+        [SugarColumn(ColumnName = "user_updateTime")]
         public DateTime UpdateTime { get; set; }
 
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(IsNullable = true,ColumnName = "user_lastLogin")]
         public DateTime LastLoginTime { get; set; }
 
+        [SugarColumn(ColumnName = "user_isDeleted")]
         public bool IsDeleted { get; set; }
 
+        [SugarColumn(ColumnName = "user_errorCount")]
         public int ErrorCount { get; set; }
 
     }
