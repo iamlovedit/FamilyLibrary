@@ -6,7 +6,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE_CONNECTION_STRING": "server=localhost;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4",
+        "DATABASE_CONNECTION_STRING": "server=localhost;port=5432;database=dynamo_packages;userid=root;password=zy4318422;",
         "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
       },
       "dotnetRunMessages": true,
@@ -19,7 +19,7 @@
       "useSSL": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Staging",
-        "DATABASE_CONNECTION_STRING": "server=mysql;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4",
+        "DATABASE_CONNECTION_STRING": "server=postgresql;port=5432;database=dynamo_packages;userid=root;password=zy4318422;",
         "REDIS_CONNECTION_STRING": "redis,password=zy4318422"
       }
     }
