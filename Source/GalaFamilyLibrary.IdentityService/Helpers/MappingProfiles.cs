@@ -14,6 +14,7 @@ namespace GalaFamilyLibrary.IdentityService.Helpers
             CreateMap<LibraryUserCreationDto, LibraryUser>()
                 .ForMember(u => u.CreateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
                 .ForMember(u => u.UpdateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
+                .ForMember(u => u.LastLoginTime, options => { options.MapFrom((ud, u) => DateTime.Now)})
                 .ForMember(u => u.Salt,
                     options => { options.MapFrom((ud, u) => { return u.Salt = Guid.NewGuid().ToString("N"); }); })
                 .ForMember(u => u.Password,
