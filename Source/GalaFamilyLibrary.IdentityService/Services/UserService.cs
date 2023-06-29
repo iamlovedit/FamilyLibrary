@@ -32,19 +32,5 @@ namespace GalaFamilyLibrary.IdentityService.Services
             }
             return roleNames;
         }
-
-        public async Task<bool> UpdateUserLastLoginAsync(LibraryUser user)
-        {
-            return await DAL.DbContext.Updateable<LibraryUser>(user).
-                UpdateColumns(u => u.LastLoginTime).
-                ExecuteCommandHasChangeAsync();
-        }
-
-        public async Task<bool> UpdateUserLoginErrorCountAsync(LibraryUser user)
-        {
-            return await DAL.DbContext.Updateable<LibraryUser>(user).
-                UpdateColumns(u => u.ErrorCount).
-                ExecuteCommandHasChangeAsync();
-        }
     }
 }
