@@ -31,6 +31,8 @@ public interface IRepositoryBase<T> where T : class, new()
 
     Task<bool> UpdateAsync(T entity);
 
+    Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T, object>> expression);
+
     Task<T> GetSingleByIdAsync(object id);
 
     Task<T> GetFirstByExpressionAsync(Expression<Func<T, bool>> expression);

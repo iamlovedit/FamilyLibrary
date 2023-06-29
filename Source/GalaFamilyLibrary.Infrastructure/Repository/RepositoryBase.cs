@@ -71,6 +71,12 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
         return await _db.Deleteable<T>(entity).ExecuteCommandHasChangeAsync();
     }
 
+    public async Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T,object>> expression)
+    {
+        return await _db.Updateable<T>(entity).UpdateColumns(expression).ExecuteCommandHasChangeAsync();
+    }
+
+
     public async Task<bool> UpdateAsync(T entity)
     {
         return await _db.Updateable<T>(entity).ExecuteCommandHasChangeAsync();
@@ -104,4 +110,5 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
         return await _db.Queryable<T>().OrderBy(field + method).Take(count).ToListAsync();
     }
 
+   
 }

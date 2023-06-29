@@ -92,4 +92,9 @@ public abstract class ServiceBase<T> : IServiceBase<T> where T : class, new()
     {
         return await DAL.AddSnowflakesAsync(entities);
     }
+
+    public async Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T, object>> expression)
+    {
+        return await DAL.UpdateColumnsAsync(entity, expression);
+    }
 }
