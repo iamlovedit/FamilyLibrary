@@ -13,6 +13,4 @@ public class FamilyCategoryDTO
     public List<FamilyCategoryDTO> Children { get; set; }
 
     public FamilyCategoryDTO Parent { get; set; }
-
-    public List<FamilyDTO> Families { get; set; }
 }

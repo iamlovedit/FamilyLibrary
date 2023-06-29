@@ -38,8 +38,8 @@ public class FamilyController : ApiControllerBase
     }
 
     [HttpGet]
-    [Route("{id:int}/{familyVersion:int}")]
-    public Task<IActionResult> DownloadFamilyAsync(int id, ushort familyVersion)
+    [Route("{id:long}/{familyVersion:int}")]
+    public Task<IActionResult> DownloadFamilyAsync(long id, ushort familyVersion)
     {
         return Task.Run<IActionResult>(async () =>
         {
@@ -70,22 +70,22 @@ public class FamilyController : ApiControllerBase
     }
 
     [HttpGet]
-    [Route("{id:int}")]
-    public async Task<MessageModel<FamilyDTO>> GetFamilyDetailAsync(int id)
+    [Route("details/{id:long}")]
+    public async Task<MessageModel<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
     {
         var redisKey = $"familyDetails/{id}";
         if (await _redis.Exist(redisKey))
         {
-            return Success(await _redis.Get<FamilyDTO>(redisKey));
+            return Success(await _redis.Get<FamilyDetailDTO>(redisKey));
         }
-        var family = await GetFamilyDetailAsync(id);
+        var family = await _familyService.GetFamilyDetails(id);
         if (family is null)
         {
             _logger.LogWarning("query family details failed id: {id} ,family not existed", id);
-            return Failed<FamilyDTO>("family not exist", 404);
+            return Failed<FamilyDetailDTO>("family not exist", 404);
         }
         _logger.LogInformation("query family details succeed id: {id}", id);
-        var familyDto = _mapper.Map<FamilyDTO>(family);
+        var familyDto = _mapper.Map<FamilyDetailDTO>(family);
         await _redis.Set(redisKey, familyDto, _redisRequirement.CacheTime);
         return Success(familyDto);
     }
@@ -139,7 +139,7 @@ public class FamilyController : ApiControllerBase
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyDTO>>> GetFamiliesPageAsync(
+    public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetFamiliesPageAsync(
         [FromQuery] CategoryKeywordQuery categoryKeywordQuery)
     {
         var redisKey =
@@ -147,7 +147,7 @@ public class FamilyController : ApiControllerBase
             $"&pageSize={categoryKeywordQuery.PageSize}&orderField={categoryKeywordQuery.OrderField}";
         if (await _redis.Exist(redisKey))
         {
-            return SucceedPage(await _redis.Get<PageModel<FamilyDTO>>(redisKey));
+            return SucceedPage(await _redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
         }
         _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
             categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
@@ -156,8 +156,8 @@ public class FamilyController : ApiControllerBase
             .AndIF(categoryKeywordQuery.Keyword != null, f => f.Name.Contains(categoryKeywordQuery.Keyword))
             .ToExpression();
 
-        var familyPage = await _familyService.QueryPageAsync(expression, categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize, $"{categoryKeywordQuery.OrderField} DESC");
-        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(_mapper);
+        var familyPage = await _familyService.GetFamilyPageAsync(expression, categoryKeywordQuery.PageIndex, categoryKeywordQuery.PageSize, $"{categoryKeywordQuery.OrderField} DESC");
+        var familyPageDto = familyPage.ConvertTo<FamilyBasicDTO>(_mapper);
         await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
         return SucceedPage(familyPageDto);
     }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SqlSugar.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
@@ -59,14 +60,15 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var password = loginUser.Password.MD5Encrypt32(user.Salt);
                 if (!password.Equals(user.Password))
                 {
-                    await _userService.UpdateUserLoginErrorCountAsync(user);
+                    user.ErrorCount += 1;
+                    await _userService.UpdateColumnsAsync(user, u => u.ErrorCount);
                     return Failed<string>("用户名或者密码错误");
                 }
 
-
                 _logger.LogInformation("user {user} logged in", user.Username);
+                user.ErrorCount = 0;
                 user.LastLoginTime = DateTime.Now;
-                await _userService.UpdateUserLastLoginAsync(user);
+                await _userService.UpdateColumnsAsync(user, u => new { u.ErrorCount, u.LastLoginTime });
 
                 var roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
                 var claims = new List<Claim>()

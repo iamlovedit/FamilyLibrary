@@ -1,30 +1,26 @@
 ﻿namespace GalaFamilyLibrary.FamilyService.DataTransferObjects
 {
-    public class FamilyDTO
+    public class FamilyDetailDTO
     {
-        public int Id { get; set; }
-
-        public int CategoryId { get; set; }
+        public long Id { get; set; }
 
         public string Name { get; set; }
 
-        public ushort Version { get; set; }
+        public FamilyCategoryBasicDTO Category { get; set; }
 
-        public int UploaderId { get; set; }
-        
+        public List<FamilySymbolDTO> Symbols { get; set; }
+
+        public List<ushort> Versions { get; set; }
+
+        public string FileId { get; set; }
+
         public int Stars { get; set; }
 
         public uint Downloads { get; set; }
 
-        public FamilyCategoryDTO Category { get; set; }
-
         public DateTime CreateTime { get; set; }
 
         public string? Description { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public string FileId { get; set; }
 
         internal string GetImagePath(IWebHostEnvironment environment)
         {

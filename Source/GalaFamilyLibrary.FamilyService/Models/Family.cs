@@ -6,8 +6,8 @@ namespace GalaFamilyLibrary.FamilyService.Models;
 [SugarTable("families")]
 public class Family : IDeletable
 {
-    [SugarColumn(IsIdentity = true, IsPrimaryKey = true, ColumnName = "family_id")]
-    public int Id { get; set; }
+    [SugarColumn(IsPrimaryKey = true, ColumnName = "family_id")]
+    public long Id { get; set; }
 
     [SugarColumn(IsNullable = false, ColumnName = "family_name")]
     public string Name { get; set; }
@@ -28,13 +28,14 @@ public class Family : IDeletable
     //public LibraryUser User { get; set; }
 
     [SugarColumn(ColumnName = "family_uploaderId")]
-    public int UploaderId { get; set; }
+    public long UploaderId { get; set; }
+
+    [Navigate(NavigateType.OneToMany, nameof(FamilySymbol.FamilyId))]
+    public List<FamilySymbol> Symbols { get; set; }
 
     [Navigate(NavigateType.OneToOne, nameof(CategoryId))]
     public FamilyCategory Category { get; set; }
 
-    [Navigate(NavigateType.OneToMany, nameof(FamilyParameter.FamilyId))]
-    public List<FamilyParameter> Parameters { get; set; }
 
     [SugarColumn(ColumnDataType = "varchar(4000)", IsJson = true, ColumnName = "family_versions")]
     public List<ushort> Versions { get; set; }
