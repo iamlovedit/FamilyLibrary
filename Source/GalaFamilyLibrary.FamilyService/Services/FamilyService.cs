@@ -19,7 +19,7 @@ public class FamilyService : ServiceBase<Family>, IFamilyService
     {
         return await DAL.DbContext.Queryable<Family>().
                Includes(f => f.Category).
-               Includes(f => f.Symbols, s => s.Parameters).
+               Includes(f => f.Symbols, s => s.Parameters,s=>s.Definition).
                InSingleAsync(id);
     }
 

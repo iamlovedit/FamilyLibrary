@@ -15,6 +15,12 @@ services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
+services.AddScoped(typeof(IFamilyParameterService), typeof(FamilyParameterService));
+services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefinitionService));
+services.AddScoped(typeof(IParameterGroupService), typeof(ParameterGroupService));
+services.AddScoped(typeof(IParameterTypeService), typeof(ParameterTypeService));
+services.AddScoped(typeof(IParameterUnitTypeService), typeof(ParameterUnitTypeService));
+
 builder.AddGenericSetup();
 services.AddSingleton(provider => new MapperConfiguration(config =>
 {
