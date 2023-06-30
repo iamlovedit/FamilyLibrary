@@ -1,10 +1,698 @@
 [
   {
-    "id": 1674317823305981952,
-    "name": "尺寸标注"
+    "id": 1674609333536690176,
+    "name": "地理位置",
+    "value": "PG_GEO_LOCATION",
+    "isDeleted": false
   },
   {
-    "id": 1674317823310176256,
-    "name": "材质和装饰"
+    "id": 1674609333536690177,
+    "name": "结构剖面几何图形",
+    "value": "PG_STRUCTURAL_SECTION_GEOMETRY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690178,
+    "name": "材质热属性",
+    "value": "PG_ENERGY_ANALYSIS_BLDG_CONS_MTL_THERMAL_PROPS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690179,
+    "name": "房间/空间数据",
+    "value": "PG_ENERGY_ANALYSIS_ROOM_SPACE_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690180,
+    "name": "建筑数据",
+    "value": "PG_ENERGY_ANALYSIS_BUILDING_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690181,
+    "name": "集",
+    "value": "PG_COUPLER_ARRAY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690182,
+    "name": "高级",
+    "value": "PG_ENERGY_ANALYSIS_ADVANCED",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690183,
+    "name": "释放/杆件力",
+    "value": "PG_RELEASES_MEMBER_FORCES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690184,
+    "name": "次端点",
+    "value": "PG_SECONDARY_END",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690185,
+    "name": "主端点",
+    "value": "PG_PRIMARY_END",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690186,
+    "name": "力矩",
+    "value": "PG_MOMENTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690187,
+    "name": "力",
+    "value": "PG_FORCES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690188,
+    "name": "预制产品数据",
+    "value": "PG_FABRICATION_PRODUCT_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690189,
+    "name": "参照",
+    "value": "PG_REFERENCE",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690190,
+    "name": "几何图形位置",
+    "value": "PG_GEOMETRY_POSITIONING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690191,
+    "name": "分区几何图形",
+    "value": "PG_DIVISION_GEOMETRY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690192,
+    "name": "管段和管件",
+    "value": "PG_SEGMENTS_FITTINGS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690193,
+    "name": "延伸(结束/顶部)",
+    "value": "PG_CONTINUOUSRAIL_END_TOP_EXTENSION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690194,
+    "name": "延伸(起始/底部)",
+    "value": "PG_CONTINUOUSRAIL_BEGIN_BOTTOM_EXTENSION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690195,
+    "name": "转角",
+    "value": "PG_STAIRS_WINDERS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690196,
+    "name": "支撑",
+    "value": "PG_STAIRS_SUPPORTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690197,
+    "name": "终点连接",
+    "value": "PG_STAIRS_OPEN_END_CONNECTION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690198,
+    "name": "扶手 2",
+    "value": "PG_RAILING_SYSTEM_SECONDARY_FAMILY_HANDRAILS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690199,
+    "name": "终端",
+    "value": "PG_TERMINTATION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690200,
+    "name": "踏板/踢面",
+    "value": "PG_STAIRS_TREADS_RISERS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690201,
+    "name": "计算规则",
+    "value": "PG_STAIRS_CALCULATOR_RULES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690202,
+    "name": "直径     (长度单位或厚度的百分比)",
+    "value": "PG_SPLIT_PROFILE_DIMENSIONS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690203,
+    "name": "长度",
+    "value": "PG_LENGTH",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690204,
+    "name": "节点",
+    "value": "PG_NODES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690205,
+    "name": "分析属性",
+    "value": "PG_ANALYTICAL_PROPERTIES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690206,
+    "name": "分析平差",
+    "value": "PG_ANALYTICAL_ALIGNMENT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690207,
+    "name": "上升/下降",
+    "value": "PG_SYSTEMTYPE_RISEDROP",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690208,
+    "name": "内衬",
+    "value": "PG_LINING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690209,
+    "name": "绝缘层",
+    "value": "PG_INSULATION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690210,
+    "name": "整个图例",
+    "value": "PG_OVERALL_LEGEND",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690211,
+    "name": "可见性",
+    "value": "PG_VISIBILITY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690212,
+    "name": "支座",
+    "value": "PG_SUPPORT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690213,
+    "name": "V 网格",
+    "value": "PG_RAILING_SYSTEM_SEGMENT_V_GRID",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690214,
+    "name": "U 网格",
+    "value": "PG_RAILING_SYSTEM_SEGMENT_U_GRID",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690215,
+    "name": "支柱",
+    "value": "PG_RAILING_SYSTEM_SEGMENT_POSTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690216,
+    "name": "图案余数",
+    "value": "PG_RAILING_SYSTEM_SEGMENT_PATTERN_REMAINDER",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690217,
+    "name": "图案重复",
+    "value": "PG_RAILING_SYSTEM_SEGMENT_PATTERN_REPEAT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690218,
+    "name": "线段图案(默认)",
+    "value": "PG_RAILING_SYSTEM_FAMILY_SEGMENT_PATTERN",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690219,
+    "name": "扶手 1",
+    "value": "PG_RAILING_SYSTEM_FAMILY_HANDRAILS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690220,
+    "name": "顶部扶栏",
+    "value": "PG_RAILING_SYSTEM_FAMILY_TOP_RAIL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690221,
+    "name": "能量模型 - 建筑设备",
+    "value": "PG_CONCEPTUAL_ENERGY_DATA_BUILDING_SERVICES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690222,
+    "name": "数据",
+    "value": "PG_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690223,
+    "name": "电气 - 线路",
+    "value": "PG_ELECTRICAL_CIRCUITING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690224,
+    "name": "常规",
+    "value": "PG_GENERAL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690225,
+    "name": "自适应构件",
+    "value": "PG_FLEXIBLE",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690226,
+    "name": "能量分析模型",
+    "value": "PG_ENERGY_ANALYSIS_CONCEPTUAL_MODEL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690227,
+    "name": "详图模型",
+    "value": "PG_ENERGY_ANALYSIS_DETAILED_MODEL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690228,
+    "name": "基本",
+    "value": "PG_ENERGY_ANALYSIS_DETAILED_AND_CONCEPTUAL_MODELS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690229,
+    "name": "管件",
+    "value": "PG_FITTING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690230,
+    "name": "概念能量数据",
+    "value": "PG_CONCEPTUAL_ENERGY_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690231,
+    "name": "面积",
+    "value": "PG_AREA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690232,
+    "name": "模型属性",
+    "value": "PG_ADSK_MODEL_PROPERTIES",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690233,
+    "name": "V 网格",
+    "value": "PG_CURTAIN_GRID_V",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690234,
+    "name": "U 网格",
+    "value": "PG_CURTAIN_GRID_U",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690235,
+    "name": "显示",
+    "value": "PG_DISPLAY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690236,
+    "name": "分析结果",
+    "value": "PG_ANALYSIS_RESULTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690237,
+    "name": "编辑板形状",
+    "value": "PG_SLAB_SHAPE_EDIT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690238,
+    "name": "光域",
+    "value": "PG_LIGHT_PHOTOMETRICS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690239,
+    "name": "填充图案应用",
+    "value": "PG_PATTERN_APPLICATION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690240,
+    "name": "绿色建筑属性",
+    "value": "PG_GREEN_BUILDING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690241,
+    "name": "轮廓 2",
+    "value": "PG_PROFILE_2",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690242,
+    "name": "轮廓 1",
+    "value": "PG_PROFILE_1",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690243,
+    "name": "轮廓",
+    "value": "PG_PROFILE",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690244,
+    "name": "下弦杆",
+    "value": "PG_TRUSS_FAMILY_BOTTOM_CHORD",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690245,
+    "name": "上弦杆",
+    "value": "PG_TRUSS_FAMILY_TOP_CHORD",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690246,
+    "name": "斜腹杆",
+    "value": "PG_TRUSS_FAMILY_DIAG_WEB",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690247,
+    "name": "竖向腹杆",
+    "value": "PG_TRUSS_FAMILY_VERT_WEB",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690248,
+    "name": "标题文字",
+    "value": "PG_TITLE",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690249,
+    "name": "消防系统",
+    "value": "PG_FIRE_PROTECTION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690250,
+    "name": "转动",
+    "value": "PG_ROTATION_ABOUT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690251,
+    "name": "平动",
+    "value": "PG_TRANSLATION_IN",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690252,
+    "name": "分析模型",
+    "value": "PG_ANALYTICAL_MODEL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690253,
+    "name": "钢筋集",
+    "value": "PG_REBAR_ARRAY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690254,
+    "name": "图层",
+    "value": "PG_REBAR_SYSTEM_LAYERS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690255,
+    "name": "网格",
+    "value": "PG_CURTAIN_GRID",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690256,
+    "name": "网格 2 竖梃",
+    "value": "PG_CURTAIN_MULLION_2",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690257,
+    "name": "水平竖梃",
+    "value": "PG_CURTAIN_MULLION_HORIZ",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690258,
+    "name": "网格 1 竖梃",
+    "value": "PG_CURTAIN_MULLION_1",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690259,
+    "name": "垂直竖梃",
+    "value": "PG_CURTAIN_MULLION_VERT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690260,
+    "name": "网格 2",
+    "value": "PG_CURTAIN_GRID_2",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690261,
+    "name": "水平网格",
+    "value": "PG_CURTAIN_GRID_HORIZ",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690262,
+    "name": "网格 1",
+    "value": "PG_CURTAIN_GRID_1",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690263,
+    "name": "垂直网格",
+    "value": "PG_CURTAIN_GRID_VERT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690264,
+    "name": "IFC 参数",
+    "value": "PG_IFC",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690265,
+    "name": "电气",
+    "value": "PG_AELECTRICAL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690266,
+    "name": "能量分析",
+    "value": "PG_ENERGY_ANALYSIS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690267,
+    "name": "结构分析",
+    "value": "PG_STRUCTURAL_ANALYSIS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690268,
+    "name": "机械 - 流量",
+    "value": "PG_MECHANICAL_AIRFLOW",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690269,
+    "name": "机械 - 负荷",
+    "value": "PG_MECHANICAL_LOADS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690270,
+    "name": "电气 - 负荷",
+    "value": "PG_ELECTRICAL_LOADS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690271,
+    "name": "电气 - 照明",
+    "value": "PG_ELECTRICAL_LIGHTING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690272,
+    "name": "文字",
+    "value": "PG_TEXT",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690273,
+    "name": "相机",
+    "value": "PG_VIEW_CAMERA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690274,
+    "name": "范围",
+    "value": "PG_VIEW_EXTENTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690275,
+    "name": "填充图案",
+    "value": "PG_PATTERN",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690276,
+    "name": "约束",
+    "value": "PG_CONSTRAINTS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690277,
+    "name": "阶段化",
+    "value": "PG_PHASING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333536690278,
+    "name": "机械",
+    "value": "PG_MECHANICAL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884480,
+    "name": "结构",
+    "value": "PG_STRUCTURAL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884481,
+    "name": "卫浴",
+    "value": "PG_PLUMBING",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884482,
+    "name": "电气工程",
+    "value": "PG_ELECTRICAL",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884483,
+    "name": "梯边梁",
+    "value": "PG_STAIR_STRINGERS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884484,
+    "name": "踢面",
+    "value": "PG_STAIR_RISERS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884485,
+    "name": "踏板",
+    "value": "PG_STAIR_TREADS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884486,
+    "name": "基线",
+    "value": "PG_UNDERLAY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884487,
+    "name": "材质和装饰",
+    "value": "PG_MATERIALS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884488,
+    "name": "图形",
+    "value": "PG_GRAPHICS",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884489,
+    "name": "构造",
+    "value": "PG_CONSTRUCTION",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884490,
+    "name": "尺寸标注",
+    "value": "PG_GEOMETRY",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884491,
+    "name": "标识数据",
+    "value": "PG_IDENTITY_DATA",
+    "isDeleted": false
+  },
+  {
+    "id": 1674609333540884492,
+    "name": "不可用",
+    "value": "INVALID",
+    "isDeleted": false
   }
 ]

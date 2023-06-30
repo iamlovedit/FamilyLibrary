@@ -1,10 +1,18 @@
 [
   {
     "id": 1674317823305981952,
-    "name": "尺寸标注"
+    "name": "长度",
+    "groupId": 1674609333540884490,
+    "unitTypeId": 1674610222204850176,
+    "parameterTypeId": 1674608726121779204,
+    "isDeleted": false
   },
   {
     "id": 1674317823310176256,
-    "name": "材质和装饰"
+    "name": "宽度",
+    "groupId": 1674609333540884490,
+    "unitTypeId": 1674610222204850176,
+    "parameterTypeId": 1674608726121779204,
+    "isDeleted": false
   }
 ]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1674621147897012224,
+    "name": "test1_testSymbol1",
+    "familyId": 1674247048507039744,
+    "isDeleted": false
+  },
+  {
+    "id": 1674621147897012225,
+    "name": "test1_testSymbol2",
+    "familyId": 1674247048507039744,
+    "isDeleted": false
+  },
+  {
+    "id": 1674621147897012226,
+    "name": "test2_testSymbol1",
+    "familyId": 1674247048511234048,
+    "isDeleted": false
+  },
+  {
+    "id": 1674621147897012227,
+    "name": "test2_testSymbol2",
+    "familyId": 1674247048511234048,
+    "isDeleted": false
+  }
+]
