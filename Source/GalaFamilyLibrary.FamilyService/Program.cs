@@ -35,8 +35,26 @@ app.UseInitSeed(dbSeed =>
     var file = string.Format(seedFolder, "Families");
     dbSeed.InitSeed<Family>(file);
 
+    file = string.Format(seedFolder, "FamilySymbols");
+    dbSeed.InitSeed<FamilySymbol>(file);
+
     file = string.Format(seedFolder, "FamilyCategories");
     dbSeed.InitSeed<FamilyCategory>(file);
+
+    file = string.Format(seedFolder, "FamilyParameters");
+    dbSeed.InitSeed<FamilyParameter>(file);
+
+    file = string.Format(seedFolder, "ParameterDefinitions");
+    dbSeed.InitSeed<ParameterDefinition>(file);
+
+    file = string.Format(seedFolder, "ParameterGroups");
+    dbSeed.InitSeed<ParameterGroup>(file);
+
+    file = string.Format(seedFolder, "ParameterTypes");
+    dbSeed.InitSeed<ParameterType>(file);
+
+    file = string.Format(seedFolder, "ParameterUnitTypes");
+    dbSeed.InitSeed<ParameterUnitType>(file);
 });
 app.UseStaticFiles();
 app.UseGeneric();
