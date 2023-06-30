@@ -25,28 +25,12 @@ namespace GalaFamilyLibrary.FamilyService.Models
         public long ParameterTypeId { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(UnitTypeId))]
-        public UnitType UnitType { get; set; }
+        public ParameterUnitType UnitType { get; set; }
 
         [SugarColumn(ColumnName = "definition_unitType")]
         public long UnitTypeId { get; set; }
 
         [SugarColumn(ColumnName = "definition_isDeleted")]
-        public bool IsDeleted { get; set; }
-    }
-
-    [SugarTable("parameter_unitType")]
-    public class UnitType : IDeletable
-    {
-        [SugarColumn(ColumnName = "unitType_id", IsPrimaryKey = true)]
-        public long Id { get; set; }
-
-        [SugarColumn(ColumnName = "unitType_value", IsPrimaryKey = true)]
-        public string Value { get; set; }
-
-        [SugarColumn(ColumnName = "unitType_name")]
-        public string Name { get; set; }
-
-        [SugarColumn(ColumnName = "unitType_isDeleted")]
         public bool IsDeleted { get; set; }
     }
 }

@@ -2,8 +2,9 @@
 {
     public enum StorageType
     {
-        String,
-        Double,
-        Integer
+        String = 0,
+        Double = 1,
+        Integer = 2,
+        ElementId = 3
     }
 }

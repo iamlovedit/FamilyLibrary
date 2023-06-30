@@ -41,7 +41,7 @@ public class Family : IDeletable
     public List<ushort> Versions { get; set; }
 
     [SugarColumn(ColumnName = "family_categoryId")]
-    public int CategoryId { get; set; }
+    public long CategoryId { get; set; }
 
     [SugarColumn(ColumnName = "family_fileId")]
     public string FileId { get; set; }

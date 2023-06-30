@@ -27,6 +27,9 @@ namespace GalaFamilyLibrary.FamilyService.Models
         [SugarColumn(ColumnName = "parameter_familySymbolId")]
         public long FamilySymbolId { get; set; }
 
+        [SugarColumn(ColumnName = "parameter_userModifiable")]
+        public bool UserModifiable { get; set; }
+
         [SugarColumn(ColumnName = "parameter_isDeleted")]
         public bool IsDeleted { get; set; }
     }
