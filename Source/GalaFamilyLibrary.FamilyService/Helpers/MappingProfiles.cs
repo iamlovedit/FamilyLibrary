@@ -28,6 +28,7 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
             CreateMap<FamilyParameter, FamilyParameterDTO>();
             CreateMap<ParameterUnitType, UnitTypeDTO>();
             CreateMap<FamilySymbol, FamilySymbolDTO>();
+            CreateMap<ParameterType, ParameterTypeDTO>();
             CreateMap<ParameterDefinition, ParameterDefinitionDTO>();
             CreateMap<Family, FamilyDetailDTO>();
             CreateMap<Family, FamilyBasicDTO>().ForMember(fd => fd.ImageUrl, options =>
