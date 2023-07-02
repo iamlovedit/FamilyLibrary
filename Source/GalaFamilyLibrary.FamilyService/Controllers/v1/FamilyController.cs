@@ -8,6 +8,7 @@ using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
@@ -164,11 +165,45 @@ public class FamilyController : ApiControllerBase
         }
 
         var families = await _familyStarService.GetByExpressionAsync(s => s.UserId == userId);
-
         var familyDTOs = _mapper.Map<List<FamilyBasicDTO>>(families);
         await _redis.Set(redisKey, familyDTOs, _redisRequirement.CacheTime);
+        _logger.LogInformation("query users stared family ,useId :{userId}", userId);
         return Success(familyDTOs);
     }
+
+    [HttpGet]
+    [Route("collections")]
+    public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetCollectionPageAsync(long userId, int pageIndex,
+        int pageSize, string? orderField)
+    {
+        var redisKey =
+            $"family/collections/userId={userId}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
+        if (await _redis.Exist(redisKey))
+        {
+            return SucceedPage(await _redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
+        }
+
+        var collectionPage =
+            await _familyCollectionService.GetFamilyCollectionAsync(userId, pageIndex, pageSize, orderField);
+        var pageDTO = collectionPage.ConvertTo<FamilyBasicDTO>();
+        await _redis.Set(redisKey, pageDTO, _redisRequirement.CacheTime);
+        return SucceedPage(pageDTO);
+    }
+
+    [HttpPost]
+    [Route("collection")]
+    public async Task<MessageModel<bool>> CreateFamilyCollection(long userId, long familyId)
+    {
+        var familyCollection = new FamilyCollection()
+        {
+            UserId = userId,
+            CreateTime = DateTime.Now,
+            FamilyId = familyId
+        };
+        var id = await _familyCollectionService.AddSnowflakeAsync(familyCollection);
+        return id > 0 ? Success(true) : Failed<bool>();
+    }
+
 
     [HttpGet]
     [AllowAnonymous]
