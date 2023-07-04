@@ -8,7 +8,6 @@ using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;

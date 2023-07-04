@@ -26,6 +26,7 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
 
             CreateMap<ParameterGroup, ParameterGroupDTO>();
             CreateMap<FamilyParameter, FamilyParameterDTO>();
+            CreateMap<DisplayUnitType, DisplayUnitTypeDTO>();
             CreateMap<ParameterUnitType, UnitTypeDTO>();
             CreateMap<FamilySymbol, FamilySymbolDTO>();
             CreateMap<ParameterType, ParameterTypeDTO>();
@@ -35,6 +36,8 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
             {
                 options.MapFrom(f => fileStorageClient.GetFileUrl(f.Name, Path.Combine("images", $"{f.FileId}.png")));
             });
+
+            CreateMap<ParameterCreationDTO, FamilyParameter>();
         }
     }
 }

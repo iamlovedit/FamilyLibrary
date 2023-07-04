@@ -20,6 +20,8 @@ services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefiniti
 services.AddScoped(typeof(IParameterGroupService), typeof(ParameterGroupService));
 services.AddScoped(typeof(IParameterTypeService), typeof(ParameterTypeService));
 services.AddScoped(typeof(IParameterUnitTypeService), typeof(ParameterUnitTypeService));
+services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
+services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 
 builder.AddGenericSetup();
 services.AddSingleton(provider => new MapperConfiguration(config =>
@@ -61,6 +63,9 @@ app.UseInitSeed(dbSeed =>
 
     file = string.Format(seedFolder, "ParameterUnitTypes");
     dbSeed.InitSeed<ParameterUnitType>(file);
+
+    file = string.Format(seedFolder, "DisplayUnitTypes");
+    dbSeed.InitSeed<DisplayUnitType>(file);
 });
 app.UseStaticFiles();
 app.UseGeneric();

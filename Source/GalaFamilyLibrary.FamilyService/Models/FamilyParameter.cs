@@ -21,7 +21,13 @@ namespace GalaFamilyLibrary.FamilyService.Models
         [Navigate(NavigateType.OneToOne, nameof(DefinitionId))]
         public ParameterDefinition Definition { get; set; }
 
-        [SugarColumn(ColumnName = "parameter_definitionID")]
+        [SugarColumn(ColumnName = "parameter_displayUnitTypeId", IsNullable = true)]
+        public long DisplayUnitTypeId { get; set; }
+
+        [Navigate(NavigateType.OneToOne, nameof(DisplayUnitTypeId))]
+        public DisplayUnitType DisplayUnitType { get; set; }
+
+        [SugarColumn(ColumnName = "parameter_definitionId")]
         public long DefinitionId { get; set; }
 
         [SugarColumn(ColumnName = "parameter_familySymbolId")]

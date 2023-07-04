@@ -4,6 +4,7 @@ using GalaFamilyLibrary.Infrastructure.Redis;
 using Microsoft.AspNetCore.Mvc;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.FamilyService.DataTransferObjects;
+using GalaFamilyLibrary.FamilyService.Models;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
@@ -13,22 +14,24 @@ public class ParameterController : ApiControllerBase
 {
     private readonly IMapper _mapper;
     private readonly ILogger<ParameterController> _logger;
+    private readonly IParameterDefinitionService _parameterDefinitionService;
     private readonly IRedisBasketRepository _redis;
     private readonly RedisRequirement _redisRequirement;
     private readonly IFamilyParameterService _parameterService;
 
-    public ParameterController(IMapper mapper, ILogger<ParameterController> logger,
+    public ParameterController(IMapper mapper, ILogger<ParameterController> logger, IParameterDefinitionService parameterDefinitionService,
         IRedisBasketRepository redis, RedisRequirement redisRequirement, IFamilyParameterService parameterService)
     {
         _mapper = mapper;
         _logger = logger;
+        _parameterDefinitionService = parameterDefinitionService;
         _redis = redis;
         _redisRequirement = redisRequirement;
         _parameterService = parameterService;
     }
 
     [HttpGet]
-    [Route("details/{id:long}")]
+    [Route("parameters/{id:long}")]
     public async Task<MessageModel<FamilyParameterDTO>> GetParameterDetailsAysnc(long id)
     {
         var redisKey = $"parameters/{id}";
@@ -48,6 +51,43 @@ public class ParameterController : ApiControllerBase
         await _redis.Set(redisKey, parameterDTO, _redisRequirement.CacheTime);
         return Success(parameterDTO);
     }
+
+    [HttpPost]
+    [Route("parameters")]
+    public async Task<MessageModel<bool>> CreateParameters(List<ParameterCreationDTO> creationDTOs)
+    {
+        var parameters = _mapper.Map<List<FamilyParameter>>(creationDTOs);
+        var ids = await _parameterService.AddSnowflakesAsync(parameters);
+        if (ids.Count > 0)
+        {
+            return Success(true);
+        }
+        return Failed<bool>();
+    }
+
+
+
+    [HttpGet]
+    [Route("definitions/{id:long}")]
+    public async Task<MessageModel<ParameterDefinitionDTO>> GetDefinitionDetails(long id)
+    {
+        var redisKey = $"parameter/definitions/{id}";
+        if (await _redis.Exist(redisKey))
+        {
+            return Success(await _redis.Get<ParameterDefinitionDTO>(redisKey));
+        }
+        var defintion = _parameterDefinitionService.GetDefinitionDetailsAsync(id);
+        if (defintion is null)
+        {
+            return Failed<ParameterDefinitionDTO>("definition not exists", 404);
+        }
+        var definitionDTO = _mapper.Map<ParameterDefinitionDTO>(defintion);
+        await _redis.Set(redisKey, definitionDTO, _redisRequirement.CacheTime);
+        return Success(definitionDTO);
+    }
+
+
+
 
     [HttpGet]
     [Route("groups")]
@@ -95,7 +135,7 @@ public class ParameterController : ApiControllerBase
         {
             return Success(await _redis.Get<List<UnitTypeDTO>>(redisKey));
         }
-        
+
         _logger.LogInformation("query all parameter unit types");
         var unitTypes = await unitTypeService.GetAllAsync();
         var unitTypeDTOs = _mapper.Map<List<UnitTypeDTO>>(unitTypes);

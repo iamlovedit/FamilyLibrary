@@ -11,13 +11,17 @@ namespace GalaFamilyLibrary.FamilyService.DataTransferObjects
 
         public string Name { get; set; }
 
+        public string Value { get; set; }
+
+        public DisplayUnitTypeDTO DisplayUnitType { get; set; }
+
         [JsonConverter(typeof(ValueToStringConverter))]
         public Models.StorageType StorageType { get; set; }
 
         public bool UserModifiable { get; set; }
 
-        public string Value { get; set; }
 
-        public ParameterDefinitionDTO Definition { get; set; }
+        public long DefinitionId { get; set; }
+
     }
 }

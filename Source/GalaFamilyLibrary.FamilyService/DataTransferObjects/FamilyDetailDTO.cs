@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GalaFamilyLibrary.FamilyService.Models;
+using Newtonsoft.Json;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.FamilyService.DataTransferObjects
