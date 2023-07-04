@@ -6,7 +6,10 @@
     "updateTime": "\/Date(1546272000000+0800)\/",
     "uploaderId": 1673990253930749954,
     "categoryId": 1674636656487043100,
+    "md5": "a91303fe029dcfd7ef51f21fb28d724b",
     "fileId": "d2e98a03-48d5-0beb-39c5-fabdc3c1ef0e",
+    "stars": 1024,
+    "downloads": 3359,
     "versions": [
       2018,
       2019,
@@ -18,6 +21,9 @@
   {
     "id": 1674247048511234048,
     "name": "test2",
+    "stars": 5532,
+    "downloads": 3320,
+    "md5": "4e337f229adc2cda6a3deaf3183dcf57",
     "createTime": "\/Date(1546272000000+0800)\/",
     "updateTime": "\/Date(1546272000000+0800)\/",
     "uploaderId": 1673990253930749955,
