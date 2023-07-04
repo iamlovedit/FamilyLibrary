@@ -66,6 +66,12 @@ app.UseInitSeed(dbSeed =>
 
     file = string.Format(seedFolder, "DisplayUnitTypes");
     dbSeed.InitSeed<DisplayUnitType>(file);
+
+    file = string.Format(seedFolder, "FamilyCollections");
+    dbSeed.InitSeed<FamilyCollection>(file);
+
+    file = string.Format(seedFolder, "FamilyStars");
+    dbSeed.InitSeed<FamilyStar>(file);
 });
 app.UseStaticFiles();
 app.UseGeneric();

@@ -12,7 +12,7 @@ namespace GalaFamilyLibrary.FamilyService.DataTransferObjects
 
         public long FamilyId { get; set; }
 
-        public ParameterGroupDTO Group { get; set; }
+        public ParameterGroupDTO ParameterGroup { get; set; }
 
         public ParameterTypeDTO ParameterType { get; set; }
 

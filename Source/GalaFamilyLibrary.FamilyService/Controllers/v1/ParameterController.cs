@@ -40,7 +40,7 @@ public class ParameterController : ApiControllerBase
             return Success(await _redis.Get<FamilyParameterDTO>(redisKey));
         }
 
-        var parameter = _parameterService.GetParameterDetailsAsync(id);
+        var parameter = await _parameterService.GetParameterDetailsAsync(id);
         if (parameter is null)
         {
             _logger.LogWarning("query parameter details failed,id {id} not exists", id);
@@ -53,13 +53,13 @@ public class ParameterController : ApiControllerBase
     }
 
     [HttpPost]
-    [Route("parameters")]
-    public async Task<MessageModel<bool>> CreateParameters(List<ParameterCreationDTO> creationDTOs)
+    public async Task<MessageModel<bool>> CreateParameters([FromBody] List<ParameterCreationDTO> creationDTOs)
     {
         var parameters = _mapper.Map<List<FamilyParameter>>(creationDTOs);
         var ids = await _parameterService.AddSnowflakesAsync(parameters);
         if (ids.Count > 0)
         {
+            _logger.LogInformation("create parameters succeed,count : {count}", ids.Count);
             return Success(true);
         }
         return Failed<bool>();
@@ -76,7 +76,7 @@ public class ParameterController : ApiControllerBase
         {
             return Success(await _redis.Get<ParameterDefinitionDTO>(redisKey));
         }
-        var defintion = _parameterDefinitionService.GetDefinitionDetailsAsync(id);
+        var defintion = await _parameterDefinitionService.GetDefinitionDetailsAsync(id);
         if (defintion is null)
         {
             return Failed<ParameterDefinitionDTO>("definition not exists", 404);
@@ -86,7 +86,19 @@ public class ParameterController : ApiControllerBase
         return Success(definitionDTO);
     }
 
-
+    [HttpPost]
+    [Route("definition")]
+    public async Task<MessageModel<bool>> CreateDefinitions([FromBody] List<ParameterDefinitionCreationDTO> creationDTOs)
+    {
+        var definitions = _mapper.Map<List<ParameterDefinition>>(creationDTOs);
+        var ids = await _parameterDefinitionService.AddSnowflakesAsync(definitions);
+        if (ids.Count > 0)
+        {
+            _logger.LogInformation("create parameter definitions succeed,count : {count}", ids.Count);
+            return Success(true);
+        }
+        return Failed<bool>();
+    }
 
 
     [HttpGet]

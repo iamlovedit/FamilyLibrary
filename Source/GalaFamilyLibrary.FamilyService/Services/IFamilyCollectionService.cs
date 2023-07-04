@@ -9,7 +9,7 @@ namespace GalaFamilyLibrary.FamilyService.Services
 {
     public interface IFamilyCollectionService : IServiceBase<FamilyCollection>
     {
-        Task<PageModel<Family>> GetFamilyCollectionAsync(long userId, int pageIndex, int pageSize, string orderField);
+        Task<PageModel<FamilyCollection>> GetFamilyCollectionAsync(long userId, int pageIndex, int pageSize, string orderField);
     }
 
     public class FamilyCollectionService : ServiceBase<FamilyCollection>, IFamilyCollectionService
@@ -18,18 +18,17 @@ namespace GalaFamilyLibrary.FamilyService.Services
         {
         }
 
-        public async Task<PageModel<Family>> GetFamilyCollectionAsync(long userId, int pageIndex, int pageSize,
+        public async Task<PageModel<FamilyCollection>> GetFamilyCollectionAsync(long userId, int pageIndex, int pageSize,
             string orderField)
         {
             RefAsync<int> totalCount = 0;
             var list = await DAL.DbContext.Queryable<FamilyCollection>()
                 .Where(fc => fc.UserId == userId)
                 .Includes(fc => fc.Family)
-                .Select(fc => fc.Family)
                 .OrderByIF(!string.IsNullOrEmpty(orderField), orderField)
                 .ToPageListAsync(pageIndex, pageSize, totalCount);
             var pageCount = Math.Ceiling(totalCount.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
-            return new PageModel<Family>(pageIndex, pageCount, totalCount, pageSize, list);
+            return new PageModel<FamilyCollection>(pageIndex, pageCount, totalCount, pageSize, list);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace GalaFamilyLibrary.FamilyService.Services
                    Includes(f => f.Definition, d => d.ParameterGroup).
                    Includes(f => f.Definition, d => d.ParameterType).
                    Includes(f => f.Definition, d => d.UnitType).
+                   Includes(f => f.DisplayUnitType).
                    InSingleAsync(id);
         }
     }

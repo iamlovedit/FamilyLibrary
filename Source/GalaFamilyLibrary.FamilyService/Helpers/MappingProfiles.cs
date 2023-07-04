@@ -38,6 +38,7 @@ namespace GalaFamilyLibrary.FamilyService.Helpers
             });
 
             CreateMap<ParameterCreationDTO, FamilyParameter>();
+            CreateMap<ParameterDefinitionCreationDTO, ParameterDefinition>();
         }
     }
 }

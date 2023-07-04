@@ -6,7 +6,7 @@ namespace GalaFamilyLibrary.FamilyService.Services
 {
     public interface IFamilyStarService : IServiceBase<FamilyStar>
     {
-        Task<List<Family>> GetStaredFamilyAsync(long userId);
+        Task<List<FamilyStar>> GetStaredFamilyAsync(long userId);
     }
 
     public class FamilyStarService : ServiceBase<FamilyStar>, IFamilyStarService
@@ -15,12 +15,11 @@ namespace GalaFamilyLibrary.FamilyService.Services
         {
         }
 
-        public async Task<List<Family>> GetStaredFamilyAsync(long userId)
+        public async Task<List<FamilyStar>> GetStaredFamilyAsync(long userId)
         {
             return await DAL.DbContext.Queryable<FamilyStar>()
                 .Where(fs => fs.UserId == userId)
                 .Includes(fs => fs.Family)
-                .Select(fs => fs.Family)
                 .ToListAsync();
         }
     }

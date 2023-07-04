@@ -163,7 +163,7 @@ public class FamilyController : ApiControllerBase
             return Success(await _redis.Get<List<FamilyBasicDTO>>(redisKey));
         }
 
-        var families = await _familyStarService.GetByExpressionAsync(s => s.UserId == userId);
+        var families = await _familyStarService.GetStaredFamilyAsync(userId);
         var familyDTOs = _mapper.Map<List<FamilyBasicDTO>>(families);
         await _redis.Set(redisKey, familyDTOs, _redisRequirement.CacheTime);
         _logger.LogInformation("query users stared family ,useId :{userId}", userId);

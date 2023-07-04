@@ -54,6 +54,7 @@ public class Family : IDeletable
     [SugarColumn(ColumnName = "family_isDeleted")]
     public bool IsDeleted { get; set; }
 
+
     internal string GetFilePath(IWebHostEnvironment environment, ushort version)
     {
         return Path.Combine(environment.WebRootPath, "families", $"{version}", $"{FileId}.rfa");

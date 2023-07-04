@@ -9,7 +9,7 @@ namespace GalaFamilyLibrary.FamilyService.Models
         [SugarColumn(ColumnName = "definition_id", IsPrimaryKey = true)]
         public long Id { get; set; }
 
-        [SugarColumn(ColumnName = "definition_name", IsPrimaryKey = true)]
+        [SugarColumn(ColumnName = "definition_name")]
         public string Name { get; set; }
 
         [SugarColumn(ColumnName = "definition_familyId")]
