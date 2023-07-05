@@ -1,4 +1,5 @@
 ﻿using GalaFamilyLibrary.Domain.Models.FamilyParameter;
+using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using Microsoft.AspNetCore.Hosting;
 using SqlSugar;
@@ -23,11 +24,17 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         [SugarColumn(ColumnName = "family_stars")]
         public int Stars { get; set; }
 
+        [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
+        public List<ApplicationUser> Collectors { get; set; }
+
+        [Navigate(typeof(FamilyStar), nameof(FamilyStar.FamilyId), nameof(FamilyStar.UserId))]
+        public List<ApplicationUser> StarredUsers { get; set; }
+
         [SugarColumn(ColumnName = "family_downloads")]
         public uint Downloads { get; set; }
 
-        //[Navigate(NavigateType.OneToOne, nameof(UploaderId))]
-        //public LibraryUser User { get; set; }
+        [Navigate(NavigateType.OneToOne, nameof(UploaderId))]
+        public ApplicationUser Uploader { get; set; }
 
         [SugarColumn(ColumnName = "family_uploaderId")]
         public long UploaderId { get; set; }

@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Infrastructure.Common;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.Models.Identity
@@ -18,6 +19,12 @@ namespace GalaFamilyLibrary.Domain.Models.Identity
         [SugarColumn(IsNullable = false, Length = 16, ColumnName = "user_username")]
         public string Username { get; set; }
 
+        [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.UserId), nameof(FamilyCollection.FamilyId))]
+        public List<Family> CollectedFamilies { get; set; }
+
+        [Navigate(typeof(FamilyStar), nameof(FamilyStar.UserId), nameof(FamilyStar.FamilyId))]
+        public List<Family> StarredFamilies { get; set; }
+
         [SugarColumn(IsNullable = false, ColumnName = "user_password")]
         public string Password { get; set; }
 
@@ -33,10 +40,11 @@ namespace GalaFamilyLibrary.Domain.Models.Identity
         [SugarColumn(IsNullable = true, ColumnName = "user_lastLogin")]
         public DateTime LastLoginTime { get; set; }
 
+        [SugarColumn(ColumnName = "user_errorCount")]
+        public int ErrorCount { get; set; }
+
         [SugarColumn(ColumnName = "user_isDeleted")]
         public bool IsDeleted { get; set; }
 
-        [SugarColumn(ColumnName = "user_errorCount")]
-        public int ErrorCount { get; set; }
     }
 }
