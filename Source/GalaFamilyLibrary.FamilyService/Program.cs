@@ -6,6 +6,7 @@ using GalaFamilyLibrary.Infrastructure.FileStorage;
 using AutoMapper;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -44,11 +45,6 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "FamilyCategories");
     dbSeed.InitSeed<FamilyCategory>(file);
 
-    //file = string.Format(seedFolder, "FamilyCollections");
-    //dbSeed.InitSeed<FamilyCollection>(file);
-
-    //file = string.Format(seedFolder, "FamilyStars");
-    //dbSeed.InitSeed<FamilyStar>(file);
 });
 app.UseStaticFiles();
 app.UseGeneric();

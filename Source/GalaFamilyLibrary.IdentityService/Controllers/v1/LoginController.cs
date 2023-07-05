@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+﻿using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -47,7 +47,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<MessageModel<string>> GetTokenAsync([FromBody] LoginUserDto loginUser)
+        public async Task<MessageModel<string>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {

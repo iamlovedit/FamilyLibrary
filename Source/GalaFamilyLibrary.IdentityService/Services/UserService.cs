@@ -1,15 +1,15 @@
-﻿using GalaFamilyLibrary.IdentityService.Models;
+﻿using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {
-    public class UserService : ServiceBase<LibraryUser>, IUserService
+    public class UserService : ServiceBase<ApplicationUser>, IUserService
     {
-        private readonly IRepositoryBase<LibraryRole> _roleRepository;
+        private readonly IRepositoryBase<ApplicationRole> _roleRepository;
         private readonly IRepositoryBase<UserRole> _userRoleRepository;
 
-        public UserService(IRepositoryBase<LibraryUser> dbContext, IRepositoryBase<LibraryRole> roleRepository, IRepositoryBase<UserRole> userRoleRepository) : base(dbContext)
+        public UserService(IRepositoryBase<ApplicationUser> dbContext, IRepositoryBase<ApplicationRole> roleRepository, IRepositoryBase<UserRole> userRoleRepository) : base(dbContext)
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GalaFamilyLibrary.Domain\GalaFamilyLibrary.Domain.csproj" />
     <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
 	  <InternalsVisibleTo Include="Application.FunctionalTests" />
   </ItemGroup>

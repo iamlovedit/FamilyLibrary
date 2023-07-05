@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;

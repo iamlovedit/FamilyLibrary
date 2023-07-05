@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.IdentityService.DataTransferObjects;
-using GalaFamilyLibrary.IdentityService.Models;
+using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
+using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 
@@ -10,8 +10,8 @@ namespace GalaFamilyLibrary.IdentityService.Helpers
     {
         public MappingProfiles(IAESEncryptionService aESEncryptionService)
         {
-            CreateMap<LibraryUser, LibraryUserDto>();
-            CreateMap<LibraryUserCreationDto, LibraryUser>()
+            CreateMap<ApplicationUser, ApplicationUserDTO>();
+            CreateMap<UserCreationDTO, ApplicationUser>()
                 .ForMember(u => u.CreateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
                 .ForMember(u => u.UpdateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
                 .ForMember(u => u.LastLoginTime, options => { options.MapFrom((ud, u) => DateTime.Now); })

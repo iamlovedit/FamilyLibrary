@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
+using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -37,14 +38,14 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<MessageModel<string>> CreateUser([FromBody] LibraryUserCreationDto userCreationDto)
+        public async Task<MessageModel<string>> CreateUser([FromBody] UserCreationDTO userCreationDto)
         {
             if (await _userService.GetFirstByExpressionAsync(u => u.Username == userCreationDto.Username) != null)
             {
                 return Failed("用户名已存在");
             }
 
-            var user = _mapper.Map<LibraryUser>(userCreationDto);
+            var user = _mapper.Map<ApplicationUser>(userCreationDto);
             var id = await _userService.AddSnowflakeAsync(user);
             if (id > 0)
             {
@@ -61,21 +62,21 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<MessageModel<LibraryUserDto>> Details(int id)
+        public async Task<MessageModel<ApplicationUserDTO>> Details(int id)
         {
             var redisKey = $"user/{id}";
             if (await _redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<LibraryUserDto>(redisKey));
+                return Success(await _redis.Get<ApplicationUserDTO>(redisKey));
             }
 
             var user = await _userService.GetByIdAsync(id);
             if (user is null)
             {
-                return Failed<LibraryUserDto>("user not found");
+                return Failed<ApplicationUserDTO>("user not found");
             }
 
-            var userDto = _mapper.Map<LibraryUserDto>(user);
+            var userDto = _mapper.Map<ApplicationUserDTO>(user);
             await _redis.Set(redisKey, userDto, _requirement.CacheTime);
             return Success(userDto);
         }

@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+﻿using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Service;
@@ -24,7 +24,6 @@ namespace GalaFamilyLibrary.FamilyService.Services
             RefAsync<int> totalCount = 0;
             var list = await DAL.DbContext.Queryable<FamilyCollection>()
                 .Where(fc => fc.UserId == userId)
-                .Includes(fc => fc.Family)
                 .OrderByIF(!string.IsNullOrEmpty(orderField), orderField)
                 .ToPageListAsync(pageIndex, pageSize, totalCount);
             var pageCount = Math.Ceiling(totalCount.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
