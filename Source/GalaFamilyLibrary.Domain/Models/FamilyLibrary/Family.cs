@@ -57,21 +57,21 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         public bool IsDeleted { get; set; }
 
 
-        internal string GetFilePath(IWebHostEnvironment environment, ushort version)
+        public string GetFilePath(IWebHostEnvironment environment, ushort version)
         {
             return Path.Combine(environment.WebRootPath, "families", $"{version}", $"{FileId}.rfa");
         }
 
-        internal string GetFilePath(ushort version)
+        public string GetFilePath(ushort version)
         {
             return Path.Combine("families", $"{version}", $"{FileId}.rfa");
         }
-        internal string GetImagePath()
+        public string GetImagePath()
         {
             return Path.Combine("images", $"{FileId}.png");
         }
 
-        internal string GetImagePath(IWebHostEnvironment environment)
+        public string GetImagePath(IWebHostEnvironment environment)
         {
             return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
         }
