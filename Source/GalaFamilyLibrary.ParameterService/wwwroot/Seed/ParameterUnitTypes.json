@@ -1,0 +1,794 @@
+[
+  {
+    "id": 1674610222204850176,
+    "name": "长度",
+    "value": "UT_Length",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850177,
+    "name": "面积",
+    "value": "UT_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850178,
+    "name": "体积",
+    "value": "UT_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850179,
+    "name": "角度",
+    "value": "UT_Angle",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850180,
+    "name": "数值",
+    "value": "UT_Number",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850181,
+    "name": "图纸长度",
+    "value": "UT_SheetLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850182,
+    "name": "场地角度",
+    "value": "UT_SiteAngle",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850183,
+    "name": "密度",
+    "value": "UT_HVAC_Density",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850184,
+    "name": "能量",
+    "value": "UT_HVAC_Energy",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850185,
+    "name": "摩擦",
+    "value": "UT_HVAC_Friction",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850186,
+    "name": "功率",
+    "value": "UT_HVAC_Power",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850187,
+    "name": "功率密度",
+    "value": "UT_HVAC_Power_Density",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222204850188,
+    "name": "压力",
+    "value": "UT_HVAC_Pressure",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044480,
+    "name": "温度",
+    "value": "UT_HVAC_Temperature",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044481,
+    "name": "速度",
+    "value": "UT_HVAC_Velocity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044482,
+    "name": "风量",
+    "value": "UT_HVAC_Airflow",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044483,
+    "name": "风管尺寸",
+    "value": "UT_HVAC_DuctSize",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044484,
+    "name": "横截面",
+    "value": "UT_HVAC_CrossSection",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044485,
+    "name": "热增益",
+    "value": "UT_HVAC_HeatGain",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044486,
+    "name": "电流",
+    "value": "UT_Electrical_Current",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044487,
+    "name": "电压",
+    "value": "UT_Electrical_Potential",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044488,
+    "name": "频率",
+    "value": "UT_Electrical_Frequency",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044489,
+    "name": "照度",
+    "value": "UT_Electrical_Illuminance",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044490,
+    "name": "光通量",
+    "value": "UT_Electrical_Luminous_Flux",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044491,
+    "name": "功率",
+    "value": "UT_Electrical_Power",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044492,
+    "name": "粗糙度",
+    "value": "UT_HVAC_Roughness",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044493,
+    "name": "力",
+    "value": "UT_Force",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044494,
+    "name": "线分布力",
+    "value": "UT_LinearForce",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044495,
+    "name": "面分布力",
+    "value": "UT_AreaForce",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044496,
+    "name": "力矩",
+    "value": "UT_Moment",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044497,
+    "name": "力显示比例",
+    "value": "UT_ForceScale",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044498,
+    "name": "线分布力显示比例",
+    "value": "UT_LinearForceScale",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044499,
+    "name": "面分布力显示比例",
+    "value": "UT_AreaForceScale",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044500,
+    "name": "力矩显示比例",
+    "value": "UT_MomentScale",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044501,
+    "name": "视在功率",
+    "value": "UT_Electrical_Apparent_Power",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044502,
+    "name": "功率密度",
+    "value": "UT_Electrical_Power_Density",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044503,
+    "name": "密度",
+    "value": "UT_Piping_Density",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044504,
+    "name": "流量",
+    "value": "UT_Piping_Flow",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044505,
+    "name": "摩擦",
+    "value": "UT_Piping_Friction",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044506,
+    "name": "压力",
+    "value": "UT_Piping_Pressure",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044507,
+    "name": "温度",
+    "value": "UT_Piping_Temperature",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044508,
+    "name": "速度",
+    "value": "UT_Piping_Velocity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044509,
+    "name": "动态粘度",
+    "value": "UT_Piping_Viscosity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044510,
+    "name": "管道尺寸",
+    "value": "UT_PipeSize",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044511,
+    "name": "粗糙度",
+    "value": "UT_Piping_Roughness",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044512,
+    "name": "应力",
+    "value": "UT_Stress",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044513,
+    "name": "容重",
+    "value": "UT_UnitWeight",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044514,
+    "name": "热膨胀系数",
+    "value": "UT_ThermalExpansion",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044515,
+    "name": "线性弯矩",
+    "value": "UT_LinearMoment",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044516,
+    "name": "线性力矩显示比例",
+    "value": "UT_LinearMomentScale",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044517,
+    "name": "点弹性系数",
+    "value": "UT_ForcePerLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044518,
+    "name": "弹性转动刚度",
+    "value": "UT_ForceLengthPerAngle",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044519,
+    "name": "线弹性系数",
+    "value": "UT_LinearForcePerLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044520,
+    "name": "弹性转动线刚度",
+    "value": "UT_LinearForceLengthPerAngle",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044521,
+    "name": "面弹性系数",
+    "value": "UT_AreaForcePerLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044522,
+    "name": "体积",
+    "value": "UT_Piping_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044523,
+    "name": "动态粘度",
+    "value": "UT_HVAC_Viscosity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044524,
+    "name": "传热系数",
+    "value": "UT_HVAC_CoefficientOfHeatTransfer",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044525,
+    "name": "气流密度",
+    "value": "UT_HVAC_Airflow_Density",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044526,
+    "name": "坡度",
+    "value": "UT_Slope",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044527,
+    "name": "冷负荷",
+    "value": "UT_HVAC_Cooling_Load",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044528,
+    "name": "冷负荷除以面积",
+    "value": "UT_HVAC_Cooling_Load_Divided_By_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044529,
+    "name": "冷负荷除以体积",
+    "value": "UT_HVAC_Cooling_Load_Divided_By_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044530,
+    "name": "热负荷",
+    "value": "UT_HVAC_Heating_Load",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044531,
+    "name": "热负荷除以面积",
+    "value": "UT_HVAC_Heating_Load_Divided_By_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044532,
+    "name": "热负荷除以体积",
+    "value": "UT_HVAC_Heating_Load_Divided_By_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044533,
+    "name": "风量除以体积",
+    "value": "UT_HVAC_Airflow_Divided_By_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044534,
+    "name": "风量除以冷负荷",
+    "value": "UT_HVAC_Airflow_Divided_By_Cooling_Load",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044535,
+    "name": "面积除以冷负荷",
+    "value": "UT_HVAC_Area_Divided_By_Cooling_Load",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044536,
+    "name": "线径",
+    "value": "UT_WireSize",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044537,
+    "name": "坡度",
+    "value": "UT_HVAC_Slope",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044538,
+    "name": "坡度",
+    "value": "UT_Piping_Slope",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044539,
+    "name": "货币",
+    "value": "UT_Currency",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044540,
+    "name": "效力",
+    "value": "UT_Electrical_Efficacy",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044541,
+    "name": "瓦特",
+    "value": "UT_Electrical_Wattage",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044542,
+    "name": "色温",
+    "value": "UT_Color_Temperature",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044543,
+    "name": "图纸长度",
+    "value": "UT_DecSheetLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044544,
+    "name": "发光强度",
+    "value": "UT_Electrical_Luminous_Intensity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044545,
+    "name": "亮度",
+    "value": "UT_Electrical_Luminance",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044546,
+    "name": "面积除以热负荷",
+    "value": "UT_HVAC_Area_Divided_By_Heating_Load",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044547,
+    "name": "系数",
+    "value": "UT_HVAC_Factor",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044548,
+    "name": "温度",
+    "value": "UT_Electrical_Temperature",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044549,
+    "name": "电缆桥架尺寸",
+    "value": "UT_Electrical_CableTraySize",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044550,
+    "name": "线管尺寸",
+    "value": "UT_Electrical_ConduitSize",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044551,
+    "name": "钢筋体积",
+    "value": "UT_Reinforcement_Volume",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044552,
+    "name": "钢筋长度",
+    "value": "UT_Reinforcement_Length",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044553,
+    "name": "需求系数",
+    "value": "UT_Electrical_Demand_Factor",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044554,
+    "name": "风管隔热层厚度",
+    "value": "UT_HVAC_DuctInsulationThickness",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044555,
+    "name": "风管内衬厚度",
+    "value": "UT_HVAC_DuctLiningThickness",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044556,
+    "name": "管道隔热层厚度",
+    "value": "UT_PipeInsulationThickness",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044557,
+    "name": "热阻",
+    "value": "UT_HVAC_ThermalResistance",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044558,
+    "name": "热质量",
+    "value": "UT_HVAC_ThermalMass",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044559,
+    "name": "加速度",
+    "value": "UT_Acceleration",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044560,
+    "name": "钢筋直径",
+    "value": "UT_Bar_Diameter",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044561,
+    "name": "裂痕宽度",
+    "value": "UT_Crack_Width",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044562,
+    "name": "位移/偏移",
+    "value": "UT_Displacement_Deflection",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044563,
+    "name": "能量",
+    "value": "UT_Energy",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044564,
+    "name": "频率",
+    "value": "UT_Structural_Frequency",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044565,
+    "name": "体量",
+    "value": "UT_Mass",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044566,
+    "name": "质量/单位长度",
+    "value": "UT_Mass_per_Unit_Length",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044567,
+    "name": "惯性矩",
+    "value": "UT_Moment_of_Inertia",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044568,
+    "name": "表面积/单位长度",
+    "value": "UT_Surface_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044569,
+    "name": "周期",
+    "value": "UT_Period",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044570,
+    "name": "角频率",
+    "value": "UT_Pulsation",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044571,
+    "name": "钢筋面积",
+    "value": "UT_Reinforcement_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044572,
+    "name": "钢筋面积/单位长度",
+    "value": "UT_Reinforcement_Area_per_Unit_Length",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044573,
+    "name": "钢筋保护层",
+    "value": "UT_Reinforcement_Cover",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044574,
+    "name": "钢筋间距",
+    "value": "UT_Reinforcement_Spacing",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044575,
+    "name": "旋转",
+    "value": "UT_Rotation",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044576,
+    "name": "截面面积",
+    "value": "UT_Section_Area",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044577,
+    "name": "截面尺寸",
+    "value": "UT_Section_Dimension",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044578,
+    "name": "截面模量",
+    "value": "UT_Section_Modulus",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044579,
+    "name": "截面属性",
+    "value": "UT_Section_Property",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044580,
+    "name": "速度",
+    "value": "UT_Structural_Velocity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044581,
+    "name": "翘曲常数",
+    "value": "UT_Warping_Constant",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044582,
+    "name": "重量",
+    "value": "UT_Weight",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044583,
+    "name": "重量/单位长度",
+    "value": "UT_Weight_per_Unit_Length",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044584,
+    "name": "热传导率",
+    "value": "UT_HVAC_ThermalConductivity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044585,
+    "name": "比热",
+    "value": "UT_HVAC_SpecificHeat",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044586,
+    "name": "蒸汽比热",
+    "value": "UT_HVAC_SpecificHeatOfVaporization",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044587,
+    "name": "渗透性",
+    "value": "UT_HVAC_Permeability",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044588,
+    "name": "电阻率",
+    "value": "UT_Electrical_Resistivity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044589,
+    "name": "质量密度",
+    "value": "UT_MassDensity",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044590,
+    "name": "质量/单位面积",
+    "value": "UT_MassPerUnitArea",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044591,
+    "name": "管道尺寸标注",
+    "value": "UT_Pipe_Dimension",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044592,
+    "name": "体量",
+    "value": "UT_PipeMass",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044593,
+    "name": "质量/单位长度",
+    "value": "UT_PipeMassPerUnitLength",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044594,
+    "name": "温度差异",
+    "value": "UT_HVAC_TemperatureDifference",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044595,
+    "name": "温度差异",
+    "value": "UT_Piping_TemperatureDifference",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044596,
+    "name": "温度差异",
+    "value": "UT_Electrical_TemperatureDifference",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044597,
+    "name": "不可用",
+    "value": "UT_Undefined",
+    "isDeleted": false
+  },
+  {
+    "id": 1674610222209044598,
+    "name": "不可见",
+    "value": "UT_Custom",
+    "isDeleted": false
+  }
+]

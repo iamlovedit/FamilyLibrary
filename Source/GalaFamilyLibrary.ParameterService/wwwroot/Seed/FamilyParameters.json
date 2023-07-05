@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1674320473040756736,
+    "name": "长度",
+    "storageType": "double",
+    "value": 400,
+    "displayUnitTypeId": 1676148726743306241,
+    "definitionId": 1674317823305981952,
+    "familySymbolId": 1674621147897012224,
+    "userModifiable": true,
+    "isDeleted": false
+  },
+  {
+    "id": 1674320473040756737,
+    "name": "宽度",
+    "storageType": "double",
+    "value": 800,
+    "displayUnitTypeId": 1676148726743306241,
+    "definitionId": 1674317823310176256,
+    "familySymbolId": 1674621147897012224,
+    "userModifiable": true,
+    "isDeleted": false
+  },
+  {
+    "id": 1674320473040756740,
+    "name": "长度",
+    "storageType": "double",
+    "value": 500,
+    "displayUnitTypeId": 1676148726743306241,
+    "definitionId": 1674317823305981952,
+    "familySymbolId": 1674621147897012225,
+    "userModifiable": true,
+    "isDeleted": false
+  },
+  {
+    "id": 1674320473040756741,
+    "name": "宽度",
+    "storageType": "double",
+    "value": 1000,
+    "displayUnitTypeId": 1676148726743306241,
+    "definitionId": 1674317823310176256,
+    "familySymbolId": 1674621147897012225,
+    "userModifiable": true,
+    "isDeleted": false
+  }
+]
