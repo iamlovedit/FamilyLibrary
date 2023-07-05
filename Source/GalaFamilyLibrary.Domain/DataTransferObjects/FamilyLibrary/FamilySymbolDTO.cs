@@ -7,6 +7,6 @@ namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary
 
         public string Name { get; set; }
 
-        public List<FamilyParameterDTO> Parameters { get; set; }
+        public List<ParameterDTO> Parameters { get; set; }
     }
 }

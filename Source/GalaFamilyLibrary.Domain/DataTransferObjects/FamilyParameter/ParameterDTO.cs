@@ -4,7 +4,7 @@ using StorageType = GalaFamilyLibrary.Domain.Models.FamilyParameter.StorageType;
 
 namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyParameter
 {
-    public class FamilyParameterDTO
+    public class ParameterDTO
     {
         [JsonConverter(typeof(ValueToStringConverter))]
         public long Id { get; set; }

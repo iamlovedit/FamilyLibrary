@@ -3,6 +3,7 @@ using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.Models.FamilyParameter
 {
+    [SugarTable(TableName = "parameter_groups")]
     public class ParameterGroup : IDeletable
     {
         [SugarColumn(ColumnName = "group_id", IsPrimaryKey = true)]
