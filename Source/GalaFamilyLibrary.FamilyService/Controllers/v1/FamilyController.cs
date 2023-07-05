@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.FamilyService.DataTransferObjects;
+using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.FamilyService.Helpers;
-using GalaFamilyLibrary.FamilyService.Models;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
@@ -231,26 +231,26 @@ public class FamilyController : ApiControllerBase
         return SucceedPage(familyPageDto);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromForm] FamilyCallbackCreationDTO familyCreation)
-    {
-        try
-        {
-            var family = _mapper.Map<Family>(familyCreation);
-            var id = await _familyService.AddAsync(family);
-            if (id > 0)
-            {
-                _logger.LogInformation("create family succeed,family id {familyId}", family.Id);
-                return Ok();
-            }
+    //[HttpPost]
+    //public async Task<IActionResult> CreateAsync([FromForm] FamilyCallbackCreationDTO familyCreation)
+    //{
+    //    try
+    //    {
+    //        var family = _mapper.Map<Family>(familyCreation);
+    //        var id = await _familyService.AddAsync(family);
+    //        if (id > 0)
+    //        {
+    //            _logger.LogInformation("create family succeed,family id {familyId}", family.Id);
+    //            return Ok();
+    //        }
 
-            _logger.LogWarning("create family failed,file id {fileId}", family.FileId);
-            return Problem();
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, e.Message);
-            return Problem(e.Message);
-        }
-    }
+    //        _logger.LogWarning("create family failed,file id {fileId}", family.FileId);
+    //        return Problem();
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        _logger.LogError(e, e.Message);
+    //        return Problem(e.Message);
+    //    }
+    //}
 }

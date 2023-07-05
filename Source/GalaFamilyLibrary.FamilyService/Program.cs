@@ -1,4 +1,3 @@
-using GalaFamilyLibrary.FamilyService.Models;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
@@ -6,6 +5,7 @@ using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using AutoMapper;
 using GalaFamilyLibrary.FamilyService.Helpers;
+using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -15,11 +15,6 @@ services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
-services.AddScoped(typeof(IFamilyParameterService), typeof(FamilyParameterService));
-services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefinitionService));
-services.AddScoped(typeof(IParameterGroupService), typeof(ParameterGroupService));
-services.AddScoped(typeof(IParameterTypeService), typeof(ParameterTypeService));
-services.AddScoped(typeof(IParameterUnitTypeService), typeof(ParameterUnitTypeService));
 services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
 services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 
@@ -33,7 +28,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTables(typeof(Program));
+    dbSeed.InitTablesByClass(typeof(Family));
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -49,29 +44,11 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "FamilyCategories");
     dbSeed.InitSeed<FamilyCategory>(file);
 
-    file = string.Format(seedFolder, "FamilyParameters");
-    dbSeed.InitSeed<FamilyParameter>(file);
+    //file = string.Format(seedFolder, "FamilyCollections");
+    //dbSeed.InitSeed<FamilyCollection>(file);
 
-    file = string.Format(seedFolder, "ParameterDefinitions");
-    dbSeed.InitSeed<ParameterDefinition>(file);
-
-    file = string.Format(seedFolder, "ParameterGroups");
-    dbSeed.InitSeed<ParameterGroup>(file);
-
-    file = string.Format(seedFolder, "ParameterTypes");
-    dbSeed.InitSeed<ParameterType>(file);
-
-    file = string.Format(seedFolder, "ParameterUnitTypes");
-    dbSeed.InitSeed<ParameterUnitType>(file);
-
-    file = string.Format(seedFolder, "DisplayUnitTypes");
-    dbSeed.InitSeed<DisplayUnitType>(file);
-
-    file = string.Format(seedFolder, "FamilyCollections");
-    dbSeed.InitSeed<FamilyCollection>(file);
-
-    file = string.Format(seedFolder, "FamilyStars");
-    dbSeed.InitSeed<FamilyStar>(file);
+    //file = string.Format(seedFolder, "FamilyStars");
+    //dbSeed.InitSeed<FamilyStar>(file);
 });
 app.UseStaticFiles();
 app.UseGeneric();
