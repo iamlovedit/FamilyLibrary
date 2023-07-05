@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.ParameterService.Controllers.v2
 {
-    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("parameter/v{version:apiVersion}")]
     public class ParameterController : ApiControllerBase
     {
