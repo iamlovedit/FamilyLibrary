@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
+using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
@@ -18,15 +19,20 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         private readonly ILogger<UserController> _logger;
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
+        private readonly IFamilyCollectionService _familyCollectionService;
+        private readonly IFamilyStarService _familyStarService;
         private readonly IRedisBasketRepository _redis;
         private readonly RedisRequirement _requirement;
 
         public UserController(ILogger<UserController> logger, IUserService userService, IMapper mapper,
+            IFamilyCollectionService familyCollectionService, IFamilyStarService familyStarService,
             IRedisBasketRepository redis, RedisRequirement requirement)
         {
             _logger = logger;
             _userService = userService;
             _mapper = mapper;
+            _familyCollectionService = familyCollectionService;
+            _familyStarService = familyStarService;
             _redis = redis;
             _requirement = requirement;
         }
@@ -80,5 +86,17 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             await _redis.Set(redisKey, userDto, _requirement.CacheTime);
             return Success(userDto);
         }
+
+
+        [HttpGet]
+        [Route("collections")]
+        [AllowAnonymous]
+        public async Task<MessageModel<List<Family>>> GetUserCollection(long id)
+        {
+            var user=await _userService.GetUserCollectionsAsync(id);
+
+            return Success(user.CollectedFamilies);
+        }
+       
     }
 }

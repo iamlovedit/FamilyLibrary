@@ -5,7 +5,7 @@ using GalaFamilyLibrary.Infrastructure.Service;
 using SqlSugar;
 using SqlSugar.Extensions;
 
-namespace GalaFamilyLibrary.FamilyService.Services
+namespace GalaFamilyLibrary.IdentityService.Services
 {
     public interface IFamilyCollectionService : IServiceBase<FamilyCollection>
     {

@@ -2,7 +2,7 @@
 using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Service;
 
-namespace GalaFamilyLibrary.FamilyService.Services
+namespace GalaFamilyLibrary.IdentityService.Services
 {
     public interface IFamilyStarService : IServiceBase<FamilyStar>
     {

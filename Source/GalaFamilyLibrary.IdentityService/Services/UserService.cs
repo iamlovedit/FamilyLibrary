@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Domain.Models.Identity;
+﻿using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Service;
 
@@ -13,6 +14,13 @@ namespace GalaFamilyLibrary.IdentityService.Services
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+        }
+
+        public async Task<ApplicationUser> GetUserCollectionsAsync(long userId)
+        {
+           return await DAL.DbContext.Queryable<ApplicationUser>()
+                .Includes(u => u.CollectedFamilies)
+                .InSingleAsync(userId);
         }
 
         public async Task<List<string>> GetUserRolesByIdAsync(long userId)

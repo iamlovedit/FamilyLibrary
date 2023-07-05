@@ -1,12 +1,11 @@
+using AutoMapper;
+using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
-using GalaFamilyLibrary.Infrastructure.FileStorage;
-using AutoMapper;
-using GalaFamilyLibrary.FamilyService.Helpers;
-using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
-using GalaFamilyLibrary.Domain.Models.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -16,9 +15,6 @@ services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
-services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
-services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
-
 builder.AddGenericSetup();
 services.AddSingleton(provider => new MapperConfiguration(config =>
 {

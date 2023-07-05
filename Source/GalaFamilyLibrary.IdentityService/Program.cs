@@ -12,6 +12,8 @@ var services = builder.Services;
 // Add services to the container.
 
 services.AddScoped(typeof(IUserService), typeof(UserService));
+services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
+services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 builder.AddGenericSetup();
 
 services.AddSingleton(provider => new MapperConfiguration(config =>
