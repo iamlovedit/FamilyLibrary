@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using GalaFamilyLibrary.DynamoPackageService.DataTransferObjects;
-using GalaFamilyLibrary.DynamoPackageService.Models;
+using GalaFamilyLibrary.Domain.DataTransferObjects.Dynamo;
+using GalaFamilyLibrary.Domain.Models.Dynamo;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Helpers

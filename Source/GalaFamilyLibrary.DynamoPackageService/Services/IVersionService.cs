@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.DynamoPackageService.Models;
+﻿using GalaFamilyLibrary.Domain.Models.Dynamo;
 using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Services
