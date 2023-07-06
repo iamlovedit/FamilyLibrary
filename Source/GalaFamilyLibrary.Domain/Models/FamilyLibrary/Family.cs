@@ -1,7 +1,5 @@
 ﻿using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.Infrastructure.Common;
-using Microsoft.AspNetCore.Hosting;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
@@ -63,12 +61,6 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         [SugarColumn(ColumnName = "family_isDeleted")]
         public bool IsDeleted { get; set; }
 
-
-        public string GetFilePath(IWebHostEnvironment environment, ushort version)
-        {
-            return Path.Combine(environment.WebRootPath, "families", $"{version}", $"{FileId}.rfa");
-        }
-
         public string GetFilePath(ushort version)
         {
             return Path.Combine("families", $"{version}", $"{FileId}.rfa");
@@ -77,11 +69,5 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         {
             return Path.Combine("images", $"{FileId}.png");
         }
-
-        public string GetImagePath(IWebHostEnvironment environment)
-        {
-            return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
-        }
     }
-
 }

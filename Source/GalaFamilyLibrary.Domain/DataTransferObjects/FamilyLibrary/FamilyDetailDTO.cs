@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary
@@ -27,9 +26,5 @@ namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary
 
         public string? Description { get; set; }
 
-        internal string GetImagePath(IWebHostEnvironment environment)
-        {
-            return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
-        }
     }
 }

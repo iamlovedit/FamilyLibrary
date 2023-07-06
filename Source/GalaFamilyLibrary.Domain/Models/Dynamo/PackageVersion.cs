@@ -1,5 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.Models.Dynamo

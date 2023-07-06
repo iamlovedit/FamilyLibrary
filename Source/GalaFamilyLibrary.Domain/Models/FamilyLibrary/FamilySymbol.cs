@@ -1,6 +1,5 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 using SqlSugar;
-using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 
 namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
 {
