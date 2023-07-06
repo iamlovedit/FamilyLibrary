@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.Identity;
@@ -37,11 +38,6 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             _requirement = requirement;
         }
 
-        /// <summary>
-        /// v1/user/register
-        /// </summary>
-        /// <param name="userCreationDto"></param>
-        /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<MessageModel<string>> CreateUser([FromBody] UserCreationDTO userCreationDto)
@@ -62,11 +58,6 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         }
 
 
-        /// <summary>
-        /// v1/user/{id}
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<MessageModel<ApplicationUserDTO>> Details(int id)
         {
@@ -89,14 +80,20 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 
 
         [HttpGet]
-        [Route("collections")]
+        [Route("collections/{id:long}")]
         [AllowAnonymous]
-        public async Task<MessageModel<List<Family>>> GetUserCollection(long id)
+        public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetUserCollection([FromRoute]long id, int pageIndex, int pageSize, string? orderField)
         {
-            var user=await _userService.GetUserCollectionsAsync(id);
+            var redisKey = $"user/collections/{id}";
+            if (await _redis.Exist(redisKey))
+            {
+                return Success(await _redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
+            }
 
-            return Success(user.CollectedFamilies);
+            var familiyPage = await _familyCollectionService.GetFamilyPageAsync(id, pageIndex, pageSize, orderField);
+            var familyDTO = familiyPage.ConvertTo<FamilyBasicDTO>(_mapper);
+            await _redis.Set(redisKey, familyDTO, _requirement.CacheTime);
+            return Success(familyDTO);
         }
-       
     }
 }

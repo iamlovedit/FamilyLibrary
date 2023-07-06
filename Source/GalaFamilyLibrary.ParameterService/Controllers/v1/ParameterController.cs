@@ -19,7 +19,8 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
         private readonly RedisRequirement _redisRequirement;
         private readonly IParameterService _parameterService;
 
-        public ParameterController(IMapper mapper, ILogger<ParameterController> logger, IParameterDefinitionService parameterDefinitionService,
+        public ParameterController(IMapper mapper, ILogger<ParameterController> logger,
+            IParameterDefinitionService parameterDefinitionService,
             IRedisBasketRepository redis, RedisRequirement redisRequirement, IParameterService parameterService)
         {
             _mapper = mapper;
@@ -32,7 +33,7 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 
         [HttpGet]
         [Route("details/{id:long}")]
-        public async Task<MessageModel<ParameterDTO>> GetParameterDetailsAysnc(long id)
+        public async Task<MessageModel<ParameterDTO>> GetParameterDetailsAsync(long id)
         {
             var redisKey = $"parameters/{id}";
             if (await _redis.Exist(redisKey))
@@ -53,7 +54,7 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
         }
 
         [HttpPost]
-        public async Task<MessageModel<bool>> CreateParameters([FromBody] List<ParameterCreationDTO> creationDTOs)
+        public async Task<MessageModel<bool>> CreateParametersAsync([FromBody] List<ParameterCreationDTO> creationDTOs)
         {
             var parameters = _mapper.Map<List<Parameter>>(creationDTOs);
             var ids = await _parameterService.AddSnowflakesAsync(parameters);
@@ -62,25 +63,27 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
                 _logger.LogInformation("create parameters succeed,count : {count}", ids.Count);
                 return Success(true);
             }
+
             return Failed<bool>();
         }
 
 
-
         [HttpGet]
         [Route("definitions/{id:long}")]
-        public async Task<MessageModel<ParameterDefinitionDTO>> GetDefinitionDetails(long id)
+        public async Task<MessageModel<ParameterDefinitionDTO>> GetDefinitionDetailsAsync(long id)
         {
             var redisKey = $"parameter/definitions/{id}";
             if (await _redis.Exist(redisKey))
             {
                 return Success(await _redis.Get<ParameterDefinitionDTO>(redisKey));
             }
+
             var defintion = await _parameterDefinitionService.GetDefinitionDetailsAsync(id);
             if (defintion is null)
             {
                 return Failed<ParameterDefinitionDTO>("definition not exists", 404);
             }
+
             var definitionDTO = _mapper.Map<ParameterDefinitionDTO>(defintion);
             await _redis.Set(redisKey, definitionDTO, _redisRequirement.CacheTime);
             return Success(definitionDTO);
@@ -88,7 +91,8 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 
         [HttpPost]
         [Route("definition")]
-        public async Task<MessageModel<bool>> CreateDefinitions([FromBody] List<ParameterDefinitionCreationDTO> creationDTOs)
+        public async Task<MessageModel<bool>> CreateDefinitionsAsync(
+            [FromBody] List<ParameterDefinitionCreationDTO> creationDTOs)
         {
             var definitions = _mapper.Map<List<ParameterDefinition>>(creationDTOs);
             var ids = await _parameterDefinitionService.AddSnowflakesAsync(definitions);
@@ -97,13 +101,14 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
                 _logger.LogInformation("create parameter definitions succeed,count : {count}", ids.Count);
                 return Success(true);
             }
+
             return Failed<bool>();
         }
 
 
         [HttpGet]
         [Route("groups")]
-        public async Task<MessageModel<List<ParameterGroupDTO>>> GetAllParameterGroups(
+        public async Task<MessageModel<List<ParameterGroupDTO>>> GetParameterGroupsAsync(
             [FromServices] IParameterGroupService groupService)
         {
             var redisKey = $"parameter/groups";
@@ -121,7 +126,7 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 
         [HttpGet]
         [Route("types")]
-        public async Task<MessageModel<List<ParameterTypeDTO>>> GetAllParameterTypes(
+        public async Task<MessageModel<List<ParameterTypeDTO>>> GetParameterTypesAsync(
             [FromServices] IParameterTypeService typeService)
         {
             var redisKey = $"parameter/types";
@@ -139,7 +144,7 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 
         [HttpGet]
         [Route("unitTypes")]
-        public async Task<MessageModel<List<UnitTypeDTO>>> GetAllUnitTypes(
+        public async Task<MessageModel<List<UnitTypeDTO>>> GetUnitTypesAsync(
             [FromServices] IParameterUnitTypeService unitTypeService)
         {
             var redisKey = $"parameter/unitTypes";

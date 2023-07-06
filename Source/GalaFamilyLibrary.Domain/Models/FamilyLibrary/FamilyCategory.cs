@@ -3,7 +3,7 @@
 namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
 {
     [SugarTable("family_categories")]
-    public class FamilyCategory
+    public class FamilyCategory:IDeletable
     {
         [SugarColumn(IsPrimaryKey = true, ColumnName = "category_id")]
         public long Id { get; set; }
@@ -25,5 +25,8 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
 
         [Navigate(NavigateType.OneToMany, nameof(Family.CategoryId))]
         public List<Family> Families { get; set; }
+        
+        [SugarColumn(ColumnName = "category_isDeleted")]
+        public bool IsDeleted { get; set; }
     }
 }
