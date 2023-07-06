@@ -1,6 +1,5 @@
 using AutoMapper;
 using GalaFamilyLibrary.Domain.Models.Dynamo;
-using GalaFamilyLibrary.DynamoPackageService.Helpers;
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;

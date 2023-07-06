@@ -1,9 +1,7 @@
 using AutoMapper;
 using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.IdentityService.Helpers;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
