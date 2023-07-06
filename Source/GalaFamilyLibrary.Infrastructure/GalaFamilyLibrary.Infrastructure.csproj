@@ -28,4 +28,8 @@
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\GalaFamilyLibrary.Domain\GalaFamilyLibrary.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

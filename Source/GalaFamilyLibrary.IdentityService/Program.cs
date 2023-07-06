@@ -16,11 +16,6 @@ services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionServ
 services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 builder.AddGenericSetup();
 
-services.AddSingleton(provider => new MapperConfiguration(config =>
-{
-    var profile = new MappingProfiles(provider.GetService<IAESEncryptionService>());
-    config.AddProfile(profile);
-}).CreateMapper());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

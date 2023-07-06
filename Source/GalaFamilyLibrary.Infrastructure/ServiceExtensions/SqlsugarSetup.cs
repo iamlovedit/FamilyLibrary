@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SqlSugar;

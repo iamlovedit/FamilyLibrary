@@ -1,8 +1,7 @@
-using GalaFamilyLibrary.Infrastructure.Middlewares;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
-using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Domain.Models.FamilyParameter;
-using GalaFamilyLibrary.ParameterService.Helpers;
+using GalaFamilyLibrary.Infrastructure.Middlewares;
+using GalaFamilyLibrary.Infrastructure.Seed;
+using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.ParameterService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +12,6 @@ services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefiniti
 services.AddScoped(typeof(IParameterGroupService), typeof(ParameterGroupService));
 services.AddScoped(typeof(IParameterTypeService), typeof(ParameterTypeService));
 services.AddScoped(typeof(IParameterUnitTypeService), typeof(ParameterUnitTypeService));
-builder.Services.AddAutoMapper(typeof(MappingProfile));
 var app = builder.Build();
 
 app.UseInitSeed(dbSeed =>

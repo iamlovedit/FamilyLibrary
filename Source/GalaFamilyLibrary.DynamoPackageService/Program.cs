@@ -32,11 +32,6 @@ services.AddQuartz(options =>
     });
 });
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
-services.AddSingleton(provider => new MapperConfiguration(config =>
-{
-    var profile = new MappingProfiles(provider.GetService<IAESEncryptionService>());
-    config.AddProfile(profile);
-}).CreateMapper());
 
 services.AddHttpClient<FetchPackagesJob>().AddTransientHttpErrorPolicy(
     policy => policy.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3, retryAttempt))));

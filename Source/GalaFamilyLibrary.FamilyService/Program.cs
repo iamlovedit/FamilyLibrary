@@ -16,10 +16,7 @@ services.AddFileStorageClientSetup(builder.Configuration);
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 builder.AddGenericSetup();
-services.AddSingleton(provider => new MapperConfiguration(config =>
-{
-    config.AddProfile(new MappingProfiles(provider.GetService<FileStorageClient>()));
-}).CreateMapper());
+
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

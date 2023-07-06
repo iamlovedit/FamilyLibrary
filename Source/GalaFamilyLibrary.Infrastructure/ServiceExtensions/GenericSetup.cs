@@ -4,7 +4,7 @@ using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-
+using GalaFamilyLibrary.Infrastructure.AutoMapper;
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
     public static class GenericSetup
@@ -23,7 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddDataProtectionSetup();
 
-
+            services.AddAutoMapperSetup();
 
             services.AddDbSetup();
 
