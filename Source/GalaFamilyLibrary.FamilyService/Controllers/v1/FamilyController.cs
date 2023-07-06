@@ -19,27 +19,20 @@ public class FamilyController : ApiControllerBase
 {
     private readonly IFamilyService _familyService;
     private readonly IFamilyCategoryService _categoryService;
-    private readonly IFamilyCollectionService _familyCollectionService;
     private readonly ILogger<FamilyController> _logger;
     private readonly IMapper _mapper;
     private readonly IRedisBasketRepository _redis;
-    private readonly IFamilyStarService _familyStarService;
     private readonly RedisRequirement _redisRequirement;
     private readonly FileStorageClient _fileStorageClient;
 
     public FamilyController(IFamilyService familyService, IFamilyCategoryService categoryService,
-        IFamilyCollectionService familyCollectionService,
-        ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis,
-        IFamilyStarService familyStarService,
-        RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
+        ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis, RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
     {
         _familyService = familyService;
         _categoryService = categoryService;
-        _familyCollectionService = familyCollectionService;
         _logger = logger;
         _mapper = mapper;
         _redis = redis;
-        _familyStarService = familyStarService;
         _redisRequirement = redisRequirement;
         _fileStorageClient = fileStorageClient;
     }
@@ -152,56 +145,6 @@ public class FamilyController : ApiControllerBase
         family.Stars = isIncrease ? family.Stars += 1 : family.Stars -= 1;
         await _familyService.UpdateColumnsAsync(family, f => f.Stars);
         return Success("update succeed");
-    }
-
-    [HttpGet]
-    [Route("stars")]
-    public async Task<MessageModel<List<FamilyBasicDTO>>> GetFamilyStarsAsync(long userId)
-    {
-        var redisKey = $"family/stars/{userId}";
-        if (await _redis.Exist(redisKey))
-        {
-            return Success(await _redis.Get<List<FamilyBasicDTO>>(redisKey));
-        }
-
-        var families = await _familyStarService.GetStaredFamilyAsync(userId);
-        var familyDTOs = _mapper.Map<List<FamilyBasicDTO>>(families);
-        await _redis.Set(redisKey, familyDTOs, _redisRequirement.CacheTime);
-        _logger.LogInformation("query users stared family ,useId :{userId}", userId);
-        return Success(familyDTOs);
-    }
-
-    [HttpGet]
-    [Route("collections")]
-    public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetCollectionPageAsync(long userId, int pageIndex,
-        int pageSize, string? orderField)
-    {
-        var redisKey =
-            $"family/collections/userId={userId}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
-        if (await _redis.Exist(redisKey))
-        {
-            return SucceedPage(await _redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
-        }
-
-        var collectionPage =
-            await _familyCollectionService.GetFamilyCollectionAsync(userId, pageIndex, pageSize, orderField);
-        var pageDTO = collectionPage.ConvertTo<FamilyBasicDTO>();
-        await _redis.Set(redisKey, pageDTO, _redisRequirement.CacheTime);
-        return SucceedPage(pageDTO);
-    }
-
-    [HttpPost]
-    [Route("collection")]
-    public async Task<MessageModel<bool>> CreateFamilyCollection(long userId, long familyId)
-    {
-        var familyCollection = new FamilyCollection()
-        {
-            UserId = userId,
-            CreateTime = DateTime.Now,
-            FamilyId = familyId
-        };
-        var id = await _familyCollectionService.AddSnowflakeAsync(familyCollection);
-        return id > 0 ? Success(true) : Failed<bool>();
     }
 
 
