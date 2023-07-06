@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
-using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -130,23 +129,6 @@ public class FamilyController : ApiControllerBase
         await _redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
         return Success(categoriesDto);
     }
-
-    [HttpPut]
-    [Route("updateStars")]
-    public async Task<MessageModel<string>> UpdateFamilyStarsAsync(long id, bool isIncrease)
-    {
-        var family = await _familyService.GetByIdAsync(id);
-        if (family is null)
-        {
-            _logger.LogInformation("update family stars failed,id {id}", id);
-            return Failed<string>("family not exists", 404);
-        }
-
-        family.Stars = isIncrease ? family.Stars += 1 : family.Stars -= 1;
-        await _familyService.UpdateColumnsAsync(family, f => f.Stars);
-        return Success("update succeed");
-    }
-
 
     [HttpGet]
     [AllowAnonymous]
