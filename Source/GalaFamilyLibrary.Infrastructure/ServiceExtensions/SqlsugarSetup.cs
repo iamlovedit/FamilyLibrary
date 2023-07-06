@@ -25,6 +25,7 @@ public static class SqlsugarSetup
 
         void ConfigAction(SqlSugarClient client)
         {
+            client.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
 #if DEBUG
             client.Aop.OnLogExecuting = (sql, paras) => { Console.WriteLine(sql); };
 #endif
@@ -41,7 +42,6 @@ public static class SqlsugarSetup
                 PgSqlIsAutoToLowerCodeFirst = false
             }
         }, ConfigAction);
-        sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
         services.AddSingleton<ISqlSugarClient>(sqlsugar);
     }
 }
