@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.DataTransferObjects.Identity
 {
     public class ApplicationUserDTO
     {
+        [JsonConverter(typeof(ValueToStringConverter))]
+        public long Id { get; set; }
 
+        public string Name { get; set; }
     }
 }

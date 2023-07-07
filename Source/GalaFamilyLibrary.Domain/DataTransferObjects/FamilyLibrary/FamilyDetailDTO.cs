@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
+using Newtonsoft.Json;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary
@@ -9,6 +10,8 @@ namespace GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary
         public long Id { get; set; }
 
         public string Name { get; set; }
+
+        public ApplicationUserDTO Uploader { get; set; }
 
         public FamilyCategoryBasicDTO Category { get; set; }
 

@@ -37,7 +37,7 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
             CreateMap<Family, FamilyBasicDTO>().ForMember(fd => fd.ImageUrl, options =>
             {
                 options.MapFrom(f => fileStorageClient.GetFileUrl(f.Name, Path.Combine("images", $"{f.FileId}.png")));
-            });
+            })
 
 
             CreateMap<DynamoPackage, PackageDTO>();
@@ -52,6 +52,10 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
                     options => { options.MapFrom((ud, u) => { return u.Salt = Guid.NewGuid().ToString("N"); }); })
                 .ForMember(u => u.Password,
                     options => { options.MapFrom((ud, u) => ud.Password.MD5Encrypt32(u.Salt)); });
+            CreateMap<CollectionCreationDTO, FamilyCollection>()
+                .ForMember(c => c.CreateTime, options => { options.MapFrom((c, fc) => DateTime.Now); });
+
+            CreateMap<StarCreationDTO, FamilyStar>();
 
             CreateMap<ParameterGroup, ParameterGroupDTO>();
 

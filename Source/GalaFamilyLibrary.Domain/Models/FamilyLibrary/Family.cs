@@ -20,7 +20,10 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         public DateTime UpdateTime { get; set; }
 
         [SugarColumn(ColumnName = "family_stars")]
-        public int Stars { get; set; }
+        public uint Stars { get; set; }
+
+        [SugarColumn(ColumnName = "family_favorites")]
+        public uint Favorites { get; set; }
 
         [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
         public List<ApplicationUser> Collectors { get; set; }

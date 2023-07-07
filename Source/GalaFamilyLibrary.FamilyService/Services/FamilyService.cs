@@ -27,6 +27,7 @@ public class FamilyService : ServiceBase<Family>, IFamilyService
     {
         RefAsync<int> totalCount = 0;
         var list = await DAL.DbContext.Queryable<Family>()
+            .Includes(f => f.Uploader)
             .Includes(f => f.Category)
             .OrderByIF(!string.IsNullOrEmpty(orderByFields), orderByFields)
             .WhereIF(whereExpression != null, whereExpression)
