@@ -25,7 +25,7 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
         public List<ApplicationUser> Collectors { get; set; }
 
-        [Navigate(typeof(FamilyStar), nameof(FamilyStar.FamilyId), nameof(FamilyStar.UserId))]
+        [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
         public List<ApplicationUser> StarredUsers { get; set; }
 
         [SugarColumn(ColumnName = "family_downloads")]

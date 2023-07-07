@@ -21,7 +21,7 @@ namespace GalaFamilyLibrary.Domain.Models.Identity
         [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.UserId), nameof(FamilyCollection.FamilyId))]
         public List<Family> CollectedFamilies { get; set; }
 
-        [Navigate(typeof(FamilyStar), nameof(FamilyStar.UserId), nameof(FamilyStar.FamilyId))]
+        [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.UserId), nameof(FamilyCollection.FamilyId))]
         public List<Family> StarredFamilies { get; set; }
 
         [SugarColumn(IsNullable = false, ColumnName = "user_password")]
