@@ -1,6 +1,6 @@
-using AutoMapper;
 using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
@@ -8,6 +8,8 @@ using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.
+services.AddFileSecurityOptionSetup(builder.Configuration);
+services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IUserService), typeof(UserService));
 services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
