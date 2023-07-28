@@ -37,7 +37,7 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
             CreateMap<Family, FamilyBasicDTO>().ForMember(fd => fd.ImageUrl, options =>
             {
                 options.MapFrom(f => fileStorageClient.GetFileUrl(f.Name, Path.Combine("images", $"{f.FileId}.png")));
-            })
+            });
 
 
             CreateMap<DynamoPackage, PackageDTO>();
