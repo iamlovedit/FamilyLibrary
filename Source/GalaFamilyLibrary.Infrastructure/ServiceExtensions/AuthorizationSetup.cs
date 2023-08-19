@@ -23,7 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-        
+
             var audienceSection = configuration.GetSection("Audience");
             var key = audienceSection["Key"];
             var keyByteArray = Encoding.ASCII.GetBytes(key);
@@ -38,8 +38,9 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
                 TimeSpan.FromSeconds(expiration.ObjToInt()), signingCredentials));
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("ElevatedRights",
-                    policy => policy.RequireRole("Administrator", "Consumer").Build());
+                options.AddPolicy(PermissionConstants.POLICYNAME,
+                    policy => policy.RequireRole(PermissionConstants.ROLE_SUPERADMINISTRATOR,
+                        PermissionConstants.ROLE_ADMINISTRATOR, PermissionConstants.ROLE_CONSUMER).Build());
             });
         }
     }

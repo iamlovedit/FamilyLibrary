@@ -4,12 +4,14 @@ using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.ParameterService.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("parameter/v{version:apiVersion}")]
+    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     public class ParameterController : ApiControllerBase
     {
         private readonly IMapper _mapper;

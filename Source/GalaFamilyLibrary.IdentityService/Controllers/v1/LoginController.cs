@@ -14,7 +14,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("identity/v{version:apiVersion}/authenticate")]
-    [Authorize(Policy = "ElevatedRights")]
+    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;

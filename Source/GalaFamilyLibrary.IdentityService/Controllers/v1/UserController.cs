@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Policy = "ElevatedRights")]
+    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     [Route("user/v{version:apiVersion}")]
     public class UserController : ApiControllerBase
     {
@@ -61,8 +61,8 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<MessageModel<ApplicationUserDTO>> Details(int id)
+        [HttpGet("{id:long}")]
+        public async Task<MessageModel<ApplicationUserDTO>> Details(long id)
         {
             var redisKey = $"user/{id}";
             if (await _redis.Exist(redisKey))
