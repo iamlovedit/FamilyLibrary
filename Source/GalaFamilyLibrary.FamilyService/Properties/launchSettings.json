@@ -6,8 +6,17 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE_CONNECTION_STRING": "server=localhost;port=5432;database=gala_library;userid=root;password=zy4318422;",
-        "REDIS_CONNECTION_STRING": "localhost,password=zy4318422",
+        "DATABASE_HOST":"localhost" ,
+        "DATABASE_PORT": "5432",
+        "DATABASE_DATABASE": "gala_library",
+        "DATABASE_USERID": "root",
+        "DATABASE_PASSWORD": "zy4318422",
+        "REDIS_HOST": "localhost",
+        "REDIS_PASSWORD": "zy4318422",
+        "AUDIENCE_ISSUER": "Young",
+        "AUDIENCE_AUDIENCE": "GalaServer",
+        "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
+        "AUDIENCE_EXPIRATION": "3600",
         "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
       },
       "dotnetRunMessages": true,
@@ -15,15 +24,9 @@
     },
     "GalaFamilyLibrary.FamilyService.Docker": {
       "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging",
-        "DATABASE_CONNECTION_STRING": "server=postgresql;port=5432;database=gala_library;userid=root;password=zy4318422;",
-        "REDIS_CONNECTION_STRING": "redis,password=zy4318422",
-        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
-      }
+      "useSSL": true
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

@@ -4,23 +4,64 @@ services:
   library_gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-
   dynamo_package:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-  
+      - DATABASE_HOST=postgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DATABASE=gala_library
+      - DATABASE_USERID=root
+      - DATABASE_PASSWORD=zy4318422
+      - REDIS_HOST=redis,
+      - REDIS_PASSWORD=zy4318422
+      - AUDIENCE_ISSUER=Young
+      - AUDIENCE_AUDIENCE=GalaServer
+      - AUDIENCE_KEY=a7a31f84-1051-81bc-b930-89c0ae9e92ef
+      - AUDIENCE_EXPIRATION=3600  
   
   family_library:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-  
-  
+      - DATABASE_HOST=postgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DATABASE=gala_library
+      - DATABASE_USERID=root
+      - DATABASE_PASSWORD=zy4318422
+      - REDIS_HOST=redis,
+      - REDIS_PASSWORD=zy4318422
+      - AUDIENCE_ISSUER=Young
+      - AUDIENCE_AUDIENCE=GalaServer
+      - AUDIENCE_KEY=a7a31f84-1051-81bc-b930-89c0ae9e92ef
+      - AUDIENCE_EXPIRATION=3600
+      - FILE_STORAGE_KEY=cf940b17-4ab8-d540-1ee5-a781c741e5ee
   library_identity:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging 
-
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - DATABASE_HOST=postgresql
+      - DATABASE_PORT=5432
+      - DATABASE_DATABASE=gala_library
+      - DATABASE_USERID=root
+      - DATABASE_PASSWORD=zy4318422
+      - REDIS_HOST=redis,
+      - REDIS_PASSWORD=zy4318422
+      - AUDIENCE_ISSUER=Young
+      - AUDIENCE_AUDIENCE=GalaServer
+      - AUDIENCE_KEY=a7a31f84-1051-81bc-b930-89c0ae9e92ef
+      - AUDIENCE_EXPIRATION=3600
   file_storage:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging 
-
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - FILE_STORAGE_KEY=cf940b17-4ab8-d540-1ee5-a781c741e5ee
+    
+  redis:
+    command:
+      redis-server --requirepass zy4318422
+  
+  postgresql:
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: zy4318422
+      POSTGRES_DB: gala_library
+      
+      
 

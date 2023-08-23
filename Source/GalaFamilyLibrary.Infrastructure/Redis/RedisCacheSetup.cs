@@ -17,7 +17,7 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
             services.AddSingleton<RedisRequirement>(provider => new RedisRequirement(TimeSpan.FromMinutes(30)));
             services.AddSingleton<ConnectionMultiplexer>(provider =>
             {
-                var redisConnectionString = configuration["REDIS_CONNECTION_STRING"];
+                var redisConnectionString =$"{configuration["REDIS_HOST"]},password={configuration["REDIS_PASSWORD"]}";
                 var redisConfig = ConfigurationOptions.Parse(redisConnectionString, true);
                 redisConfig.ResolveDns = true;
                 return ConnectionMultiplexer.Connect(redisConfig);

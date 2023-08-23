@@ -16,11 +16,7 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging",
-        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
-      }
+      "useSSL": true
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

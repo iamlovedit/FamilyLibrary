@@ -24,15 +24,14 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
                 throw new ArgumentNullException(nameof(configuration));
             }
 
-            var audienceSection = configuration.GetSection("Audience");
-            var key = audienceSection["Key"];
+            var key = configuration["AUDIENCE_KEY"];
             var keyByteArray = Encoding.ASCII.GetBytes(key);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
-            var issuer = audienceSection["Issuer"];
-            var audience = audienceSection["Audience"];
-            var expiration = audienceSection["Expiration"];
+            var issuer = configuration["AUDIENCE_ISSUER"];
+            var audience = configuration["AUDIENCE_AUDIENCE"];
+            var expiration = configuration["AUDIENCE_EXPIRATION"];
 
             services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, issuer, audience,
                 TimeSpan.FromSeconds(expiration.ObjToInt()), signingCredentials));

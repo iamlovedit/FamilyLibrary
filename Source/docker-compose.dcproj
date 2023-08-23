@@ -20,6 +20,7 @@
     <None Include=".dockerignore" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="Envoy\envoy.yaml" />
   </ItemGroup>
 </Project>

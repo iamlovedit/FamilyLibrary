@@ -5,6 +5,7 @@ using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using GalaFamilyLibrary.Infrastructure.AutoMapper;
+
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
     public static class GenericSetup
@@ -40,7 +41,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddJwtAuthentication(configuration);
 
             //sqlsugar
-            services.AddSqlsugarSetup(configuration);
+            services.AddSqlsugarSetup(configuration, builder.Environment);
             //route
             services.AddRoutingSetup();
             //repository
@@ -50,10 +51,8 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             //api version
             services.AddApiVersionSetup();
 
-            services.AddControllers(options =>
-            {
-                options.Filters.Add(typeof(GlobalExceptionsFilter));
-            }).AddProduceJsonSetup();
+            services.AddControllers(options => { options.Filters.Add(typeof(GlobalExceptionsFilter)); })
+                .AddProduceJsonSetup();
 
             services.AddVersionedApiExplorerSetup();
 
