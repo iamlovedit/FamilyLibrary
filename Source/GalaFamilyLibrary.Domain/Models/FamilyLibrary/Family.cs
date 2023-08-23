@@ -26,16 +26,16 @@ namespace GalaFamilyLibrary.Domain.Models.FamilyLibrary
         public uint Favorites { get; set; }
 
         [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
-        public List<ApplicationUser> Collectors { get; set; }
+        public List<User> Collectors { get; set; }
 
         [Navigate(typeof(FamilyCollection), nameof(FamilyCollection.FamilyId), nameof(FamilyCollection.UserId))]
-        public List<ApplicationUser> StarredUsers { get; set; }
+        public List<User> StarredUsers { get; set; }
 
         [SugarColumn(ColumnName = "family_downloads")]
         public uint Downloads { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(UploaderId))]
-        public ApplicationUser Uploader { get; set; }
+        public User Uploader { get; set; }
 
         [SugarColumn(ColumnName = "family_uploaderId")]
         public long UploaderId { get; set; }

@@ -21,7 +21,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass(typeof(ApplicationUser));
+    dbSeed.InitTablesByClass(typeof(User));
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -30,10 +30,10 @@ app.UseInitSeed(dbSeed =>
 
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Users");
-    dbSeed.InitSeed<ApplicationUser>(file);
+    dbSeed.InitSeed<User>(file);
 
     file = string.Format(seedFolder, "Roles");
-    dbSeed.InitSeed<ApplicationRole>(file);
+    dbSeed.InitSeed<Role>(file);
 
     file = string.Format(seedFolder, "UserRoles");
     dbSeed.InitSeed<UserRole>(file);

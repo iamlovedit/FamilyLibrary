@@ -43,8 +43,8 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
             CreateMap<DynamoPackage, PackageDTO>();
             CreateMap<PackageVersion, PackageVersionDTO>();
 
-            CreateMap<ApplicationUser, ApplicationUserDTO>();
-            CreateMap<UserCreationDTO, ApplicationUser>()
+            CreateMap<User, ApplicationUserDTO>();
+            CreateMap<UserCreationDTO, User>()
                 .ForMember(u => u.CreateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
                 .ForMember(u => u.UpdateTime, options => { options.MapFrom((ud, u) => DateTime.Now); })
                 .ForMember(u => u.LastLoginTime, options => { options.MapFrom((ud, u) => DateTime.Now); })

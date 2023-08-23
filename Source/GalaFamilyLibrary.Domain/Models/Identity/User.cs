@@ -4,7 +4,7 @@ using SqlSugar;
 namespace GalaFamilyLibrary.Domain.Models.Identity
 {
     [SugarTable("application_users")]
-    public class ApplicationUser : IDeletable
+    public class User : IDeletable
     {
         [SugarColumn(IsPrimaryKey = true, ColumnName = "user_id")]
         public long Id { get; set; }

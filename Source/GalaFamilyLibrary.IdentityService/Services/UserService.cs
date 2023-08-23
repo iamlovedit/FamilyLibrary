@@ -5,20 +5,20 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {
-    public class UserService : ServiceBase<ApplicationUser>, IUserService
+    public class UserService : ServiceBase<User>, IUserService
     {
-        private readonly IRepositoryBase<ApplicationRole> _roleRepository;
+        private readonly IRepositoryBase<Role> _roleRepository;
         private readonly IRepositoryBase<UserRole> _userRoleRepository;
 
-        public UserService(IRepositoryBase<ApplicationUser> dbContext, IRepositoryBase<ApplicationRole> roleRepository, IRepositoryBase<UserRole> userRoleRepository) : base(dbContext)
+        public UserService(IRepositoryBase<User> dbContext, IRepositoryBase<Role> roleRepository, IRepositoryBase<UserRole> userRoleRepository) : base(dbContext)
         {
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
         }
 
-        public async Task<ApplicationUser> GetUserCollectionsAsync(long userId)
+        public async Task<User> GetUserCollectionsAsync(long userId)
         {
-           return await DAL.DbContext.Queryable<ApplicationUser>()
+           return await DAL.DbContext.Queryable<User>()
                 .Includes(u => u.CollectedFamilies)
                 .InSingleAsync(userId);
         }

@@ -1,4 +1,4 @@
-﻿namespace GalaFamilyLibrary.Domain.Models.Identity
+﻿namespace GalaFamilyLibrary.Domain.DataTransferObjects.Identity
 {
     public class StarCreationDTO
     {

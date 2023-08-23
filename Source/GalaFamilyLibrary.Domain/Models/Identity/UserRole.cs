@@ -13,11 +13,11 @@ namespace GalaFamilyLibrary.Domain.Models.Identity
 
         [SugarColumn(IsIgnore = true)]
         [Navigate(NavigateType.OneToOne, nameof(UserId))]
-        public ApplicationUser User { get; set; }
+        public User User { get; set; }
 
         [SugarColumn(IsIgnore = true)]
         [Navigate(NavigateType.OneToOne, nameof(RoleId))]
-        public ApplicationRole Role { get; set; }
+        public Role Role { get; set; }
 
         [SugarColumn(ColumnName = "user_roles_roleId")]
         public long RoleId { get; set; }

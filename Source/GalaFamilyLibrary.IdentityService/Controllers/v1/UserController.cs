@@ -50,7 +50,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 return Failed("用户名已存在");
             }
 
-            var user = _mapper.Map<ApplicationUser>(userCreationDto);
+            var user = _mapper.Map<User>(userCreationDto);
             var id = await _userService.AddSnowflakeAsync(user);
             if (id > 0)
             {

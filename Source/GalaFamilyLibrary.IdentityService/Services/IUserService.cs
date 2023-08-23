@@ -4,10 +4,10 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {
-    public interface IUserService : IServiceBase<ApplicationUser>
+    public interface IUserService : IServiceBase<User>
     {
         Task<List<string>> GetUserRolesByIdAsync(long userId);
 
-        Task<ApplicationUser> GetUserCollectionsAsync(long userId);
+        Task<User> GetUserCollectionsAsync(long userId);
     }
 }

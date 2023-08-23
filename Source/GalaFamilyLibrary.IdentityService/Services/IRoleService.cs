@@ -3,7 +3,7 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {
-    public interface IRoleService : IServiceBase<ApplicationRole>
+    public interface IRoleService : IServiceBase<Role>
     {
 
     }
