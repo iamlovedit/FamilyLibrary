@@ -2,8 +2,8 @@
 {
     public interface IAESEncryptionService
     {
-        string Encrypt(string source, string? passPhrase = null, string? iv = null);
+        string Encrypt(string source, string? aesKey = null);
 
-        string Decrypt(string source, string? passPhrase = null, string? iv = null);
+        string Decrypt(string source, string? aesKey = null);
     }
 }

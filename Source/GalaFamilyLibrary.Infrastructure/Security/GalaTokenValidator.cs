@@ -20,10 +20,10 @@ namespace GalaFamilyLibrary.Infrastructure.Security
         }
 
         public bool CanValidateToken { get; }
+
         public int MaximumTokenSizeInBytes { get; set; }
 
-        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters,
-            out SecurityToken validatedToken)
+        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
         {
             var decodeToken = _aesEncryptionService.Decrypt(securityToken);
             var principal =

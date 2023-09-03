@@ -3,6 +3,7 @@ using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,20 +21,22 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         private readonly PermissionRequirement _permissionRequirement;
         private readonly ILogger<LoginController> _logger;
         private readonly IRedisBasketRepository _redis;
+        private readonly IAESEncryptionService _aesEncryptionService;
         private readonly IUserService _userService;
 
         public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
-            IRedisBasketRepository redis,
+            IRedisBasketRepository redis, IAESEncryptionService aesEncryptionService,
             IUserService userService)
         {
             _permissionRequirement = permissionRequirement;
             _logger = logger;
             _redis = redis;
+            _aesEncryptionService = aesEncryptionService;
             _userService = userService;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
         public IActionResult Test()
         {
             return Ok("HelloWorld");
@@ -47,11 +50,11 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<MessageModel<string>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
+        public async Task<MessageModel<TokenInfo>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                return Failed<string>("用户名或者密码不能为空");
+                return Failed<TokenInfo>("用户名或者密码不能为空");
             }
 
             var user = await _userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
@@ -62,7 +65,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 {
                     user.ErrorCount += 1;
                     await _userService.UpdateColumnsAsync(user, u => u.ErrorCount);
-                    return Failed<string>("用户名或者密码错误");
+                    return Failed<TokenInfo>("用户名或者密码错误");
                 }
 
                 _logger.LogInformation("user {user} logged in", user.Username);
@@ -79,15 +82,11 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                     new(ClaimTypes.Expiration,
                         DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
                 };
-                var tokenKey = $"auth/token/{user.Id}";
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
                 var token = GenerateToken(claims, _permissionRequirement);
-                var protectToken = token.Token.ExcryptAES();
-                await _redis.Set(protectToken, token, _permissionRequirement.Expiration);
-                return Success(protectToken);
+                return Success(token);
             }
-
-            return Failed<string>("用户名或者密码错误");
+            return Failed<TokenInfo>("用户名或者密码错误");
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             throw new NotImplementedException();
         }
 
-        private static TokenInfo GenerateToken(List<Claim> claims, PermissionRequirement permissionRequirement)
+        private TokenInfo GenerateToken(List<Claim> claims, PermissionRequirement permissionRequirement)
         {
             var now = DateTime.Now;
             var jwtToken = new JwtSecurityToken(
@@ -140,6 +139,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             );
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            token = _aesEncryptionService.Encrypt(token);
             return new TokenInfo(token, permissionRequirement.Expiration.TotalSeconds,
                 JwtBearerDefaults.AuthenticationScheme);
             ;
