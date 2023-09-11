@@ -18,12 +18,10 @@ services:
     networks:
       - "family_library"
     depends_on:
-      - mysql
+      - postgresql
       - redis
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4
-      - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
       - "5001:80"
     image: ${DOCKER_REGISTRY-}dynamo_package
@@ -37,15 +35,13 @@ services:
     networks:
       - "family_library"
     depends_on:
-      - mysql
+      - postgresql
       - redis
       - file_storage
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=FamilyLibrary;userid=root;password=zy4318422;CharSet=utf8mb4
-      - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "5002:80"
+      - "6001:80"
     image: ${DOCKER_REGISTRY-}family_library
     build:
       context: .
@@ -57,14 +53,12 @@ services:
     networks:
       - "family_library"
     depends_on:
-      - mysql
+      - postgresql
       - redis
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryUser;userid=root;password=zy4318422;CharSet=utf8mb4
-      - REDIS_CONNECTION_STRING= redis,password=zy4318422
     ports:
-      - "5003:80"
+      - "7001:80"
     image: ${DOCKER_REGISTRY-}library_identity
     build:
       context: .
@@ -78,7 +72,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
-      - "5004:80"
+      - "8001:80"
     image: ${DOCKER_REGISTRY-}file_storage
     volumes:
       - /usr/local/docker/familyLibrary/files:/app/files
@@ -86,19 +80,14 @@ services:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
   
-  mysql:
-    networks:
-      - "family_library"
-    restart: always
-    image: "mysql"
-    container_name: "mysql"
+  postgresql:
     environment:
-      MYSQL_ROOT_PASSWORD: zy4318422
-    ports:
-      - "3306:3306"
+      POSTGRES_USER: $DATABASE_USERID
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_DATABASE
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-      - /usr/local/docker/mysql/mysql:/var/lib/mysql
-  
+      - /usr/local/docker/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
   redis:
     networks:
       - "family_library"
@@ -107,7 +96,8 @@ services:
     image: "redis"
     ports:
       - "6379:6379"
-    command: redis-server --requirepass zy4318422
+    command:
+      redis-server --requirepass $REDIS_PASSWORD
   
   seqcli:
     image: datalust/seqcli:latest

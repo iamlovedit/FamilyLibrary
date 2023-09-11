@@ -1,23 +1,6 @@
 version: '3.4'
 
 services:
-#  library_gateway:
-#    container_name: "library_gateway"
-#    networks:
-#      - "family_library"
-#    depends_on:
-#      - mysql
-#      - redis
-#    environment:
-#      - DATABASE_CONNECTION_STRING=server=mysql;port=3306;database=LibraryGateway;userid=root;password=zy4318422;CharSet=utf8mb4
-#      - REDIS_CONNECTION_STRING= redis,password=zy4318422
-#    ports:
-#      - "5000:80"
-#    image: library_gateway
-#    build:
-#      context: .
-#      dockerfile: GalaFamilyLibrary.Gateway/Dockerfile
-  
   library_gateway:
     restart: on-failure
     container_name: "library_gateway"
@@ -51,7 +34,7 @@ services:
       - postgresql
       - redis
     ports:
-      - "5002:80"
+      - "6001:80"
     image: family_library
     build:
       context: .
@@ -65,7 +48,7 @@ services:
       - postgresql
       - redis
     ports:
-      - "5003:80"
+      - "7001:80"
     image: library_identity
     build:
       context: .
@@ -74,24 +57,13 @@ services:
   file_storage:
     container_name: "file_storage"
     ports:
-      - "5004:80"
+      - "8001:80"
     networks:
       - family_library
     image: file_storage
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
-
-  mysql:
-    networks:
-      - "family_library"
-    restart: always
-    image: "mysql"
-    container_name: "mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: zy4318422
-    ports:
-      - "3306:3306"
   
   postgresql:
     networks:
@@ -101,7 +73,7 @@ services:
     container_name: "postgresql"
     ports:
       - "5432:5432"
-    
+  
   redis:
     networks:
       - "family_library"
@@ -110,7 +82,8 @@ services:
     image: "redis"
     ports:
       - "6379:6379"
-    command: redis-server --requirepass zy4318422
+    command:
+      redis-server --requirepass $REDIS_PASSWORD
 
   seqcli:
     image: datalust/seqcli:latest
