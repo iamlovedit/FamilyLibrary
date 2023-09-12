@@ -1,30 +1,26 @@
-﻿using GalaFamilyLibrary.EventBus.Abstractions;
+﻿using System.Net.Sockets;
+using System.Text;
+using Autofac;
+using GalaFamilyLibrary.EventBus.Abstractions;
 using GalaFamilyLibrary.EventBus.Events;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Polly;
 using Polly.Retry;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using RabbitMQ.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-using Polly;
-using Autofac;
 
-namespace GalaFamilyLibrary.EventBus.RabbitMQ
+namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 {
-    public class EventBusRabbitMQ : IEventBus, IDisposable
+    public class EventBusRabbitMq : IEventBus, IDisposable
     {
         const string BROKER_NAME = "eshop_event_bus";
         const string AUTOFAC_SCOPE_NAME = "eshop_event_bus";
 
         private readonly IRabbitMQPersistentConnection _persistentConnection;
-        private readonly ILogger<EventBusRabbitMQ> _logger;
+        private readonly ILogger<EventBusRabbitMq> _logger;
         private readonly IEventBusSubscriptionsManager _subsManager;
         private readonly ILifetimeScope _autofac;
         private readonly int _retryCount;
@@ -32,7 +28,7 @@ namespace GalaFamilyLibrary.EventBus.RabbitMQ
         private IModel _consumerChannel;
         private string _queueName;
 
-        public EventBusRabbitMQ(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMQ> logger,
+        public EventBusRabbitMq(IRabbitMQPersistentConnection persistentConnection, ILogger<EventBusRabbitMq> logger,
             ILifetimeScope autofac, IEventBusSubscriptionsManager subsManager, string queueName = null, int retryCount = 5)
         {
             _persistentConnection = persistentConnection ?? throw new ArgumentNullException(nameof(persistentConnection));

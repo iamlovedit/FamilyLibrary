@@ -14,4 +14,15 @@
     <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
   </ItemGroup>
 
+
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
+  </ItemGroup>
+
+
+
+
+
 </Project>

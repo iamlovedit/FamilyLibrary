@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.EventBus.Events
 {
@@ -6,21 +7,19 @@ namespace GalaFamilyLibrary.EventBus.Events
     {
         public IntegrationEvent()
         {
-            Id = Guid.NewGuid();
+            Id = SnowFlakeSingle.instance.NextId();
             CreationDate = DateTime.UtcNow;
         }
 
         [JsonConstructor]
-        public IntegrationEvent(Guid id, DateTime createDate)
+        public IntegrationEvent(long id, DateTime createDate)
         {
             Id = id;
             CreationDate = createDate;
         }
 
-        [JsonProperty]
-        public Guid Id { get; private set; }
+        [JsonProperty] public long Id { get; private set; }
 
-        [JsonProperty]
-        public DateTime CreationDate { get; private set; }
+        [JsonProperty] public DateTime CreationDate { get; private set; }
     }
 }

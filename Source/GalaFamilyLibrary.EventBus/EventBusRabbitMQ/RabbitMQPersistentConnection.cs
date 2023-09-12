@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Net.Sockets;
+using Microsoft.Extensions.Logging;
 using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
-using System.Net.Sockets;
 
-namespace GalaFamilyLibrary.EventBus.RabbitMQ
+namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 {
     public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
     {
