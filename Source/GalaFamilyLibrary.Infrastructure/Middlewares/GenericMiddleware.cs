@@ -15,12 +15,14 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 throw new ArgumentNullException(nameof(app));
             }
 
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
             {
                 app.UseSwagger();
                 app.UseVersionedSwaggerUI();
             }
 
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+                { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
             //app.UseConsul(app.Configuration);
 
             // app.UseForwardedHeaders(new ForwardedHeadersOptions
