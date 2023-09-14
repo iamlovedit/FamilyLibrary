@@ -1,30 +1,47 @@
 version: '3.4'
 
 services:
-  library_gateway:
+  gala_services_gateway:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Staging
 
-  dynamo_package:
+  gala_services_dynamo_packages:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-
+      - ASPNETCORE_ENVIRONMENT=Staging
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile  
   
-  family_library:
+  gala_services_family_library:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Staging
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
-
-  library_identity:
+  gala_services_identity:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-
-
-  file_storage:
+      - ASPNETCORE_ENVIRONMENT=Staging
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
+  
+  gala_services_file_storage:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Staging
       - FILE_STORAGE_KEY=cf940b17-4ab8-d540-1ee5-a781c741e5ee
-  
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile   
+    
+  gala_services_family_parameters:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+    image: ${DOCKER_REGISTRY-}gala_services_parameters
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
+    
   redis:
     command:
       redis-server --requirepass $REDIS_PASSWORD
@@ -36,9 +53,4 @@ services:
       POSTGRES_DB: $DATABASE_DATABASE
       
       
-  gala_services_parameters:
-    image: ${DOCKER_REGISTRY-}gala_services_parameters
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
 

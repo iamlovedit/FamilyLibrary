@@ -25,11 +25,6 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
             //app.UseConsul(app.Configuration);
 
-            // app.UseForwardedHeaders(new ForwardedHeadersOptions
-            // {
-            //     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            // });
-
             app.UseCorsService();
 
             app.UseAuthentication();

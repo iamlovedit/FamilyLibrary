@@ -1,22 +1,22 @@
 version: '3.4'
 
 services:
-  library_gateway:
+  gala_services_gateway:
     restart: on-failure
-    container_name: "library_gateway"
+    container_name: "gala_services_gateway"
     networks:
-      - "family_library"
+      - gala_services_net
     image: envoyproxy/envoy:v1.11.1
     ports:
       - "5000:80"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
-  dynamo_package:
+  gala_services_dynamo_packages:
     restart: on-failure
-    container_name: "dynamo_package"
+    container_name: "gala_services_dynamo_packages"
     networks:
-      - "family_library"
+      - gala_services_net
     depends_on:
       - postgresql
       - redis
@@ -29,11 +29,11 @@ services:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
   
-  family_library:
+  gala_services_family_library:
     restart: on-failure
-    container_name: "family_library"
+    container_name: "gala_services_family_library"
     networks:
-      - "family_library"
+      - gala_services_net
     depends_on:
       - postgresql
       - redis
@@ -47,11 +47,11 @@ services:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
-  library_identity:
+  gala_services_identity:
     restart: on-failure
-    container_name: "library_identity"
+    container_name: "gala_services_identity"
     networks:
-      - "family_library"
+      - gala_services_net
     depends_on:
       - postgresql
       - redis
@@ -64,11 +64,11 @@ services:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
 
-  file_storage:
+  gala_services_file_storage:
     restart: on-failure
-    container_name: "file_storage"
+    container_name: "gala_services_file_storage"
     networks:
-      - "family_library"
+      - gala_services_net
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
@@ -78,8 +78,16 @@ services:
       - /usr/local/docker/familyLibrary/files:/app/files
     build:
       context: .
-      dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
+      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
   
+  gala_services_family_parameters:
+    restart: on-failure
+    container_name: "gala_services_family_parameters"
+    networks:
+      - gala_services_net
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    
   postgresql:
     environment:
       POSTGRES_USER: $DATABASE_USERID
@@ -88,9 +96,10 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - /usr/local/docker/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
+
   redis:
     networks:
-      - "family_library"
+      - gala_services_net
     restart: always
     container_name: "redis"
     image: "redis"
@@ -107,7 +116,7 @@ services:
       - seq
     restart: on-failure
     networks:
-      - family_library
+      - gala_services_net
   seq:
     image: datalust/seq:latest
     container_name: "seq"
@@ -118,7 +127,7 @@ services:
     ports:
       - "5341:80"
     networks:
-      - family_library
+      - gala_services_net
 networks:
-  family_library:
+  gala_services_net:
     driver: bridge

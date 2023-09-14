@@ -3,7 +3,7 @@
   address:
     socket_address:
       address: 0.0.0.0
-      port_value: 8001
+      port_value: 4321
 static_resources:
   listeners:
     - address:
@@ -77,7 +77,7 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: dynamo_package
+            address: gala_services_dynamo_packages
             port_value: 80
 
     - name: family
@@ -86,7 +86,7 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: family_library
+            address: gala_services_family_library
             port_value: 80
 
     - name: identity
@@ -95,5 +95,23 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: library_identity
+            address: gala_services_identity
             port_value: 80
+
+    - name: file
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      hosts:
+        - socket_address:
+            address: gala_services_file_storage
+            port_value: 80
+
+    - name: parameter
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      hosts:
+        - socket_address:
+            address: gala_services_family_parameters
+            port_value: 80            
