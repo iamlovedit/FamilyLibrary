@@ -5,16 +5,12 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
 WORKDIR /src
 COPY ["GalaFamilyLibrary.IdentityService/GalaFamilyLibrary.IdentityService.csproj", "GalaFamilyLibrary.IdentityService/"]
 COPY ["GalaFamilyLibrary.Infrastructure/GalaFamilyLibrary.Infrastructure.csproj", "GalaFamilyLibrary.Infrastructure/"]
-RUN dotnet restore "GalaFamilyLibrary.IdentityService/GalaFamilyLibrary.IdentityService.csproj"
 COPY . .
 WORKDIR "/src/GalaFamilyLibrary.IdentityService"
-RUN dotnet build "GalaFamilyLibrary.IdentityService.csproj" -c Release -o /app/build
-
-FROM build AS publish
 RUN dotnet publish "GalaFamilyLibrary.IdentityService.csproj" -c Release -o /app/publish
 
 FROM base AS final
