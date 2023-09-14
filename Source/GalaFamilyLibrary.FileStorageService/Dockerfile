@@ -1,4 +1,3 @@
-
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -15,5 +14,6 @@ RUN dotnet publish "GalaFamilyLibrary.FileStorageService.csproj" -c Release -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+VOLUME ["/app/files"]
 COPY ["GalaFamilyLibrary.FileStorageService/files","/app/files"] 
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.FileStorageService.dll"]

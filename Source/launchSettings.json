@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "dynamo_package": "StartDebugging",
+        "family_library": "StartDebugging",
+        "file_storage": "StartDebugging",
+        "galafamilylibrary.parameterservice": "StartDebugging",
+        "library_identity": "StartDebugging"
+      }
+    }
+  }
+}
