@@ -37,10 +37,6 @@ services:
   gala_services_family_parameters:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-    image: ${DOCKER_REGISTRY-}gala_services_parameters
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
     
   redis:
     command:

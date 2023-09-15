@@ -24,10 +24,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "5001:80"
-    image: ${DOCKER_REGISTRY-}dynamo_package
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
+
   
   gala_services_family_library:
     restart: on-failure
@@ -42,10 +39,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "6001:80"
-    image: ${DOCKER_REGISTRY-}family_library
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
   gala_services_identity:
     restart: on-failure
@@ -59,10 +52,6 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
     ports:
       - "7001:80"
-    image: ${DOCKER_REGISTRY-}library_identity
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
 
   gala_services_file_storage:
     restart: on-failure
@@ -76,9 +65,6 @@ services:
     image: ${DOCKER_REGISTRY-}file_storage
     volumes:
       - /usr/local/docker/familyLibrary/files:/app/files
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
   
   gala_services_family_parameters:
     restart: on-failure
@@ -111,7 +97,7 @@ services:
   seqcli:
     image: datalust/seqcli:latest
     container_name: "seqcli"
-    command: apikey create -t newapikey --token tZSCDVnAbyYZB1s4twSl -s http://seq
+    command: apikey create -t newapikey --token $SEQ_TOKEN -s http://seq
     depends_on:
       - seq
     restart: on-failure

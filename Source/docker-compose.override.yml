@@ -35,8 +35,7 @@ services:
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
       - TZ=$TIMEZONE
-
-    image: dynamo_package
+    image: ${DOCKER_REGISTRY-}gala_dynamo_packages
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
@@ -52,7 +51,6 @@ services:
     ports:
       - "6001:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
       - DATABASE_HOST=$DATABASE_HOST
       - DATABASE_PORT=$DATABASE_PORT
       - DATABASE_DATABASE=$DATABASE_DATABASE
@@ -66,7 +64,7 @@ services:
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
       - TZ=$TIMEZONE
 
-    image: family_library
+    image: ${DOCKER_REGISTRY-}gala_family_library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
@@ -82,7 +80,6 @@ services:
     ports:
       - "7001:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=$ASPNETCORE_ENVIRONMENT
       - DATABASE_HOST=$DATABASE_HOST
       - DATABASE_PORT=$DATABASE_PORT
       - DATABASE_DATABASE=$DATABASE_DATABASE
@@ -96,7 +93,7 @@ services:
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
       - TZ=$TIMEZONE
 
-    image: library_identity
+    image: ${DOCKER_REGISTRY-}gala_identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
@@ -108,14 +105,39 @@ services:
       - "8001:80"
     networks:
       - gala_services_net
-    image: file_storage
+    environment:
+      - DATABASE_HOST=$DATABASE_HOST
+      - DATABASE_PORT=$DATABASE_PORT
+      - DATABASE_DATABASE=$DATABASE_DATABASE
+      - DATABASE_USERID=$DATABASE_USERID
+      - DATABASE_PASSWORD=$DATABASE_PASSWORD
+      - REDIS_HOST=$REDIS_HOST,
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - AUDIENCE_ISSUER=$AUDIENCE_ISSUER
+      - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
+      - AUDIENCE_KEY=$AUDIENCE_KEY
+      - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - TZ=$TIMEZONE
+
+    image: ${DOCKER_REGISTRY-}gala_file_storage
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
   
   gala_services_family_parameters:
     environment:
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - DATABASE_HOST=$DATABASE_HOST
+      - DATABASE_PORT=$DATABASE_PORT
+      - DATABASE_DATABASE=$DATABASE_DATABASE
+      - DATABASE_USERID=$DATABASE_USERID
+      - DATABASE_PASSWORD=$DATABASE_PASSWORD
+      - REDIS_HOST=$REDIS_HOST,
+      - REDIS_PASSWORD=$REDIS_PASSWORD
+      - AUDIENCE_ISSUER=$AUDIENCE_ISSUER
+      - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
+      - AUDIENCE_KEY=$AUDIENCE_KEY
+      - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - TZ=$TIMEZONE
     container_name: "gala_services_family_parameters"
     restart: on-failure
     ports:
@@ -125,6 +147,10 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro    
+    image: ${DOCKER_REGISTRY-}gala_family_parameters
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
 
   postgresql:
     networks:
