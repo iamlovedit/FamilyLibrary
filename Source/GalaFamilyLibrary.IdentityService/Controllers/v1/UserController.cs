@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     [Route("user/v{version:apiVersion}")]
     public class UserController : ApiControllerBase
     {

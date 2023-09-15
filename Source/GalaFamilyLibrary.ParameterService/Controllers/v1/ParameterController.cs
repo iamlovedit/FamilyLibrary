@@ -11,7 +11,6 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("parameter/v{version:apiVersion}")]
-    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     public class ParameterController : ApiControllerBase
     {
         private readonly IMapper _mapper;

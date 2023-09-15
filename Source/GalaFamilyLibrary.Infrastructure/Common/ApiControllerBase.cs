@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
 [ApiController]
+[Authorize(Policy = PermissionConstants.POLICYNAME)]
 [Route("api/v{version:apiVersion}/[controller]")]
+[Produces("application/json")]
+[ProducesResponseType(StatusCodes.Status200OK)]
 public class ApiControllerBase : ControllerBase
 {
     [NonAction]

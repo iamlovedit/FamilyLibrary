@@ -13,7 +13,6 @@ using SqlSugar;
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
 [ApiVersion("1.0")]
-[Authorize(Policy = PermissionConstants.POLICYNAME)]
 [Route("family/v{version:apiVersion}")]
 public class FamilyController : ApiControllerBase
 {
