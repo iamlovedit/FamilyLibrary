@@ -18,7 +18,6 @@ services.AddRedisCacheSetup(builder.Configuration);
 
 services.AddSeqSetup(builder.Configuration);
 
-builder.AddTraceOutputSetup();
 services.AddAuthorizationSetup(builder.Configuration);
 services.AddJwtAuthentication(builder.Configuration);
 services.AddOcelot().AddPolly();

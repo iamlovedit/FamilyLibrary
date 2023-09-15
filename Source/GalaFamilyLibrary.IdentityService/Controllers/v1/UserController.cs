@@ -3,7 +3,6 @@ using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;

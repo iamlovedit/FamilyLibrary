@@ -15,7 +15,6 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddCorsSetup();
 services.AddHttpClient();
-services.AddAESEncryptionSetup(builder.Configuration);
 services.AddFileSecurityOptionSetup(builder.Configuration);
 var app = builder.Build();
 
