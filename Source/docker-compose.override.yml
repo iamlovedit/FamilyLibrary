@@ -34,6 +34,7 @@ services:
       - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - AES_KEY=$AES_KEY
       - TZ=$TIMEZONE
     image: ${DOCKER_REGISTRY-}gala_dynamo_packages
     build:
@@ -62,6 +63,7 @@ services:
       - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - AES_KEY=$AES_KEY
       - TZ=$TIMEZONE
 
     image: ${DOCKER_REGISTRY-}gala_family_library
@@ -91,6 +93,7 @@ services:
       - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - AES_KEY=$AES_KEY
       - TZ=$TIMEZONE
 
     image: ${DOCKER_REGISTRY-}gala_identity
@@ -117,6 +120,7 @@ services:
       - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - AES_KEY=$AES_KEY
       - TZ=$TIMEZONE
 
     image: ${DOCKER_REGISTRY-}gala_file_storage
@@ -137,6 +141,7 @@ services:
       - AUDIENCE_AUDIENCE=$AUDIENCE_AUDIENCE
       - AUDIENCE_KEY=$AUDIENCE_KEY
       - AUDIENCE_EXPIRATION=$AUDIENCE_EXPIRATION
+      - AES_KEY=$AES_KEY
       - TZ=$TIMEZONE
     container_name: "gala_services_family_parameters"
     restart: on-failure

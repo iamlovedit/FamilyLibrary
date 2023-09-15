@@ -13,64 +13,25 @@ services:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
   gala_services_dynamo_packages:
-    restart: on-failure
-    container_name: "gala_services_dynamo_packages"
-    networks:
-      - gala_services_net
-    depends_on:
-      - postgresql
-      - redis
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - "5001:80"
 
-  
   gala_services_family_library:
-    restart: on-failure
-    container_name: "gala_services_family_library"
-    networks:
-      - gala_services_net
-    depends_on:
-      - postgresql
-      - redis
-      - file_storage
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - "6001:80"
+
 
   gala_services_identity:
-    restart: on-failure
-    container_name: "gala_services_identity"
-    networks:
-      - gala_services_net
-    depends_on:
-      - postgresql
-      - redis
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - "7001:80"
 
   gala_services_file_storage:
-    restart: on-failure
-    container_name: "gala_services_file_storage"
-    networks:
-      - gala_services_net
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-    ports:
-      - "8001:80"
-    image: ${DOCKER_REGISTRY-}file_storage
     volumes:
       - /usr/local/docker/familyLibrary/files:/app/files
   
   gala_services_family_parameters:
-    restart: on-failure
-    container_name: "gala_services_family_parameters"
-    networks:
-      - gala_services_net
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
     
@@ -82,6 +43,8 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - /usr/local/docker/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
+    ports:
+      - "$DATABASE_PORT:5432"
 
   redis:
     networks:
@@ -90,7 +53,7 @@ services:
     container_name: "redis"
     image: "redis"
     ports:
-      - "6379:6379"
+      - "$REDIS_PORT:6379"
     command:
       redis-server --requirepass $REDIS_PASSWORD
   
