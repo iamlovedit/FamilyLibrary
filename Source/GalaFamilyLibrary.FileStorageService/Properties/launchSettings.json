@@ -6,7 +6,8 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee"
+        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee",
+        "AES_KEY": "zxcvbnmasdfghjkl"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5004;https://localhost:6004"
