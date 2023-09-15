@@ -32,8 +32,8 @@ public static class SqlsugarSetup
         SnowFlakeSingle.WorkId = workId;
         var connectionString = $"server={configuration["DATABASE_HOST"]};" +
                                $"port={configuration["DATABASE_PORT"]};" +
-                               $"database={configuration["DATABASE_DATABASE"]}" +
-                               $";userid={configuration["DATABASE_USERID"]};" +
+                               $"database={configuration["DATABASE_DATABASE"]};" +
+                               $"userid={configuration["DATABASE_USERID"]};" +
                                $"password={configuration["DATABASE_PASSWORD"]};";
 
         void ConfigAction(SqlSugarClient client)

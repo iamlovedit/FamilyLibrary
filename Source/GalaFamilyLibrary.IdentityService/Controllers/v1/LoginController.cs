@@ -1,10 +1,9 @@
 ﻿using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
-using GalaFamilyLibrary.IdentityService.Models;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Security;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SqlSugar.Extensions;
@@ -22,16 +21,18 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         private readonly ILogger<LoginController> _logger;
         private readonly IRedisBasketRepository _redis;
         private readonly IAESEncryptionService _aesEncryptionService;
+        private readonly ITokenBuilder _tokenBuilder;
         private readonly IUserService _userService;
 
         public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
-            IRedisBasketRepository redis, IAESEncryptionService aesEncryptionService,
+            IRedisBasketRepository redis, IAESEncryptionService aesEncryptionService, ITokenBuilder tokenBuilder,
             IUserService userService)
         {
             _permissionRequirement = permissionRequirement;
             _logger = logger;
             _redis = redis;
             _aesEncryptionService = aesEncryptionService;
+            _tokenBuilder = tokenBuilder;
             _userService = userService;
         }
 
@@ -83,7 +84,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                         DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
                 };
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
-                var token = GenerateToken(claims, _permissionRequirement);
+                var token = _tokenBuilder.GenerateTokenInfo(claims);
                 return Success(token);
             }
             return Failed<TokenInfo>("用户名或者密码错误");
@@ -122,27 +123,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 throw;
             }
 
-
             throw new NotImplementedException();
-        }
-
-        private TokenInfo GenerateToken(List<Claim> claims, PermissionRequirement permissionRequirement)
-        {
-            var now = DateTime.Now;
-            var jwtToken = new JwtSecurityToken(
-                issuer: permissionRequirement.Issuer,
-                audience: permissionRequirement.Audience,
-                claims: claims,
-                notBefore: now,
-                expires: now.Add(permissionRequirement.Expiration),
-                signingCredentials: permissionRequirement.SigningCredentials
-            );
-
-            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            token = _aesEncryptionService.Encrypt(token);
-            return new TokenInfo(token, permissionRequirement.Expiration.TotalSeconds,
-                JwtBearerDefaults.AuthenticationScheme);
-            ;
         }
     }
 }

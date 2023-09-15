@@ -15,6 +15,7 @@ public static class ProduceJsonSetup
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
             options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
         });
     }
 }

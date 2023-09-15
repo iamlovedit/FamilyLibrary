@@ -23,7 +23,6 @@ public static class JwtAuthenticationSetup
         var key = new SymmetricSecurityKey(buffer);
         var issuer = configuration["AUDIENCE_ISSUER"];
         var audience = configuration["AUDIENCE_AUDIENCE"];
-        var serviceProvider = services.BuildServiceProvider();
         var tokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
@@ -49,9 +48,6 @@ public static class JwtAuthenticationSetup
         void ConfigureJwtBearer(JwtBearerOptions options)
         {
             options.TokenValidationParameters = tokenValidationParameters;
-            options.SecurityTokenValidators.Clear();
-            options.SecurityTokenValidators.Add(
-                new GalaTokenValidator(serviceProvider.GetService<IAESEncryptionService>()));
             options.Events = new JwtBearerEvents()
             {
                 OnChallenge = challengeContext =>

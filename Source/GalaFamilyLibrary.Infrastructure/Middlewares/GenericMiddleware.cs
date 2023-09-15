@@ -3,6 +3,7 @@ using GalaFamilyLibrary.Infrastructure.Cors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
 {
@@ -22,7 +23,8 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
-                { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
+            { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
+
             //app.UseConsul(app.Configuration);
 
             app.UseCorsService();
@@ -36,6 +38,8 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
             app.MapControllers();
 
             app.Run();
+
+            Log.CloseAndFlush();
         }
     }
 }

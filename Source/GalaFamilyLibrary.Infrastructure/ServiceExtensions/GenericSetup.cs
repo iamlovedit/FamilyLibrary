@@ -1,10 +1,13 @@
-﻿using GalaFamilyLibrary.Infrastructure.Cors;
+﻿using GalaFamilyLibrary.Infrastructure.AutoMapper;
+using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Filters;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using GalaFamilyLibrary.Infrastructure.AutoMapper;
+using Microsoft.Extensions.Options;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
@@ -16,11 +19,13 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-
             var configuration = builder.Configuration;
             var services = builder.Services;
 
-            services.AddAESEncryptionSetup(configuration);
+            services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
+            services.AddSingleton<GalaTokenValidator>();
+            services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerOptionsPostConfigureOptions>();
+            services.AddSingleton<ITokenBuilder, TokenBuilder>();
 
             services.AddDataProtectionSetup();
 
@@ -28,7 +33,6 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddDbSetup();
 
-            builder.AddTraceOutputSetup();
 
             //services.AddConsulConfigSetup(configuration);
 
