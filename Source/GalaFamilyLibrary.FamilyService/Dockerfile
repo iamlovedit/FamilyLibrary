@@ -15,5 +15,6 @@ RUN dotnet publish "GalaFamilyLibrary.FamilyService.csproj" -c Release -o /app/p
 
 FROM base AS final
 WORKDIR /app
+VOLUME ["/app/logs"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.FamilyService.dll"]

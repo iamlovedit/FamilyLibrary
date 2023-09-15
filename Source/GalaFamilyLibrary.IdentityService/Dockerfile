@@ -15,5 +15,6 @@ RUN dotnet publish "GalaFamilyLibrary.IdentityService.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
+VOLUME ["/app/logs"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.IdentityService.dll"]

@@ -14,5 +14,6 @@ RUN dotnet publish "GalaFamilyLibrary.ParameterService.csproj" -c Release -o /ap
 
 FROM base AS final
 WORKDIR /app
+VOLUME ["/app/logs"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.ParameterService.dll"]

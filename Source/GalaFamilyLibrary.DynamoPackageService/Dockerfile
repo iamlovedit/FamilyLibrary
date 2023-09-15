@@ -15,5 +15,6 @@ RUN dotnet publish "GalaFamilyLibrary.DynamoPackageService.csproj" -c Release -o
 
 FROM base AS final
 WORKDIR /app
+VOLUME ["/app/logs"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.DynamoPackageService.dll"]

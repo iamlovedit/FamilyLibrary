@@ -15,5 +15,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 VOLUME ["/app/files"]
+VOLUME ["/app/logs"]
 COPY ["GalaFamilyLibrary.FileStorageService/files","/app/files"] 
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.FileStorageService.dll"]
