@@ -18,6 +18,7 @@
       <EmbeddedResource Remove="files\Images\**" />
       <None Remove="files\Families\**" />
       <None Remove="files\Images\**" />
+      <None Remove="deploy.sh" />
     </ItemGroup>
 
     <ItemGroup>
