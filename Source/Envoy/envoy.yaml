@@ -50,6 +50,21 @@ static_resources:
                           route:
                             auto_host_rewrite: true
                             cluster: identity
+                            
+                        - name: "files"
+                          match:
+                            prefix: "/files"
+                          route:
+                            auto_host_rewrite: true
+                            cluster: files
+                        
+                        - name: "parameter"
+                          match:
+                            prefix: "/parameter"
+                          route:
+                            auto_host_rewrite: true
+                            cluster: parameter
+
                 http_filters:
                   - name: envoy.router
                 access_log:
@@ -98,7 +113,7 @@ static_resources:
             address: gala_services_identity
             port_value: 80
 
-    - name: file
+    - name: files
       connect_timeout: 0.25s
       type: logical_dns
       lb_policy: round_robin
