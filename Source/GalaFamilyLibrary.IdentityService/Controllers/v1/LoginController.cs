@@ -6,9 +6,14 @@ using GalaFamilyLibrary.Infrastructure.Security;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SqlSugar.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using GalaFamilyLibrary.IdentityService.DataTransferObjects;
+using GalaFamilyLibrary.IdentityService.Models;
+using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.Infrastructure.Redis;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {

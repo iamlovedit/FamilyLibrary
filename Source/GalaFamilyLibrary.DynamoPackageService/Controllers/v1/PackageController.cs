@@ -21,15 +21,17 @@ public class PackageController : ApiControllerBase
     private readonly IPackageService _packageService;
     private readonly ILogger<PackageController> _logger;
     private readonly IRedisBasketRepository _redis;
+    private readonly RedisRequirement _redisRequirement;
     private readonly IMapper _mapper;
     private readonly TimeSpan _cacheTime;
 
     public PackageController(IPackageService packageService, ILogger<PackageController> logger,
-        IRedisBasketRepository redis, IMapper mapper)
+        IRedisBasketRepository redis,RedisRequirement redisRequirement, IMapper mapper)
     {
         _packageService = packageService;
         _logger = logger;
         _redis = redis;
+        _redisRequirement = redisRequirement;
         _mapper = mapper;
         _cacheTime = TimeSpan.FromDays(1);
     }
@@ -64,6 +66,25 @@ public class PackageController : ApiControllerBase
             _logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
             return Redirect($"https://dynamopackages.com/download/{id}/{packageVersion}");
         });
+    }
+
+    [HttpGet]
+    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(int pageIndex = 1,
+        int pageSize = 30, string orderField = "")
+    {
+        _logger.LogInformation("query packages by pageIndex: {pageIndex} pageSize: {pageSize} orderField: {orderField}",
+            pageIndex, pageSize, orderField);
+        var redisKey = $"?pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
+        if (await _redis.Exist(redisKey))
+        {
+            return SucceedPage(await _redis.Get<PageModel<PackageDTO>>(redisKey));
+        }
+
+        var packagesPage = await _packageService.QueryPageAsync(p => !p.IsDeleted, pageIndex, pageSize,
+            string.IsNullOrEmpty(orderField) ? null : $"{orderField} desc");
+        var result = packagesPage.ConvertTo<PackageDTO>(_mapper);
+        await _redis.Set(redisKey, result, _redisRequirement.CacheTime);
+        return SucceedPage(result);
     }
 
     [HttpGet]
