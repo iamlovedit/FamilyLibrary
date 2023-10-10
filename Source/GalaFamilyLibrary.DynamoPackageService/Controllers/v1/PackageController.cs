@@ -23,15 +23,17 @@ public class PackageController : ApiControllerBase
     private readonly IPackageService _packageService;
     private readonly ILogger<PackageController> _logger;
     private readonly IRedisBasketRepository _redis;
+    private readonly RedisRequirement _redisRequirement;
     private readonly IMapper _mapper;
     private readonly TimeSpan _cacheTime;
 
     public PackageController(IPackageService packageService, ILogger<PackageController> logger,
-        IRedisBasketRepository redis, IMapper mapper)
+        IRedisBasketRepository redis,RedisRequirement redisRequirement, IMapper mapper)
     {
         _packageService = packageService;
         _logger = logger;
         _redis = redis;
+        _redisRequirement = redisRequirement;
         _mapper = mapper;
         _cacheTime = TimeSpan.FromDays(1);
     }
