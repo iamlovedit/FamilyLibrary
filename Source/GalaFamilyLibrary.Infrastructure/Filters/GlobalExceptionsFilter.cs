@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace GalaFamilyLibrary.Infrastructure.Filters
 {
@@ -14,8 +15,8 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
             {
                 if (!context.ExceptionHandled)
                 {
+                    Log.Logger.Error($"{context.Exception.StackTrace}");
                     var message = new MessageModel<Exception>(false, context.Exception.Message, 500);
-
                     context.Result = new ContentResult
                     {
                         StatusCode = StatusCodes.Status200OK,

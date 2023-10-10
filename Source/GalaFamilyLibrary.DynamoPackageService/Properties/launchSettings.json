@@ -6,22 +6,27 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE_CONNECTION_STRING": "server=localhost;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4",
-        "REDIS_CONNECTION_STRING": "localhost,password=zy4318422"
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PORT": "5432",
+        "DATABASE_DATABASE": "gala_library",
+        "DATABASE_USERID": "root",
+        "DATABASE_PASSWORD": "pass@word",
+        "REDIS_HOST": "localhost",
+        "REDIS_PASSWORD": "pass@word",
+        "AUDIENCE_ISSUER": "Young",
+        "AUDIENCE_AUDIENCE": "GalaServer",
+        "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
+        "AUDIENCE_EXPIRATION": "3600",
+        "AES_KEY": "zxcvbnmasdfghjkl"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5001;https://localhost:6001"
     },
     "GalaFamilyLibrary.DynamoPackageService.Docker": {
       "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging",
-        "DATABASE_CONNECTION_STRING": "server=mysql;port=3306;database=DynamoPackage;userid=root;password=zy4318422;CharSet=utf8mb4",
-        "REDIS_CONNECTION_STRING": "redis,password=zy4318422"
-      }
+      "useSSL": true
     }
   },
   "$schema": "https://json.schemastore.org/launchsettings.json"

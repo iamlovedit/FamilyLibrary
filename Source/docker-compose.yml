@@ -1,26 +1,52 @@
 version: '3.4'
 
 services:
-  library_gateway:
+  gala_services_gateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
 
-  dynamo_package:
+  gala_services_dynamo_packages:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile  
   
-  
-  family_library:
+  gala_services_family_library:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging
-  
-  
-  library_identity:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Staging 
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
-  file_storage:
+  gala_services_identity:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Staging 
-
+      - ASPNETCORE_ENVIRONMENT=Staging
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
+  
+  gala_services_file_storage:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - FILE_STORAGE_KEY=cf940b17-4ab8-d540-1ee5-a781c741e5ee
+    build:
+      context: .
+      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile   
+    
+  gala_services_family_parameters:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging
+    
+  redis:
+    command:
+      redis-server --requirepass $REDIS_PASSWORD
+  
+  postgresql:
+    environment:
+      POSTGRES_USER: $DATABASE_USERID
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_DATABASE
+      
+      
 

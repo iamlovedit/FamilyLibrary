@@ -9,7 +9,9 @@
     <DockerServiceName>galafamilylibrary.dynamopackageservice</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include=".env" />
     <None Include="deploy.sh" />
+    <None Include="deploy_Windows.bat" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
@@ -18,8 +20,10 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="Envoy\envoy.yaml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".env" />
     <Content Include="Envoy\envoy.yaml" />
   </ItemGroup>
 </Project>

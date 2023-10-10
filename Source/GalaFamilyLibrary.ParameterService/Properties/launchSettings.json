@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "GalaFamilyLibrary.ParameterService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5005;https://localhost:6005",
+      "dotnetRunMessages": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PORT": "5432",
+        "DATABASE_DATABASE": "gala_library",
+        "DATABASE_USERID": "root",
+        "DATABASE_PASSWORD": "pass@word",
+        "REDIS_HOST": "localhost",
+        "REDIS_PASSWORD": "pass@word",
+        "AUDIENCE_ISSUER": "Young",
+        "AUDIENCE_AUDIENCE": "GalaServer",
+        "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
+        "AUDIENCE_EXPIRATION": "3600",
+        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee",
+        "AES_KEY": "zxcvbnmasdfghjkl"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  }
+}

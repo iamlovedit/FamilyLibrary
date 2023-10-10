@@ -5,19 +5,16 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS publish
 WORKDIR /src
 COPY ["GalaFamilyLibrary.DynamoPackageService/GalaFamilyLibrary.DynamoPackageService.csproj", "GalaFamilyLibrary.DynamoPackageService/"]
 COPY ["GalaFamilyLibrary.Infrastructure/GalaFamilyLibrary.Infrastructure.csproj", "GalaFamilyLibrary.Infrastructure/"]
-RUN dotnet restore "GalaFamilyLibrary.DynamoPackageService/GalaFamilyLibrary.DynamoPackageService.csproj"
 COPY . .
 WORKDIR "/src/GalaFamilyLibrary.DynamoPackageService"
-RUN dotnet build "GalaFamilyLibrary.DynamoPackageService.csproj" -c Release -o /app/build
-
-FROM build AS publish
 RUN dotnet publish "GalaFamilyLibrary.DynamoPackageService.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
+VOLUME ["/app/logs"]
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "GalaFamilyLibrary.DynamoPackageService.dll"]

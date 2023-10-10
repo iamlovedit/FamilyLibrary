@@ -19,12 +19,10 @@ public static class JwtAuthenticationSetup
         if (services == null) throw new ArgumentNullException(nameof(services));
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-        var section = configuration.GetSection("Audience");
-        var buffer = Encoding.UTF8.GetBytes(section["Key"]);
+        var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]);
         var key = new SymmetricSecurityKey(buffer);
-        var issuer = section["Issuer"];
-        var audience = section["Audience"];
-        var serviceProvider = services.BuildServiceProvider();
+        var issuer = configuration["AUDIENCE_ISSUER"];
+        var audience = configuration["AUDIENCE_AUDIENCE"];
         var tokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
@@ -50,8 +48,6 @@ public static class JwtAuthenticationSetup
         void ConfigureJwtBearer(JwtBearerOptions options)
         {
             options.TokenValidationParameters = tokenValidationParameters;
-            options.SecurityTokenValidators.Clear();
-            options.SecurityTokenValidators.Add(new GalaTokenValidator(serviceProvider.GetService<IAESEncryptionService>()));
             options.Events = new JwtBearerEvents()
             {
                 OnChallenge = challengeContext =>

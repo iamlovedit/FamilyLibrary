@@ -14,6 +14,41 @@ public class DatabaseSeed
         _appDbContext = appDbContext;
     }
 
+    public void InitTablesByClass(Type model)
+    {
+        if (_appDbContext.DbType == DbType.Oracle)
+        {
+            throw new InvalidOperationException("暂不支持Oracle数据库");
+        }
+        else
+        {
+            _appDbContext.Database.DbMaintenance.CreateDatabase();
+        }
+        try
+        {
+            var types = model.Assembly.DefinedTypes.
+             Where(ti => ti.Namespace == model.Namespace && ti.IsClass && ti.GetCustomAttribute<SugarTable>() != null).
+             Select(ti => ti.AsType());
+
+            foreach (var type in types)
+            {
+                if (_appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
+                {
+                    continue;
+                }
+                var tableName = type.GetCustomAttribute<SugarTable>()?.TableName ?? type.Name;
+                Console.WriteLine($"正在创建表 {tableName}");
+                _appDbContext.Database.CodeFirst.InitTables(type);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
+
+    }
+
     public void InitTables(Type program)
     {
         if (_appDbContext.DbType == DbType.Oracle)
@@ -82,5 +117,5 @@ public class DatabaseSeed
             throw;
         }
     }
-    
+
 }

@@ -1,14 +1,23 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using GalaFamilyLibrary.Domain;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SqlSugar;
+using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
 public static class SqlsugarSetup
 {
-    public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration,
+        IWebHostEnvironment webHostEnvironment)
     {
+        if (webHostEnvironment == null)
+        {
+            throw new ArgumentNullException(nameof(webHostEnvironment));
+        }
+
         if (services is null)
         {
             throw new ArgumentNullException(nameof(services));
@@ -19,21 +28,35 @@ public static class SqlsugarSetup
             throw new ArgumentNullException(nameof(configuration));
         }
 
+        var workId = configuration.GetSection("SnowFlake")["WorkId"].ObjToInt();
+        SnowFlakeSingle.WorkId = workId;
+        var connectionString = $"server={configuration["DATABASE_HOST"]};" +
+                               $"port={configuration["DATABASE_PORT"]};" +
+                               $"database={configuration["DATABASE_DATABASE"]};" +
+                               $"userid={configuration["DATABASE_USERID"]};" +
+                               $"password={configuration["DATABASE_PASSWORD"]};";
+
         void ConfigAction(SqlSugarClient client)
         {
-#if DEBUG
-            client.Aop.OnLogExecuting = (sql, paras) => { Console.WriteLine(sql); };
-#endif
+            client.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
+            if (webHostEnvironment.IsDevelopment() || webHostEnvironment.IsStaging())
+            {
+                client.Aop.OnLogExecuting = (sql, paras) => { Console.WriteLine(sql); };
+            }
         }
 
         var sqlsugar = new SqlSugarScope(new ConnectionConfig()
         {
-            DbType = DbType.MySql,
+            DbType = DbType.PostgreSQL,
             IsAutoCloseConnection = true,
-            ConnectionString = configuration["DATABASE_CONNECTION_STRING"],
-            InitKeyType = InitKeyType.Attribute
+            ConnectionString = connectionString,
+            InitKeyType = InitKeyType.Attribute,
+            MoreSettings = new ConnMoreSettings
+            {
+                PgSqlIsAutoToLower = false,
+                PgSqlIsAutoToLowerCodeFirst = false
+            }
         }, ConfigAction);
-        sqlsugar.QueryFilter.AddTableFilter<IDeletable>(d => !d.IsDeleted);
         services.AddSingleton<ISqlSugarClient>(sqlsugar);
     }
 }

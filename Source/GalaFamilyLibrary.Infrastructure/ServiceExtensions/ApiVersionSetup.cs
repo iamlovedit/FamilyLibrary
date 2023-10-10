@@ -15,8 +15,8 @@ public static class ApiVersionSetup
             options.AssumeDefaultVersionWhenUnspecified = true;
             options.ReportApiVersions = true;
             options.ApiVersionReader = ApiVersionReader.Combine(new UrlSegmentApiVersionReader(),
-                new HeaderApiVersionReader("x-api-version"),
-                new MediaTypeApiVersionReader("x-api-version"));
+                new HeaderApiVersionReader("gala-api-version"),
+                new MediaTypeApiVersionReader("gala-api-version"));
         });
     }
 }

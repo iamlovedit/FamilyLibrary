@@ -1,7 +1,6 @@
 using AutoMapper;
-using GalaFamilyLibrary.DynamoPackageService.Helpers;
+using GalaFamilyLibrary.Domain.Models.Dynamo;
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
-using GalaFamilyLibrary.DynamoPackageService.Models;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
@@ -32,11 +31,6 @@ services.AddQuartz(options =>
     });
 });
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
-services.AddSingleton(provider => new MapperConfiguration(config =>
-{
-    var profile = new MappingProfiles(provider.GetService<IAESEncryptionService>());
-    config.AddProfile(profile);
-}).CreateMapper());
 
 services.AddHttpClient<FetchPackagesJob>().AddTransientHttpErrorPolicy(
     policy => policy.WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(3, retryAttempt))));
@@ -45,7 +39,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTables(typeof(Program));
+    dbSeed.InitTablesByClass(typeof(DynamoPackage));
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {

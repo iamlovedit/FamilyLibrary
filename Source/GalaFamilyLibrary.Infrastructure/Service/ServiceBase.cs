@@ -82,4 +82,19 @@ public abstract class ServiceBase<T> : IServiceBase<T> where T : class, new()
     {
         return await DAL.QueryByOrderAsync(field, count, isDesc);
     }
+
+    public async Task<long> AddSnowflakeAsync(T entity)
+    {
+        return await DAL.AddSnowflakeAsync(entity);
+    }
+
+    public async Task<IList<long>> AddSnowflakesAsync(IList<T> entities)
+    {
+        return await DAL.AddSnowflakesAsync(entities);
+    }
+
+    public async Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T, object>> expression)
+    {
+        return await DAL.UpdateColumnsAsync(entity, expression);
+    }
 }

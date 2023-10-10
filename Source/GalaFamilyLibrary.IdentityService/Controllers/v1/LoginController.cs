@@ -1,9 +1,9 @@
-﻿using GalaFamilyLibrary.IdentityService.DataTransferObjects;
-using GalaFamilyLibrary.IdentityService.Models;
+﻿using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -19,26 +19,30 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("identity/v{version:apiVersion}/authenticate")]
-    [Authorize(Policy = "ElevatedRights")]
+    [Authorize(Policy = PermissionConstants.POLICYNAME)]
     public class LoginController : ApiControllerBase
     {
         private readonly PermissionRequirement _permissionRequirement;
         private readonly ILogger<LoginController> _logger;
         private readonly IRedisBasketRepository _redis;
+        private readonly IAESEncryptionService _aesEncryptionService;
+        private readonly ITokenBuilder _tokenBuilder;
         private readonly IUserService _userService;
 
         public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
-            IRedisBasketRepository redis,
+            IRedisBasketRepository redis, IAESEncryptionService aesEncryptionService, ITokenBuilder tokenBuilder,
             IUserService userService)
         {
             _permissionRequirement = permissionRequirement;
             _logger = logger;
             _redis = redis;
+            _aesEncryptionService = aesEncryptionService;
+            _tokenBuilder = tokenBuilder;
             _userService = userService;
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
         public IActionResult Test()
         {
             return Ok("HelloWorld");
@@ -52,11 +56,11 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<MessageModel<string>> GetTokenAsync([FromBody] LoginUserDto loginUser)
+        public async Task<MessageModel<TokenInfo>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                return Failed<string>("用户名或者密码不能为空");
+                return Failed<TokenInfo>("用户名或者密码不能为空");
             }
 
             var user = await _userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
@@ -65,12 +69,15 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 var password = loginUser.Password.MD5Encrypt32(user.Salt);
                 if (!password.Equals(user.Password))
                 {
-                    return Failed<string>("用户名或者密码错误");
+                    user.ErrorCount += 1;
+                    await _userService.UpdateColumnsAsync(user, u => u.ErrorCount);
+                    return Failed<TokenInfo>("用户名或者密码错误");
                 }
 
                 _logger.LogInformation("user {user} logged in", user.Username);
+                user.ErrorCount = 0;
                 user.LastLoginTime = DateTime.Now;
-                await _userService.UpdateAsync(user);
+                await _userService.UpdateColumnsAsync(user, u => new { u.ErrorCount, u.LastLoginTime });
 
                 var roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
                 var claims = new List<Claim>()
@@ -81,15 +88,11 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                     new(ClaimTypes.Expiration,
                         DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
                 };
-                var tokenKey = $"auth/token/{user.Id}";
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
-                var token = GenerateToken(claims, _permissionRequirement);
-                var protectToken = token.Token.ExcryptAES();
-                await _redis.Set(protectToken, token, _permissionRequirement.Expiration);
-                return Success(protectToken);
+                var token = _tokenBuilder.GenerateTokenInfo(claims);
+                return Success(token);
             }
-
-            return Failed<string>("用户名或者密码错误");
+            return Failed<TokenInfo>("用户名或者密码错误");
         }
 
         /// <summary>
@@ -125,26 +128,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 throw;
             }
 
-
             throw new NotImplementedException();
-        }
-
-        private static TokenInfo GenerateToken(List<Claim> claims, PermissionRequirement permissionRequirement)
-        {
-            var now = DateTime.Now;
-            var jwtToken = new JwtSecurityToken(
-                issuer: permissionRequirement.Issuer,
-                audience: permissionRequirement.Audience,
-                claims: claims,
-                notBefore: now,
-                expires: now.Add(permissionRequirement.Expiration),
-                signingCredentials: permissionRequirement.SigningCredentials
-            );
-
-            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            return new TokenInfo(token, permissionRequirement.Expiration.TotalSeconds,
-                JwtBearerDefaults.AuthenticationScheme);
-            ;
         }
     }
 }

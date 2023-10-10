@@ -11,16 +11,17 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="6.0.13" />
     <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.84" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.105" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GalaFamilyLibrary.Domain\GalaFamilyLibrary.Domain.csproj" />
     <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
 	  <InternalsVisibleTo Include="Application.FunctionalTests" />
   </ItemGroup>

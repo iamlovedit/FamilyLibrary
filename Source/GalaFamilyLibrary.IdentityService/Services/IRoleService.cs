@@ -1,9 +1,9 @@
-﻿using GalaFamilyLibrary.IdentityService.Models;
+﻿using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {
-    public interface IRoleService : IServiceBase<LibraryRole>
+    public interface IRoleService : IServiceBase<Role>
     {
 
     }

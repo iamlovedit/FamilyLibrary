@@ -1,10 +1,6 @@
-﻿using System.Linq.Expressions;
-using System.Net.Http;
-using System.Text;
-using System.Xml;
-using AutoMapper;
-using GalaFamilyLibrary.DynamoPackageService.DataTransferObjects;
-using GalaFamilyLibrary.DynamoPackageService.Models;
+﻿using AutoMapper;
+using GalaFamilyLibrary.Domain.DataTransferObjects.Dynamo;
+using GalaFamilyLibrary.Domain.Models.Dynamo;
 using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
@@ -13,6 +9,8 @@ using GalaFamilyLibrary.Infrastructure.Transaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using System.Linq.Expressions;
+using System.Xml;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 
