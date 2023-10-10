@@ -7,11 +7,11 @@ namespace GalaFamilyLibrary.DynamoPackageService.Models
     [SugarTable("package_versions")]
     public class PackageVersion : IDeletable
     {
-        [SugarColumn(IsPrimaryKey = true)] public string Id { get; set; }
-
+        [SugarColumn(IsPrimaryKey = true,IsNullable =false)]
         public string Version { get; set; }
 
-        [SugarColumn(IsNullable = false)] public string PackageId { get; set; }
+        [SugarColumn(IsPrimaryKey = true, IsNullable = false)]
+        public string PackageId { get; set; }
 
         public string Url { get; set; }
 

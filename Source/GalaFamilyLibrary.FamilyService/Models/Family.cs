@@ -15,6 +15,10 @@ public class Family : IDeletable
 
     public DateTime UpdateTime { get; set; }
 
+    public int Stars { get; set; }
+
+    public uint Downloads { get; set; }
+
     //[Navigate(NavigateType.OneToOne, nameof(UploaderId))]
     //public LibraryUser User { get; set; }
 
@@ -37,11 +41,20 @@ public class Family : IDeletable
 
     internal string GetFilePath(IWebHostEnvironment environment, ushort version)
     {
-        return Path.Combine(environment.WebRootPath, "Families", $"{version}", $"{FileId}.rfa");
+        return Path.Combine(environment.WebRootPath, "families", $"{version}", $"{FileId}.rfa");
+    }
+
+    internal string GetFilePath(ushort version)
+    {
+        return Path.Combine("families", $"{version}", $"{FileId}.rfa");
+    }
+    internal string GetImagePath()
+    {
+        return Path.Combine("images", $"{FileId}.png");
     }
 
     internal string GetImagePath(IWebHostEnvironment environment)
     {
-        return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");
+        return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
     }
 }

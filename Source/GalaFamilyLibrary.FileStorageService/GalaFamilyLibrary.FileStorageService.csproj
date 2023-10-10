@@ -6,7 +6,19 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>7f6c9888-78c9-49ef-87a5-d00911dd5554</UserSecretsId>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Remove="files\Families\**" />
+      <Compile Remove="files\Images\**" />
+      <Content Remove="files\Families\**" />
+      <Content Remove="files\Images\**" />
+      <EmbeddedResource Remove="files\Families\**" />
+      <EmbeddedResource Remove="files\Images\**" />
+      <None Remove="files\Families\**" />
+      <None Remove="files\Images\**" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
@@ -16,6 +28,10 @@
 
     <ItemGroup>
       <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
     </ItemGroup>
 
 </Project>

@@ -11,6 +11,10 @@
         public ushort Version { get; set; }
 
         public int UploaderId { get; set; }
+        
+        public int Stars { get; set; }
+
+        public uint Downloads { get; set; }
 
         public FamilyCategoryDTO Category { get; set; }
 
@@ -21,10 +25,10 @@
         public string ImageUrl { get; set; }
 
         public string FileId { get; set; }
-        
+
         internal string GetImagePath(IWebHostEnvironment environment)
         {
-            return Path.Combine(environment.WebRootPath, "Images", $"{FileId}.png");
+            return Path.Combine(environment.WebRootPath, "images", $"{FileId}.png");
         }
     }
 }

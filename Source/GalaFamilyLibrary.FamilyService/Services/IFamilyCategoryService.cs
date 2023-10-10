@@ -5,5 +5,5 @@ namespace GalaFamilyLibrary.FamilyService.Services;
 
 public interface IFamilyCategoryService:IServiceBase<FamilyCategory>
 {
-    Task<IList<FamilyCategory>> GetCategoryTreeAsync(int rootId);
+    Task<IList<FamilyCategory>> GetCategoryTreeAsync(int? rootId);
 }

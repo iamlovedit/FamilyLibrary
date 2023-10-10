@@ -3,14 +3,23 @@ using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
+using AutoMapper;
+using GalaFamilyLibrary.FamilyService.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
+services.AddFileSecurityOptionSetup(builder.Configuration);
+services.AddFileStorageClientSetup(builder.Configuration);
+
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 builder.AddGenericSetup();
-
+services.AddSingleton(provider => new MapperConfiguration(config =>
+{
+    config.AddProfile(new MappingProfiles(provider.GetService<FileStorageClient>()));
+}).CreateMapper());
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.

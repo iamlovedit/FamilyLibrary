@@ -1,8 +1,9 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Cors;
+using GalaFamilyLibrary.Infrastructure.Filters;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
@@ -17,7 +18,12 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             var configuration = builder.Configuration;
             var services = builder.Services;
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddAESEncryptionSetup(configuration);
+
+            services.AddDataProtectionSetup();
+
+
 
             services.AddDbSetup();
 
@@ -44,7 +50,10 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             //api version
             services.AddApiVersionSetup();
 
-            services.AddControllers().AddProduceJsonSetup();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(GlobalExceptionsFilter));
+            }).AddProduceJsonSetup();
 
             services.AddVersionedApiExplorerSetup();
 

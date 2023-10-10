@@ -18,3 +18,9 @@ services:
   library_identity:
     environment:
       - ASPNETCORE_ENVIRONMENT=Staging 
+
+  file_storage:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Staging 
+
+
