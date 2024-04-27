@@ -1,35 +1,51 @@
-@import './base.css';
+body {
+  overflow: auto;
+  --header-height: 52px;
+  --footer-height: 40px;
+}
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  height: 100vh;
+  width: 100%;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+@media print {
+  .hide-in-print * {
+    visibility: hidden !important;
   }
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/* For WebKit-based browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Change the width of the scrollbar */
+  height: 8px;
+  /* Change the height of the scrollbar */
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* Set the scrollbar track color to transparent */
+  border-radius: 10px;
+  /* Add border-radius to the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  /* Change the color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Add border-radius to the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* Change the color of the scrollbar thumb when hovered */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  /* Change the width of the scrollbar */
+  scrollbar-color: #888 transparent;
+  /* Set the scrollbar thumb color and make the track transparent */
 }
