@@ -354,6 +354,7 @@ async function getFamiliesPage(
       orderBy
     )
     if (httpResponse.succeed) {
+      console.log(httpResponse.data)
       familiesRef.value = httpResponse.response.data
     } else {
       throw new Error(httpResponse.message)

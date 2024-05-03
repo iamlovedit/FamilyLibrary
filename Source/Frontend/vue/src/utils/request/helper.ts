@@ -6,7 +6,7 @@ export interface HttpResponse<T = any> {
   succeed: boolean
   statusCode: number
   message: string
-  response: T
+  data: T
 }
 
 export interface Page<T = any> {

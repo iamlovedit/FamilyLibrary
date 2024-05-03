@@ -11,7 +11,7 @@ const request = async <T = any>(config: AxiosRequestConfig): Promise<HttpRespons
       succeed: false,
       statusCode: error.response?.status || 500,
       message,
-      response: null as any
+      data: null as any
     }
   }
 }
