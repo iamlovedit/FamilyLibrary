@@ -73,7 +73,7 @@ public class GalaControllerBase : ControllerBase
     
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public long GetUserIdFromClaims()
+    protected long GetUserIdFromClaims()
     {
         return long.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Jti) ?? "0");
     }
