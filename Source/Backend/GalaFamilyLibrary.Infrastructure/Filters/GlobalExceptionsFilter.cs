@@ -21,11 +21,10 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
                     {
                         StatusCode = StatusCodes.Status200OK,
                         ContentType = "application/json;charset=utf-8",
-                        Content = JsonConvert.SerializeObject(message)
+                        Content = message.Serialize()
                     };
                 }
 
-                //不再继续传递异常
                 context.ExceptionHandled = true;
             });
         }
