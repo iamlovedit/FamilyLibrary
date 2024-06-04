@@ -1,0 +1,82 @@
+version: '3.4'
+
+services:
+  gala_services_gateway:
+    restart: on-failure
+    container_name: "gala_services_gateway"
+    networks:
+      - gala_services_net
+    image: envoyproxy/envoy:v1.11.1
+    ports:
+      - "5000:80"
+    volumes:
+      - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+
+  gala_services_dynamo_packages:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  gala_services_family_library:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+
+  gala_services_identity:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+
+  gala_services_file_storage:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    volumes:
+      - /usr/local/docker/familyLibrary/files:/app/files
+  
+  gala_services_family_parameters:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    
+  postgresql:
+    environment:
+      POSTGRES_USER: $DATABASE_USERID
+      POSTGRES_PASSWORD: $DATABASE_PASSWORD
+      POSTGRES_DB: $DATABASE_DATABASE
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /usr/local/docker/postgresql/data/pgdata:/var/lib/postgresql/data/pgdata
+    ports:
+      - "$DATABASE_PORT:5432"
+
+  redis:
+    networks:
+      - gala_services_net
+    restart: always
+    container_name: "redis"
+    image: "redis"
+    ports:
+      - "$REDIS_PORT:6379"
+    command:
+      redis-server --requirepass $REDIS_PASSWORD
+  
+  seqcli:
+    image: datalust/seqcli:latest
+    container_name: "seqcli"
+    command: apikey create -t newapikey --token $SEQ_TOKEN -s http://seq
+    depends_on:
+      - seq
+    restart: on-failure
+    networks:
+      - gala_services_net
+  seq:
+    image: datalust/seq:latest
+    container_name: "seq"
+    volumes:
+      - /usr/local/docker/seq/data:/data
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:80"
+    networks:
+      - gala_services_net
+networks:
+  gala_services_net:
+    driver: bridge

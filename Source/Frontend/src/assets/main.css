@@ -1,0 +1,51 @@
+body {
+  overflow: auto;
+  --header-height: 52px;
+  --footer-height: 40px;
+}
+
+#app {
+  height: 100vh;
+  width: 100%;
+}
+
+@media print {
+  .hide-in-print * {
+    visibility: hidden !important;
+  }
+}
+
+/* For WebKit-based browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  /* Change the width of the scrollbar */
+  height: 8px;
+  /* Change the height of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  /* Set the scrollbar track color to transparent */
+  border-radius: 10px;
+  /* Add border-radius to the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  /* Change the color of the scrollbar thumb */
+  border-radius: 10px;
+  /* Add border-radius to the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  /* Change the color of the scrollbar thumb when hovered */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  /* Change the width of the scrollbar */
+  scrollbar-color: #888 transparent;
+  /* Set the scrollbar thumb color and make the track transparent */
+}
