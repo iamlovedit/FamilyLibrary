@@ -5,28 +5,21 @@ using System.Text;
 
 namespace GalaFamilyLibrary.Infrastructure.Redis
 {
-    public class RedisBasketRepository : IRedisBasketRepository
+    public class RedisBasketRepository(ILogger<RedisBasketRepository> logger, ConnectionMultiplexer redis)
+        : IRedisBasketRepository
     {
-        private readonly ILogger<RedisBasketRepository> _logger;
-        private readonly ConnectionMultiplexer _redis;
-        private readonly IDatabase _database;
-
-        public RedisBasketRepository(ILogger<RedisBasketRepository> logger, ConnectionMultiplexer redis)
-        {
-            _logger = logger;
-            _redis = redis;
-            _database = redis.GetDatabase();
-        }
+        private readonly ILogger<RedisBasketRepository> _logger = logger;
+        private readonly IDatabase _database = redis.GetDatabase();
 
         private IServer GetServer()
         {
-            var endpoint = _redis.GetEndPoints();
-            return _redis.GetServer(endpoint.First());
+            var endpoint = redis.GetEndPoints();
+            return redis.GetServer(endpoint.First());
         }
 
         public async Task Clear()
         {
-            foreach (var endPoint in _redis.GetEndPoints())
+            foreach (var endPoint in redis.GetEndPoints())
             {
                 var server = GetServer();
                 foreach (var key in server.Keys())
@@ -104,6 +97,7 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
             {
                 redislist.Add(item);
             }
+
             return await _database.ListRightPushAsync(redisKey, redislist.ToArray());
         }
 

@@ -13,20 +13,11 @@ public static class SqlsugarSetup
     public static void AddSqlsugarSetup(this IServiceCollection services, IConfiguration configuration,
         IWebHostEnvironment webHostEnvironment)
     {
-        if (webHostEnvironment == null)
-        {
-            throw new ArgumentNullException(nameof(webHostEnvironment));
-        }
+        ArgumentNullException.ThrowIfNull(webHostEnvironment);
 
-        if (services is null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
+        ArgumentNullException.ThrowIfNull(services);
 
-        if (configuration is null)
-        {
-            throw new ArgumentNullException(nameof(configuration));
-        }
+        ArgumentNullException.ThrowIfNull(configuration);
 
         var workId = configuration.GetSection("SnowFlake")["WorkId"].ObjToInt();
         SnowFlakeSingle.WorkId = workId;

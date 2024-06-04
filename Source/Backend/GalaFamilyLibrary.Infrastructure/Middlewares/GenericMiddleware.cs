@@ -11,10 +11,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
     {
         public static void UseGeneric(this WebApplication app)
         {
-            if (app is null)
-            {
-                throw new ArgumentNullException(nameof(app));
-            }
+            ArgumentNullException.ThrowIfNull(app);
 
             if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
             {

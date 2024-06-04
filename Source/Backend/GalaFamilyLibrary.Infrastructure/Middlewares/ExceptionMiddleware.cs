@@ -8,22 +8,13 @@ using Microsoft.Extensions.Hosting;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
 {
-    public class ExceptionMiddleware
+    public class ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment webHostEnvironment)
     {
-        private readonly RequestDelegate _next;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-
-        public ExceptionMiddleware(RequestDelegate next, IWebHostEnvironment webHostEnvironment)
-        {
-            _next = next;
-            _webHostEnvironment = webHostEnvironment;
-        }
-
         public async Task Invoke(HttpContext context)
         {
             try
             {
-                await _next(context);
+                await next(context);
             }
             catch (Exception e)
             {
@@ -34,7 +25,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                     Detail = e.ToString(),
                     Status = 200
                 };
-                if (_webHostEnvironment.IsDevelopment())
+                if (webHostEnvironment.IsDevelopment())
                 {
                     problemDetails.Detail = e.ToString();
                 }

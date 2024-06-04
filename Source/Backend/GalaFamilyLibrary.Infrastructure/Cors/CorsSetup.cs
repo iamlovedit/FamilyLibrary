@@ -8,7 +8,7 @@ public static class CorsSetup
 
     public static void AddCorsSetup(this IServiceCollection services)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
         services.AddCors(options =>
         {
             options.AddPolicy(_corsSchema, policy =>

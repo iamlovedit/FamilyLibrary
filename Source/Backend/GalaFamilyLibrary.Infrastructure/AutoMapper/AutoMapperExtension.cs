@@ -8,10 +8,7 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
     {
         public static void AddAutoMapperSetup(this IServiceCollection services)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
             services.AddSingleton(provider => new MapperConfiguration(config =>
             {

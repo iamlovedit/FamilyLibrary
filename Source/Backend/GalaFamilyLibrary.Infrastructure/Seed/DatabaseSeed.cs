@@ -94,7 +94,10 @@ public class DatabaseSeed
             return setting;
         });
         if (string.IsNullOrEmpty(seedFile))
+        {
             throw new ArgumentException("Value cannot be null or empty.", nameof(seedFile));
+        }
+
         try
         {
             if (await _appDbContext.Database.Queryable<T>().AnyAsync())

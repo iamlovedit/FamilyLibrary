@@ -10,8 +10,10 @@ public static class SeqSetup
 {
     public static void AddSeqSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(services);
+
+        ArgumentNullException.ThrowIfNull(configuration);
+
         services.AddLogging(loggerBuilder =>
         {
             var seqConfig = configuration.GetSection("Seq");
