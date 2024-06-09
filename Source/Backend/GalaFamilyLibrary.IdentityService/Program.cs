@@ -1,4 +1,7 @@
+using FluentValidation;
+using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.Domain.Models.Identity;
+using GalaFamilyLibrary.Domain.Validators;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
@@ -14,6 +17,7 @@ services.AddFileStorageClientSetup(builder.Configuration);
 services.AddScoped(typeof(IUserService), typeof(UserService));
 services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
 services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
+services.AddScoped<IValidator<UserCreationDTO>, UserCreationValidator>();
 builder.AddGenericSetup();
 
 var app = builder.Build();

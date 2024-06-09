@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Validators;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -20,6 +22,7 @@ public class FamilyController(
     ILogger<FamilyController> logger,
     IMapper mapper,
     IRedisBasketRepository redis,
+    IValidator<FamilyCreationValidator> familyCreationValidator,
     RedisRequirement redisRequirement,
     FileStorageClient fileStorageClient)
     : ApiControllerBase

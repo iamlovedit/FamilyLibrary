@@ -1,5 +1,8 @@
 using AutoMapper;
+using FluentValidation;
+using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Validators;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
@@ -15,6 +18,7 @@ services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
+services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
 builder.AddGenericSetup();
 
 
@@ -28,6 +32,7 @@ app.UseInitSeed(dbSeed =>
     {
         return;
     }
+
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Families");
     dbSeed.InitSeed<Family>(file);
@@ -37,7 +42,6 @@ app.UseInitSeed(dbSeed =>
 
     file = string.Format(seedFolder, "FamilyCategories");
     dbSeed.InitSeed<FamilyCategory>(file);
-
 });
 app.UseStaticFiles();
 app.UseGeneric();

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
@@ -21,6 +22,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         IFamilyCollectionService familyCollectionService,
         IFamilyStarService familyStarService,
         IUnitOfWork unitOfWork,
+        IValidator<UserCreationDTO> userCreationValidator,
         IRedisBasketRepository redis,
         RedisRequirement requirement)
         : ApiControllerBase
