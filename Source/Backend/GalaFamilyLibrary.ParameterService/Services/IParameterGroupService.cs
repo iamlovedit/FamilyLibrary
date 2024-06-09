@@ -8,11 +8,6 @@ namespace GalaFamilyLibrary.ParameterService.Services
     {
 
     }
-    public class ParameterGroupService : ServiceBase<ParameterGroup>, IParameterGroupService
-    {
-        public ParameterGroupService(IRepositoryBase<ParameterGroup> dbContext) : base(dbContext)
-        {
-
-        }
-    }
+    public class ParameterGroupService(IRepositoryBase<ParameterGroup> dbContext)
+        : ServiceBase<ParameterGroup>(dbContext), IParameterGroupService;
 }

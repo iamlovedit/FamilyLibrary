@@ -17,12 +17,9 @@ namespace GalaFamilyLibrary.EventBus.IntegrationEventLog.Services
         
     }
 
-    public class IntegrationEventLogService : ServiceBase<IntegrationEventLogEntry>, IIntegrationEventLogService
+    public class IntegrationEventLogService(IRepositoryBase<IntegrationEventLogEntry> dbContext)
+        : ServiceBase<IntegrationEventLogEntry>(dbContext), IIntegrationEventLogService
     {
-        public IntegrationEventLogService(IRepositoryBase<IntegrationEventLogEntry> dbContext) : base(dbContext)
-        {
-        }
-
         public Task<IEnumerable<IntegrationEventLogEntry>> RetrieveEventLogsPendingToPublishAsync(long transactionId)
         {
             throw new NotImplementedException();

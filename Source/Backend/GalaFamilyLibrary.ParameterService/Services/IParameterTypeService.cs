@@ -9,10 +9,6 @@ namespace GalaFamilyLibrary.ParameterService.Services
 
     }
 
-    public class ParameterTypeService : ServiceBase<ParameterType>, IParameterTypeService
-    {
-        public ParameterTypeService(IRepositoryBase<ParameterType> dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class ParameterTypeService(IRepositoryBase<ParameterType> dbContext)
+        : ServiceBase<ParameterType>(dbContext), IParameterTypeService;
 }

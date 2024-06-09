@@ -11,29 +11,21 @@ namespace GalaFamilyLibrary.Infrastructure.Security
         TokenInfo GenerateTokenInfo(IReadOnlyCollection<Claim> claims);
     }
 
-    public class TokenBuilder : ITokenBuilder
+    public class TokenBuilder(IAESEncryptionService aesEncryptionService, PermissionRequirement permissionRequirement)
+        : ITokenBuilder
     {
-        private readonly IAESEncryptionService _aesEncryptionService;
-        private readonly PermissionRequirement _permissionRequirement;
-
-        public TokenBuilder(IAESEncryptionService aesEncryptionService, PermissionRequirement permissionRequirement)
-        {
-            _aesEncryptionService = aesEncryptionService;
-            _permissionRequirement = permissionRequirement;
-        }
-
         public TokenInfo GenerateTokenInfo(IReadOnlyCollection<Claim> claims)
         {
             var jwtToken = new JwtSecurityToken(
-                   issuer: _permissionRequirement.Issuer,
-                   audience: _permissionRequirement.Audience,
+                   issuer: permissionRequirement.Issuer,
+                   audience: permissionRequirement.Audience,
                    claims: claims,
                    notBefore: DateTime.Now,
-                   expires: DateTime.Now.Add(_permissionRequirement.Expiration),
-                   signingCredentials: _permissionRequirement.SigningCredentials);
+                   expires: DateTime.Now.Add(permissionRequirement.Expiration),
+                   signingCredentials: permissionRequirement.SigningCredentials);
             var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            token = _aesEncryptionService.Encrypt(token);
-            return new TokenInfo(token, _permissionRequirement.Expiration.TotalSeconds, JwtBearerDefaults.AuthenticationScheme);
+            token = aesEncryptionService.Encrypt(token);
+            return new TokenInfo(token, permissionRequirement.Expiration.TotalSeconds, JwtBearerDefaults.AuthenticationScheme);
         }
     }
 }

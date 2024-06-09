@@ -10,56 +10,45 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
 {
     [ApiVersion("2.0")]
     [Route("parameter/v{version:apiVersion}")]
-    public class ParameterController : ApiControllerBase
+    public class ParameterController(
+        IMapper mapper,
+        ILogger<ParameterController> logger,
+        IParameterDefinitionService parameterDefinitionService,
+        IRedisBasketRepository redis,
+        RedisRequirement redisRequirement,
+        IParameterService parameterService)
+        : ApiControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly ILogger<ParameterController> _logger;
-        private readonly IParameterDefinitionService _parameterDefinitionService;
-        private readonly IRedisBasketRepository _redis;
-        private readonly RedisRequirement _redisRequirement;
-        private readonly IParameterService _parameterService;
-
-        public ParameterController(IMapper mapper, ILogger<ParameterController> logger, IParameterDefinitionService parameterDefinitionService,
-            IRedisBasketRepository redis, RedisRequirement redisRequirement, IParameterService parameterService)
-        {
-            _mapper = mapper;
-            _logger = logger;
-            _parameterDefinitionService = parameterDefinitionService;
-            _redis = redis;
-            _redisRequirement = redisRequirement;
-            _parameterService = parameterService;
-        }
-
         [HttpGet]
         [Route("details/{id:long}")]
         public async Task<MessageModel<ParameterDTO>> GetParameterDetailsAysnc(long id)
         {
             var redisKey = $"parameters/{id}";
-            if (await _redis.Exist(redisKey))
+            if (await redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<ParameterDTO>(redisKey));
+                return Success(await redis.Get<ParameterDTO>(redisKey));
             }
 
-            var parameter = await _parameterService.GetParameterDetailsAsync(id);
+            var parameter = await parameterService.GetParameterDetailsAsync(id);
             if (parameter is null)
             {
-                _logger.LogWarning("query parameter details failed,id {id} not exists", id);
+                logger.LogWarning("query parameter details failed,id {id} not exists", id);
                 return Failed<ParameterDTO>("Resource not exists", 404);
             }
 
-            var parameterDTO = _mapper.Map<ParameterDTO>(parameter);
-            await _redis.Set(redisKey, parameterDTO, _redisRequirement.CacheTime);
+            var parameterDTO = mapper.Map<ParameterDTO>(parameter);
+            await redis.Set(redisKey, parameterDTO, redisRequirement.CacheTime);
             return Success(parameterDTO);
         }
 
         [HttpPost]
         public async Task<MessageModel<bool>> CreateParameters([FromBody] List<ParameterCreationDTO> creationDTOs)
         {
-            var parameters = _mapper.Map<List<Parameter>>(creationDTOs);
-            var ids = await _parameterService.AddSnowflakesAsync(parameters);
+            var parameters = mapper.Map<List<Parameter>>(creationDTOs);
+            var ids = await parameterService.AddSnowflakesAsync(parameters);
             if (ids.Count > 0)
             {
-                _logger.LogInformation("create parameters succeed,count : {count}", ids.Count);
+                logger.LogInformation("create parameters succeed,count : {count}", ids.Count);
                 return Success(true);
             }
             return Failed<bool>();
@@ -72,17 +61,17 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
         public async Task<MessageModel<ParameterDefinitionDTO>> GetDefinitionDetails(long id)
         {
             var redisKey = $"parameter/definitions/{id}";
-            if (await _redis.Exist(redisKey))
+            if (await redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<ParameterDefinitionDTO>(redisKey));
+                return Success(await redis.Get<ParameterDefinitionDTO>(redisKey));
             }
-            var defintion = await _parameterDefinitionService.GetDefinitionDetailsAsync(id);
+            var defintion = await parameterDefinitionService.GetDefinitionDetailsAsync(id);
             if (defintion is null)
             {
                 return Failed<ParameterDefinitionDTO>("definition not exists", 404);
             }
-            var definitionDTO = _mapper.Map<ParameterDefinitionDTO>(defintion);
-            await _redis.Set(redisKey, definitionDTO, _redisRequirement.CacheTime);
+            var definitionDTO = mapper.Map<ParameterDefinitionDTO>(defintion);
+            await redis.Set(redisKey, definitionDTO, redisRequirement.CacheTime);
             return Success(definitionDTO);
         }
 
@@ -90,11 +79,11 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
         [Route("definition")]
         public async Task<MessageModel<bool>> CreateDefinitions([FromBody] List<ParameterDefinitionCreationDTO> creationDTOs)
         {
-            var definitions = _mapper.Map<List<ParameterDefinition>>(creationDTOs);
-            var ids = await _parameterDefinitionService.AddSnowflakesAsync(definitions);
+            var definitions = mapper.Map<List<ParameterDefinition>>(creationDTOs);
+            var ids = await parameterDefinitionService.AddSnowflakesAsync(definitions);
             if (ids.Count > 0)
             {
-                _logger.LogInformation("create parameter definitions succeed,count : {count}", ids.Count);
+                logger.LogInformation("create parameter definitions succeed,count : {count}", ids.Count);
                 return Success(true);
             }
             return Failed<bool>();
@@ -107,15 +96,15 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
             [FromServices] IParameterGroupService groupService)
         {
             var redisKey = $"parameter/groups";
-            if (await _redis.Exist(redisKey))
+            if (await redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<List<ParameterGroupDTO>>(redisKey));
+                return Success(await redis.Get<List<ParameterGroupDTO>>(redisKey));
             }
 
-            _logger.LogInformation("query all parameter groups");
+            logger.LogInformation("query all parameter groups");
             var groups = await groupService.GetAllAsync();
-            var groupDTOs = _mapper.Map<List<ParameterGroupDTO>>(groups);
-            await _redis.Set(redisKey, groupDTOs, TimeSpan.FromDays(7));
+            var groupDTOs = mapper.Map<List<ParameterGroupDTO>>(groups);
+            await redis.Set(redisKey, groupDTOs, TimeSpan.FromDays(7));
             return Success(groupDTOs);
         }
 
@@ -125,15 +114,15 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
             [FromServices] IParameterTypeService typeService)
         {
             var redisKey = $"parameter/types";
-            if (await _redis.Exist(redisKey))
+            if (await redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<List<ParameterTypeDTO>>(redisKey));
+                return Success(await redis.Get<List<ParameterTypeDTO>>(redisKey));
             }
 
-            _logger.LogInformation("query all parameter types");
+            logger.LogInformation("query all parameter types");
             var types = await typeService.GetAllAsync();
-            var typeDTOs = _mapper.Map<List<ParameterTypeDTO>>(types);
-            await _redis.Set(redisKey, typeDTOs, TimeSpan.FromDays(7));
+            var typeDTOs = mapper.Map<List<ParameterTypeDTO>>(types);
+            await redis.Set(redisKey, typeDTOs, TimeSpan.FromDays(7));
             return Success(typeDTOs);
         }
 
@@ -143,15 +132,15 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v2
             [FromServices] IParameterUnitTypeService unitTypeService)
         {
             var redisKey = $"parameter/unitTypes";
-            if (await _redis.Exist(redisKey))
+            if (await redis.Exist(redisKey))
             {
-                return Success(await _redis.Get<List<UnitTypeDTO>>(redisKey));
+                return Success(await redis.Get<List<UnitTypeDTO>>(redisKey));
             }
 
-            _logger.LogInformation("query all parameter unit types");
+            logger.LogInformation("query all parameter unit types");
             var unitTypes = await unitTypeService.GetAllAsync();
-            var unitTypeDTOs = _mapper.Map<List<UnitTypeDTO>>(unitTypes);
-            await _redis.Set(redisKey, unitTypeDTOs, TimeSpan.FromDays(7));
+            var unitTypeDTOs = mapper.Map<List<UnitTypeDTO>>(unitTypes);
+            await redis.Set(redisKey, unitTypeDTOs, TimeSpan.FromDays(7));
             return Success(unitTypeDTOs);
         }
     }

@@ -5,24 +5,17 @@ using SqlSugar;
 
 namespace GalaFamilyLibrary.Infrastructure.Seed;
 
-public class DatabaseSeed
+public class DatabaseSeed(AppDbContext appDbContext)
 {
-    private readonly AppDbContext _appDbContext;
-
-    public DatabaseSeed(AppDbContext appDbContext)
-    {
-        _appDbContext = appDbContext;
-    }
-
     public void InitTablesByClass(Type model)
     {
-        if (_appDbContext.DbType == DbType.Oracle)
+        if (appDbContext.DbType == DbType.Oracle)
         {
             throw new InvalidOperationException("暂不支持Oracle数据库");
         }
         else
         {
-            _appDbContext.Database.DbMaintenance.CreateDatabase();
+            appDbContext.Database.DbMaintenance.CreateDatabase();
         }
         try
         {
@@ -32,13 +25,13 @@ public class DatabaseSeed
 
             foreach (var type in types)
             {
-                if (_appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
+                if (appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
                 {
                     continue;
                 }
                 var tableName = type.GetCustomAttribute<SugarTable>()?.TableName ?? type.Name;
                 Console.WriteLine($"正在创建表 {tableName}");
-                _appDbContext.Database.CodeFirst.InitTables(type);
+                appDbContext.Database.CodeFirst.InitTables(type);
             }
         }
         catch (Exception e)
@@ -51,13 +44,13 @@ public class DatabaseSeed
 
     public void InitTables(Type program)
     {
-        if (_appDbContext.DbType == DbType.Oracle)
+        if (appDbContext.DbType == DbType.Oracle)
         {
             throw new InvalidOperationException("暂不支持Oracle数据库");
         }
         else
         {
-            _appDbContext.Database.DbMaintenance.CreateDatabase();
+            appDbContext.Database.DbMaintenance.CreateDatabase();
         }
 
         try
@@ -66,14 +59,14 @@ public class DatabaseSeed
                 .Where(t => t.IsClass && t.GetCustomAttribute<SugarTable>() != null);
             foreach (var type in modelTypes)
             {
-                if (_appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
+                if (appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
                 {
                     continue;
                 }
 
                 var tableName = type.GetCustomAttribute<SugarTable>()?.TableName ?? type.Name;
                 Console.WriteLine($"正在创建表 {tableName}");
-                _appDbContext.Database.CodeFirst.InitTables(type);
+                appDbContext.Database.CodeFirst.InitTables(type);
             }
         }
         catch (Exception e)
@@ -100,7 +93,7 @@ public class DatabaseSeed
 
         try
         {
-            if (await _appDbContext.Database.Queryable<T>().AnyAsync())
+            if (await appDbContext.Database.Queryable<T>().AnyAsync())
             {
                 return;
             }
@@ -112,7 +105,7 @@ public class DatabaseSeed
             }
 
             var data = JsonConvert.DeserializeObject<List<T>>(json);
-            await _appDbContext.GetEntityDB<T>().InsertRangeAsync(data);
+            await appDbContext.GetEntityDB<T>().InsertRangeAsync(data);
         }
         catch (Exception e)
         {

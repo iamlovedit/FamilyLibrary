@@ -4,12 +4,9 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.FamilyService.Services;
 
-public class FamilyCategoryService : ServiceBase<FamilyCategory>, IFamilyCategoryService
+public class FamilyCategoryService(IRepositoryBase<FamilyCategory> dbContext)
+    : ServiceBase<FamilyCategory>(dbContext), IFamilyCategoryService
 {
-    public FamilyCategoryService(IRepositoryBase<FamilyCategory> dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<IList<FamilyCategory>> GetCategoryTreeAsync(int? rootId)
     {
         if (rootId.HasValue)

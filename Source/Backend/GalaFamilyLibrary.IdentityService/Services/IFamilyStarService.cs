@@ -9,12 +9,9 @@ namespace GalaFamilyLibrary.IdentityService.Services
         Task<List<FamilyStar>> GetStaredFamilyAsync(long userId);
     }
 
-    public class FamilyStarService : ServiceBase<FamilyStar>, IFamilyStarService
+    public class FamilyStarService(IRepositoryBase<FamilyStar> dbContext)
+        : ServiceBase<FamilyStar>(dbContext), IFamilyStarService
     {
-        public FamilyStarService(IRepositoryBase<FamilyStar> dbContext) : base(dbContext)
-        {
-        }
-
         public async Task<List<FamilyStar>> GetStaredFamilyAsync(long userId)
         {
             return await DAL.DbContext.Queryable<FamilyStar>()

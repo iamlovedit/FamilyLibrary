@@ -4,12 +4,9 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Services;
 
-public class PackageService : ServiceBase<DynamoPackage>, IPackageService
+public class PackageService(IRepositoryBase<DynamoPackage> dbContext)
+    : ServiceBase<DynamoPackage>(dbContext), IPackageService
 {
-    public PackageService(IRepositoryBase<DynamoPackage> dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<DynamoPackage> GetDynamoPackageByIdAsync(string id)
     {
         return await DAL.DbContext.Queryable<DynamoPackage>()

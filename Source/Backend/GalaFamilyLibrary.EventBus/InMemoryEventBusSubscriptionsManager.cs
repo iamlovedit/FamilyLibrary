@@ -10,16 +10,10 @@ namespace GalaFamilyLibrary.EventBus
 {
     public class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
     {
-        private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
-        private readonly List<Type> _eventTypes;
+        private readonly Dictionary<string, List<SubscriptionInfo>> _handlers = new();
+        private readonly List<Type> _eventTypes = new();
 
         public event EventHandler<string> OnEventRemoved;
-
-        public InMemoryEventBusSubscriptionsManager()
-        {
-            _handlers = new Dictionary<string, List<SubscriptionInfo>>();
-            _eventTypes = new List<Type>();
-        }
 
         public bool IsEmpty => !_handlers.Keys.Any();
         public void Clear() => _handlers.Clear();

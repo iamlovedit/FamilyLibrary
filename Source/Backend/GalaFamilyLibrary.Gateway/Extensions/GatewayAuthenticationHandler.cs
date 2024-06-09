@@ -6,16 +6,15 @@ using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.Gateway.Extensions
 {
-    public class GatewayAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+    public class GatewayAuthenticationHandler(
+        IRedisBasketRepository redis,
+        IOptionsMonitor<AuthenticationSchemeOptions> options,
+        ILoggerFactory logger,
+        UrlEncoder encoder,
+        ISystemClock clock)
+        : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock)
     {
-        private readonly IRedisBasketRepository _redis;
-
-        public GatewayAuthenticationHandler(IRedisBasketRepository redis,
-            IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder,
-            ISystemClock clock) : base(options, logger, encoder, clock)
-        {
-            _redis = redis;
-        }
+        private readonly IRedisBasketRepository _redis = redis;
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {

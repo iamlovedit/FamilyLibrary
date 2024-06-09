@@ -7,27 +7,17 @@ using Quartz;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Jobs
 {
-    public class FetchPackagesJob : IJob
+    public class FetchPackagesJob(
+        AppDbContext appDbContext,
+        IUnitOfWork unitOfWork,
+        IRedisBasketRepository redis,
+        IHttpClientFactory httpClientFactory,
+        ILogger<FetchPackagesJob> logger)
+        : IJob
     {
-        private readonly AppDbContext _appDbContext;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IRedisBasketRepository _redis;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly ILogger<FetchPackagesJob> _logger;
-
-        public FetchPackagesJob(AppDbContext appDbContext, IUnitOfWork unitOfWork, IRedisBasketRepository redis,
-            IHttpClientFactory httpClientFactory, ILogger<FetchPackagesJob> logger)
-        {
-            _appDbContext = appDbContext;
-            _unitOfWork = unitOfWork;
-            _redis = redis;
-            _httpClientFactory = httpClientFactory;
-            _logger = logger;
-        }
-
         public async Task Execute(IJobExecutionContext context)
         {
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = httpClientFactory.CreateClient();
             var responseMessage = await httpClient.GetAsync("https://dynamopackages.com/packages");
             if (responseMessage.IsSuccessStatusCode)
             {
@@ -44,11 +34,11 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                         }
 
                         var newPackages = content.ToObject<List<DynamoPackage>>();
-                        var packageDb = _appDbContext.GetEntityDB<DynamoPackage>();
-                        var packageVersionDb = _appDbContext.GetEntityDB<PackageVersion>();
+                        var packageDb = appDbContext.GetEntityDB<DynamoPackage>();
+                        var packageVersionDb = appDbContext.GetEntityDB<PackageVersion>();
                         var oldPackages = await packageDb.GetListAsync();
                         var oldPackageVersions = await packageVersionDb.GetListAsync();
-                        _unitOfWork.BeginTransaction();
+                        unitOfWork.BeginTransaction();
                         var addedPackages = new List<DynamoPackage>();
                         var addedPackageVersions = new List<PackageVersion>();
                         var newPackageVersions = new List<PackageVersion>();
@@ -106,22 +96,22 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                             }
                         }
 
-                        _logger.LogInformation(
+                        logger.LogInformation(
                             "update succeed,added new package count {added},added new version count {addedverson}",
                             addedPackages.Count, addedPackageVersions.Count);
-                        _unitOfWork.CommitTransaction();
-                        await _redis.Clear();
+                        unitOfWork.CommitTransaction();
+                        await redis.Clear();
                     }
                     catch (Exception e)
                     {
-                        _unitOfWork.RollbackTransaction();
-                        _logger.LogError(e, e.Message);
+                        unitOfWork.RollbackTransaction();
+                        logger.LogError(e, e.Message);
                     }
                 }
             }
             else
             {
-                _logger.LogError("request error,http status code : {code}", responseMessage.StatusCode);
+                logger.LogError("request error,http status code : {code}", responseMessage.StatusCode);
             }
         }
     }

@@ -6,16 +6,11 @@ namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("package/v{version:apiVersion}")]
-public class PackageController:ApiControllerBase
+public class PackageController(IPackageService packageService, ILogger<PackageController> logger)
+    : ApiControllerBase
 {
-    private readonly IPackageService _packageService;
-    private readonly ILogger<PackageController> _logger;
-
-    public PackageController(IPackageService packageService,ILogger<PackageController> logger)
-    {
-        _packageService = packageService;
-        _logger = logger;
-    }
+    private readonly IPackageService _packageService = packageService;
+    private readonly ILogger<PackageController> _logger = logger;
 
     [HttpGet]
     public async Task<string> Get()

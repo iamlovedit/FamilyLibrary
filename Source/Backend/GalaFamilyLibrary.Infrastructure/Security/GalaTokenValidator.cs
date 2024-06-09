@@ -5,15 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace GalaFamilyLibrary.Infrastructure.Security
 {
-    public class GalaTokenValidator : ISecurityTokenValidator
+    public class GalaTokenValidator(IAESEncryptionService aesEncryptionService) : ISecurityTokenValidator
     {
-        private readonly IAESEncryptionService _aesEncryptionService;
-
-        public GalaTokenValidator(IAESEncryptionService aesEncryptionService)
-        {
-            _aesEncryptionService = aesEncryptionService;
-        }
-
         public bool CanReadToken(string securityToken)
         {
             return true;
@@ -25,7 +18,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security
 
         public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
         {
-            var decodeToken = _aesEncryptionService.Decrypt(securityToken);
+            var decodeToken = aesEncryptionService.Decrypt(securityToken);
             return new JwtSecurityTokenHandler().ValidateToken(decodeToken, validationParameters, out validatedToken);
         }
     }
