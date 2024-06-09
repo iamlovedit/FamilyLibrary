@@ -6,10 +6,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
     {
         public static void AddRoutingSetup(this IServiceCollection services)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
             services.AddRouting(options =>
             {

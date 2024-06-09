@@ -15,11 +15,9 @@ namespace GalaFamilyLibrary.IdentityService.Services
         Task<PageModel<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize, string orderField);
     }
 
-    public class FamilyCollectionService : ServiceBase<FamilyCollection>, IFamilyCollectionService
+    public class FamilyCollectionService(IRepositoryBase<FamilyCollection> dbContext)
+        : ServiceBase<FamilyCollection>(dbContext), IFamilyCollectionService
     {
-        public FamilyCollectionService(IRepositoryBase<FamilyCollection> dbContext) : base(dbContext)
-        {
-        }
         public async Task<PageModel<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize,
             string orderField)
         {

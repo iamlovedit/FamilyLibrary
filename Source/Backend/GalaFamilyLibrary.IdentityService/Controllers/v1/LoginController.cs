@@ -17,26 +17,17 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("identity/v{version:apiVersion}/authenticate")]
-    public class LoginController : ApiControllerBase
+    public class LoginController(
+        PermissionRequirement permissionRequirement,
+        ILogger<LoginController> logger,
+        IRedisBasketRepository redis,
+        IAESEncryptionService aesEncryptionService,
+        ITokenBuilder tokenBuilder,
+        IUserService userService)
+        : ApiControllerBase
     {
-        private readonly PermissionRequirement _permissionRequirement;
-        private readonly ILogger<LoginController> _logger;
-        private readonly IRedisBasketRepository _redis;
-        private readonly IAESEncryptionService _aesEncryptionService;
-        private readonly ITokenBuilder _tokenBuilder;
-        private readonly IUserService _userService;
-
-        public LoginController(PermissionRequirement permissionRequirement, ILogger<LoginController> logger,
-            IRedisBasketRepository redis, IAESEncryptionService aesEncryptionService, ITokenBuilder tokenBuilder,
-            IUserService userService)
-        {
-            _permissionRequirement = permissionRequirement;
-            _logger = logger;
-            _redis = redis;
-            _aesEncryptionService = aesEncryptionService;
-            _tokenBuilder = tokenBuilder;
-            _userService = userService;
-        }
+        private readonly IRedisBasketRepository _redis = redis;
+        private readonly IAESEncryptionService _aesEncryptionService = aesEncryptionService;
 
         [HttpGet]
         [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
@@ -60,33 +51,33 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 return Failed<TokenInfo>("用户名或者密码不能为空");
             }
 
-            var user = await _userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
+            var user = await userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
             if (user != null)
             {
                 var password = loginUser.Password.MD5Encrypt32(user.Salt);
                 if (!password.Equals(user.Password))
                 {
                     user.ErrorCount += 1;
-                    await _userService.UpdateColumnsAsync(user, u => u.ErrorCount);
+                    await userService.UpdateColumnsAsync(user, u => u.ErrorCount);
                     return Failed<TokenInfo>("用户名或者密码错误");
                 }
 
-                _logger.LogInformation("user {user} logged in", user.Username);
+                logger.LogInformation("user {user} logged in", user.Username);
                 user.ErrorCount = 0;
                 user.LastLoginTime = DateTime.Now;
-                await _userService.UpdateColumnsAsync(user, u => new { u.ErrorCount, u.LastLoginTime });
+                await userService.UpdateColumnsAsync(user, u => new { u.ErrorCount, u.LastLoginTime });
 
-                var roleNames = await _userService.GetUserRolesByIdAsync(user.Id);
+                var roleNames = await userService.GetUserRolesByIdAsync(user.Id);
                 var claims = new List<Claim>()
                 {
                     new(ClaimTypes.Name, loginUser.Username),
                     new(ClaimTypes.Email, user.Email),
                     new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
                     new(ClaimTypes.Expiration,
-                        DateTime.Now.AddSeconds(_permissionRequirement.Expiration.TotalSeconds).ToString())
+                        DateTime.Now.AddSeconds(permissionRequirement.Expiration.TotalSeconds).ToString())
                 };
                 claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
-                var token = _tokenBuilder.GenerateTokenInfo(claims);
+                var token = tokenBuilder.GenerateTokenInfo(claims);
                 return Success(token);
             }
             return Failed<TokenInfo>("用户名或者密码错误");

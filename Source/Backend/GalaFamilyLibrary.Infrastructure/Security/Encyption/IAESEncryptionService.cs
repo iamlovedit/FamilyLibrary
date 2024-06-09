@@ -11,14 +11,8 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
         string Decrypt(string source, string? aesKey = null);
     }
 
-    public class AESEncryptionService : IAESEncryptionService
+    public class AESEncryptionService(IConfiguration configuration) : IAESEncryptionService
     {
-        private readonly IConfiguration _configuration;
-        public AESEncryptionService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
         public string Decrypt(string source, string? aesKey = null)
         {
             if (string.IsNullOrEmpty(source))
@@ -58,7 +52,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
             var aes = Aes.Create();
             aes.Mode = CipherMode.ECB;
             aes.Padding = PaddingMode.PKCS7;
-            var key = aesKey ?? _configuration["AES_KEY"];
+            var key = aesKey ?? configuration["AES_KEY"];
             aes.Key = md5.ComputeHash(Encoding.UTF8.GetBytes(key!));
             return aes;
         }

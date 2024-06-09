@@ -3,23 +3,15 @@ using SqlSugar;
 
 namespace GalaFamilyLibrary.EventBus.Events
 {
-    public class IntegrationEvent
+    [method: JsonConstructor]
+    public class IntegrationEvent(long id, DateTime createDate)
     {
-        public IntegrationEvent()
+        public IntegrationEvent() : this(SnowFlakeSingle.instance.NextId(), DateTime.UtcNow)
         {
-            Id = SnowFlakeSingle.instance.NextId();
-            CreationDate = DateTime.UtcNow;
         }
 
-        [JsonConstructor]
-        public IntegrationEvent(long id, DateTime createDate)
-        {
-            Id = id;
-            CreationDate = createDate;
-        }
+        [JsonProperty] public long Id { get; private set; } = id;
 
-        [JsonProperty] public long Id { get; private set; }
-
-        [JsonProperty] public DateTime CreationDate { get; private set; }
+        [JsonProperty] public DateTime CreationDate { get; private set; } = createDate;
     }
 }

@@ -1,22 +1,17 @@
 ﻿namespace GalaFamilyLibrary.Infrastructure.Security
 {
-    public class TokenInfo
+    public class TokenInfo(double expiredIn, string tokenType)
     {
         public string? Token { get; }
 
-        public double? ExpiredIn { get; }
+        public double? ExpiredIn { get; } = expiredIn;
 
-        public string? TokenType { get; }
+        public string? TokenType { get; } = tokenType;
 
         public string? RefreshToken { get; set; }
 
         public double? RefreshExpiredIn { get; set; }
 
-        public TokenInfo(double expiredIn, string tokenType)
-        {
-            ExpiredIn = expiredIn;
-            TokenType = tokenType;
-        }
         public TokenInfo(string token, double expiredIn, string tokenType) : this(expiredIn, tokenType)
         {
             Token = token;

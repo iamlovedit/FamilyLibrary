@@ -1,11 +1,6 @@
 namespace GalaFamilyLibrary.Infrastructure.Redis;
 
-public class RedisRequirement
+public class RedisRequirement(TimeSpan cacheTime)
 {
-    public TimeSpan CacheTime { get; }
-
-    public RedisRequirement(TimeSpan cacheTime)
-    {
-        CacheTime = cacheTime;
-    }
+    public TimeSpan CacheTime { get; } = cacheTime;
 }

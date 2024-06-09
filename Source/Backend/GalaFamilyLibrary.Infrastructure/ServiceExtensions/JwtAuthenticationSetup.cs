@@ -16,8 +16,9 @@ public static class JwtAuthenticationSetup
 {
     public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (configuration == null) throw new ArgumentNullException(nameof(configuration));
+        ArgumentNullException.ThrowIfNull(services);
+
+        ArgumentNullException.ThrowIfNull(configuration);
 
         var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]);
         var key = new SymmetricSecurityKey(buffer);

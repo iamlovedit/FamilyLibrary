@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace GalaFamilyLibrary.Infrastructure.Security
 {
-    public class QueryStringProtectionAttribute : ActionFilterAttribute
+    public class QueryStringProtectionAttribute(IDataProtectionHelper dataProtectionHelper) : ActionFilterAttribute
     {
-        private readonly IDataProtectionHelper _dataProtectionHelper;
-        public string[] QueryStringParameters { get; set; }
-        public QueryStringProtectionAttribute(IDataProtectionHelper dataProtectionHelper)
-        {
-            _dataProtectionHelper = dataProtectionHelper;
-            QueryStringParameters = Array.Empty<string>();
-        }
+        public string[] QueryStringParameters { get; set; } = Array.Empty<string>();
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -20,7 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security
                 if (context.ActionArguments.ContainsKey(parameter))
                 {
                     var queryStringValue = context.HttpContext.Request.Query[parameter];
-                    var decryptedValue = _dataProtectionHelper.Decrypt(queryStringValue, nameof(QueryStringProtectionAttribute));
+                    var decryptedValue = dataProtectionHelper.Decrypt(queryStringValue, nameof(QueryStringProtectionAttribute));
                     context.ActionArguments[parameter] = decryptedValue;
                 }
             }

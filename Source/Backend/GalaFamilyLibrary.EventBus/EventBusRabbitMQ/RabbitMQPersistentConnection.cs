@@ -7,22 +7,18 @@ using RabbitMQ.Client.Exceptions;
 
 namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 {
-    public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
+    public class RabbitMQPersistentConnection(
+        IConnectionFactory connectionFactory,
+        ILogger<RabbitMQPersistentConnection> logger,
+        int retryCount = 5)
+        : IRabbitMQPersistentConnection
     {
-        private readonly IConnectionFactory _connectionFactory;
-        private readonly ILogger<RabbitMQPersistentConnection> _logger;
-        private readonly int _retryCount;
+        private readonly IConnectionFactory _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
+        private readonly ILogger<RabbitMQPersistentConnection> _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         IConnection _connection;
         bool _disposed;
 
         object sync_root = new object();
-
-        public RabbitMQPersistentConnection(IConnectionFactory connectionFactory, ILogger<RabbitMQPersistentConnection> logger, int retryCount = 5)
-        {
-            _connectionFactory = connectionFactory ?? throw new ArgumentNullException(nameof(connectionFactory));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _retryCount = retryCount;
-        }
 
         public bool IsConnected
         {
@@ -44,7 +40,10 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 
         public void Dispose()
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             _disposed = true;
 
@@ -66,7 +65,7 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
             {
                 var policy = Policy.Handle<SocketException>()
                     .Or<BrokerUnreachableException>()
-                    .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                    .WaitAndRetry(retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
                     {
                         _logger.LogWarning(ex, "RabbitMQ Client could not connect after {TimeOut}s ({ExceptionMessage})", $"{time.TotalSeconds:n1}", ex.Message);
                     }
@@ -99,7 +98,10 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 
         private void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             _logger.LogWarning("A RabbitMQ connection is shutdown. Trying to re-connect...");
 
@@ -108,7 +110,10 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 
         void OnCallbackException(object sender, CallbackExceptionEventArgs e)
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             _logger.LogWarning("A RabbitMQ connection throw exception. Trying to re-connect...");
 
@@ -117,7 +122,10 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
 
         void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
         {
-            if (_disposed) return;
+            if (_disposed)
+            {
+                return;
+            }
 
             _logger.LogWarning("A RabbitMQ connection is on shutdown. Trying to re-connect...");
 

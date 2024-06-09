@@ -10,10 +10,7 @@ namespace GalaFamilyLibrary.Infrastructure.Security
     {
         public static void AddDataProtectionSetup(this IServiceCollection services)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
             services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
             {

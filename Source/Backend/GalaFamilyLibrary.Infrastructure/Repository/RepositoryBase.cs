@@ -5,98 +5,93 @@ using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.Infrastructure.Repository;
 
-public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
+public class RepositoryBase<T>(ISqlSugarClient context) : IRepositoryBase<T>
+    where T : class, new()
 {
-    public ISqlSugarClient DbContext => _db;
-    private readonly ISqlSugarClient _db;
-
-    public RepositoryBase(ISqlSugarClient context)
-    {
-        _db = context;
-    }
+    public ISqlSugarClient DbContext => context;
 
     public async Task<T> GetByIdAsync(object id)
     {
-        return await _db.Queryable<T>().In(id).SingleAsync();
+        return await context.Queryable<T>().In(id).SingleAsync();
     }
 
     public async Task<T> GetByIdAsync(object id, bool useCache = false)
     {
-        return await _db.Queryable<T>().WithCacheIF(useCache).In(id).SingleAsync();
+        return await context.Queryable<T>().WithCacheIF(useCache).In(id).SingleAsync();
     }
 
     public async Task<List<T>> GetByExpressionAsync(Expression<Func<T, bool>> whereExpression)
     {
-        return await _db.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync();
+        return await context.Queryable<T>().WhereIF(whereExpression != null, whereExpression).ToListAsync();
     }
 
     public async Task<IList<T>> GetAllAsync(bool useCache = false)
     {
-        return await _db.Queryable<T>().ToListAsync();
+        return await context.Queryable<T>().ToListAsync();
     }
 
     public async Task<List<T>> GetByIdsAsync(object[] idArray)
     {
-        return await _db.Queryable<T>().In(idArray).ToListAsync();
+        return await context.Queryable<T>().In(idArray).ToListAsync();
     }
 
     public async Task<long> AddSnowflakeAsync(T entity)
     {
-        return await _db.Insertable<T>(entity).ExecuteReturnSnowflakeIdAsync();
+        return await context.Insertable<T>(entity).ExecuteReturnSnowflakeIdAsync();
     }
 
     public async Task<IList<long>> AddSnowflakesAsync(IList<T> entities)
     {
-        return await _db.Insertable<T>(entities).ExecuteReturnSnowflakeIdListAsync();
+        return await context.Insertable<T>(entities).ExecuteReturnSnowflakeIdListAsync();
     }
 
     public async Task<int> AddAsync(T entity)
     {
-        var insert = _db.Insertable(entity);
+        var insert = context.Insertable(entity);
         return await insert.ExecuteReturnIdentityAsync();
     }
 
     public async Task<int> AddAsync(IList<T> entities)
     {
-        return await _db.Insertable(entities.ToArray()).ExecuteCommandAsync();
+        return await context.Insertable(entities.ToArray()).ExecuteCommandAsync();
     }
 
     public async Task<bool> DeleteByIdAsync(object id)
     {
-        return await _db.Deleteable<T>(id).ExecuteCommandHasChangeAsync();
+        return await context.Deleteable<T>(id).ExecuteCommandHasChangeAsync();
     }
 
     public async Task<bool> DeleteAsync(T entity)
     {
-        return await _db.Deleteable<T>(entity).ExecuteCommandHasChangeAsync();
+        return await context.Deleteable<T>(entity).ExecuteCommandHasChangeAsync();
     }
 
-    public async Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T,object>> expression)
+    public async Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T, object>> expression)
     {
-        return await _db.Updateable<T>(entity).UpdateColumns(expression).ExecuteCommandHasChangeAsync();
+        return await context.Updateable<T>(entity).UpdateColumns(expression).ExecuteCommandHasChangeAsync();
     }
 
 
     public async Task<bool> UpdateAsync(T entity)
     {
-        return await _db.Updateable<T>(entity).ExecuteCommandHasChangeAsync();
+        return await context.Updateable<T>(entity).ExecuteCommandHasChangeAsync();
     }
 
     public async Task<T> GetSingleByIdAsync(object id)
     {
-        return await _db.Queryable<T>().InSingleAsync(id);
+        return await context.Queryable<T>().InSingleAsync(id);
     }
 
     public async Task<T> GetFirstByExpressionAsync(Expression<Func<T, bool>> expression)
     {
-        return await _db.Queryable<T>().FirstAsync(expression);
+        return await context.Queryable<T>().FirstAsync(expression);
     }
 
     public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1,
         int pageSize = 20, string? orderByFields = null)
     {
         RefAsync<int> totalCount = 0;
-        var list = await _db.Queryable<T>()
+        var list = await context.Queryable<T>()
             .OrderByIF(!string.IsNullOrEmpty(orderByFields), orderByFields)
             .WhereIF(whereExpression != null, whereExpression)
             .ToPageListAsync(pageIndex, pageSize, totalCount);
@@ -107,8 +102,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class, new()
     public async Task<IList<T>> QueryByOrderAsync(string field, int count, bool isDesc = false)
     {
         var method = isDesc ? " desc " : " asc ";
-        return await _db.Queryable<T>().OrderBy(field + method).Take(count).ToListAsync();
+        return await context.Queryable<T>().OrderBy(field + method).Take(count).ToListAsync();
     }
-
-   
 }

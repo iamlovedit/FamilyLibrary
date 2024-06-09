@@ -15,7 +15,7 @@ public static class ConsulMiddleware
 {
     public static void UseConsul(this IApplicationBuilder app, IConfiguration configuration)
     {
-        if (app == null) throw new ArgumentNullException(nameof(app));
+        ArgumentNullException.ThrowIfNull(app);
         //var consulClient = app.ApplicationServices.GetRequiredService<IConsulClient>();
         var consulClient = new ConsulClient(x => x.Address = new Uri("http://localhost:8500"));
         var logger = app.ApplicationServices.GetRequiredService<ILoggerFactory>().CreateLogger("Consul");

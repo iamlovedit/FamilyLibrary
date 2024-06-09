@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
-public class ApiAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+public class ApiAuthenticationHandler(
+    IOptionsMonitor<AuthenticationSchemeOptions> options,
+    ILoggerFactory logger,
+    UrlEncoder encoder,
+    ISystemClock clock)
+    : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock)
 {
-    public ApiAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
-        UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
-    {
-    }
-
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         throw new NotImplementedException();

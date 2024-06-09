@@ -9,12 +9,9 @@ namespace GalaFamilyLibrary.ParameterService.Services
         Task<ParameterDefinition> GetDefinitionDetailsAsync(long id);
     }
 
-    public class ParameterDefinitionService : ServiceBase<ParameterDefinition>, IParameterDefinitionService
+    public class ParameterDefinitionService(IRepositoryBase<ParameterDefinition> dbContext)
+        : ServiceBase<ParameterDefinition>(dbContext), IParameterDefinitionService
     {
-        public ParameterDefinitionService(IRepositoryBase<ParameterDefinition> dbContext) : base(dbContext)
-        {
-        }
-
         public async Task<ParameterDefinition> GetDefinitionDetailsAsync(long id)
         {
             return await DAL.DbContext.Queryable<ParameterDefinition>()

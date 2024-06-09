@@ -19,23 +19,15 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
 {
     [ApiController]
     [Route("files")]
-    public class FileController : ControllerBase
+    public class FileController(
+        IWebHostEnvironment webHostEnvironment,
+        IAESEncryptionService aESEncryptionService,
+        ILogger<FileController> logger,
+        FileSecurityOption fileSecurityOption,
+        IHttpClientFactory httpClientFactory)
+        : ControllerBase
     {
-        private readonly IAESEncryptionService _aESEncryptionService;
-        private readonly ILogger<FileController> _logger;
-        private readonly FileSecurityOption _fileSecurityOption;
-        private readonly IHttpClientFactory _httpClientFactory;
-        private readonly string _fileFolder;
-
-        public FileController(IWebHostEnvironment webHostEnvironment, IAESEncryptionService aESEncryptionService,
-            ILogger<FileController> logger, FileSecurityOption fileSecurityOption, IHttpClientFactory httpClientFactory)
-        {
-            _aESEncryptionService = aESEncryptionService;
-            _logger = logger;
-            _fileSecurityOption = fileSecurityOption;
-            _httpClientFactory = httpClientFactory;
-            _fileFolder = Path.Combine(webHostEnvironment.ContentRootPath, "files");
-        }
+        private readonly string _fileFolder = Path.Combine(webHostEnvironment.ContentRootPath, "files");
 
         [HttpGet]
         [Route("{*path:file}")]
@@ -48,7 +40,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     return Unauthorized();
                 }
 
-                var unprotectionToken = _aESEncryptionService.Decrypt(token);
+                var unprotectionToken = aESEncryptionService.Decrypt(token);
                 if (string.IsNullOrEmpty(unprotectionToken))
                 {
                     return Unauthorized();
@@ -62,16 +54,16 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                         return Unauthorized();
                     }
 
-                    if (options.AccessKey == _fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
+                    if (options.AccessKey == fileSecurityOption.AccessKey && options.Expiration < DateTime.Now)
                     {
-                        _logger.LogWarning("download file {filename} failed,access denied", options.Filename);
+                        logger.LogWarning("download file {filename} failed,access denied", options.Filename);
                         return Unauthorized();
                     }
 
                     var filePath = Path.Combine(_fileFolder, path);
                     if (!System.IO.File.Exists(filePath))
                     {
-                        _logger.LogWarning("download file {filename} failed,file not exist,current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
+                        logger.LogWarning("download file {filename} failed,file not exist,current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
                         return NotFound("file not exist");
                     }
 
@@ -81,14 +73,14 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                         contentType = "application/octet-stream";
                     }
 
-                    _logger.LogInformation("download file {filename} succeed current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
+                    logger.LogInformation("download file {filename} succeed current root path {folder},file path {filePath}", options.Filename, _fileFolder, filePath);
                     var extension = Path.GetExtension(path).ToLower();
                     var fileName = $"{options.Filename}{extension}";
                     return PhysicalFile(filePath, contentType,fileName);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e.Message);
+                    logger.LogError(e.Message);
                     return BadRequest();
                 }
             });
@@ -107,7 +99,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                     return Unauthorized();
                 }
 
-                var unprotectionToken = _aESEncryptionService.Decrypt(token);
+                var unprotectionToken = aESEncryptionService.Decrypt(token);
                 if (string.IsNullOrEmpty(unprotectionToken))
                 {
                     return Unauthorized();
@@ -121,9 +113,9 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                         return Unauthorized();
                     }
 
-                    if (options.AccessKey == _fileSecurityOption.AccessKey || options.Expiration < DateTime.Now)
+                    if (options.AccessKey == fileSecurityOption.AccessKey || options.Expiration < DateTime.Now)
                     {
-                        _logger.LogWarning(
+                        logger.LogWarning(
                             "upload file {filename},file id {fileId},file extension {fileExtension} failed,access denied",
                             options.Filename, callback.FileId, fileExtension);
                         return Unauthorized();
@@ -138,7 +130,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                             var filePath = Path.Combine(_fileFolder, path);
                             if (fileExtension != ".png")
                             {
-                                using (var httpClient = _httpClientFactory.CreateClient())
+                                using (var httpClient = httpClientFactory.CreateClient())
                                 {
                                     var keyValues = new KeyValuePair<string, string>[]
                                     {
@@ -154,12 +146,12 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                                     {
                                         await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
                                         await memoryStream.FlushAsync();
-                                        _logger.LogInformation("upload succeed,current root path {folder},file path {filePath}", _fileFolder, filePath);
+                                        logger.LogInformation("upload succeed,current root path {folder},file path {filePath}", _fileFolder, filePath);
                                         return Ok("upload succeed");
                                     }
                                     else
                                     {
-                                        _logger.LogInformation("upload failed,current root path {folder},file path {filePath}", _fileFolder, filePath);
+                                        logger.LogInformation("upload failed,current root path {folder},file path {filePath}", _fileFolder, filePath);
                                         return Problem("upload failed");
                                     }
                                 }
@@ -179,7 +171,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e.Message);
+                    logger.LogError(e.Message);
                     return Problem(e.Message);
                 }
             }

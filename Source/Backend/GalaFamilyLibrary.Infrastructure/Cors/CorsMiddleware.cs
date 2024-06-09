@@ -6,7 +6,8 @@ namespace GalaFamilyLibrary.Infrastructure.Cors
     {
         public static void UseCorsService(this IApplicationBuilder app)
         {
-            if (app == null) throw new ArgumentNullException(nameof(app));
+            ArgumentNullException.ThrowIfNull(app);
+
             app.UseCors(CorsSetup._corsSchema);
         }
     }

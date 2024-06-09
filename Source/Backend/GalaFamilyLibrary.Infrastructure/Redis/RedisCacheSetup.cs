@@ -8,16 +8,13 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
     {
         public static void AddRedisCacheSetup(this IServiceCollection services, IConfiguration configuration)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
             services.AddTransient<IRedisBasketRepository, RedisBasketRepository>();
             services.AddSingleton<RedisRequirement>(provider => new RedisRequirement(TimeSpan.FromMinutes(30)));
             services.AddSingleton<ConnectionMultiplexer>(provider =>
             {
-                var redisConnectionString =$"{configuration["REDIS_HOST"]},password={configuration["REDIS_PASSWORD"]}";
+                var redisConnectionString = $"{configuration["REDIS_HOST"]},password={configuration["REDIS_PASSWORD"]}";
                 var redisConfig = ConfigurationOptions.Parse(redisConnectionString, true);
                 redisConfig.ResolveDns = true;
                 return ConnectionMultiplexer.Connect(redisConfig);

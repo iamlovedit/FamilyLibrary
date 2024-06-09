@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
+using GalaFamilyLibrary.Domain.Validators;
 using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -14,46 +16,35 @@ namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
 [ApiVersion("1.0")]
 [Route("family/v{version:apiVersion}")]
-public class FamilyController : ApiControllerBase
+public class FamilyController(
+    IFamilyService familyService,
+    IFamilyCategoryService categoryService,
+    ILogger<FamilyController> logger,
+    IMapper mapper,
+    IRedisBasketRepository redis,
+    IValidator<FamilyCreationValidator> familyCreationValidator,
+    RedisRequirement redisRequirement,
+    FileStorageClient fileStorageClient)
+    : ApiControllerBase
 {
-    private readonly IFamilyService _familyService;
-    private readonly IFamilyCategoryService _categoryService;
-    private readonly ILogger<FamilyController> _logger;
-    private readonly IMapper _mapper;
-    private readonly IRedisBasketRepository _redis;
-    private readonly RedisRequirement _redisRequirement;
-    private readonly FileStorageClient _fileStorageClient;
-
-    public FamilyController(IFamilyService familyService, IFamilyCategoryService categoryService,
-        ILogger<FamilyController> logger, IMapper mapper, IRedisBasketRepository redis, RedisRequirement redisRequirement, FileStorageClient fileStorageClient)
-    {
-        _familyService = familyService;
-        _categoryService = categoryService;
-        _logger = logger;
-        _mapper = mapper;
-        _redis = redis;
-        _redisRequirement = redisRequirement;
-        _fileStorageClient = fileStorageClient;
-    }
-
     [HttpGet]
     [Route("{id:long}/{familyVersion:int}")]
     public Task<IActionResult> DownloadFamilyAsync(long id, ushort familyVersion)
     {
         return Task.Run<IActionResult>(async () =>
         {
-            var family = await _familyService.GetByIdAsync(id);
+            var family = await familyService.GetByIdAsync(id);
             if (family is null)
             {
-                _logger.LogWarning("download family by id: {id} version:{version} failed", id, familyVersion);
+                logger.LogWarning("download family by id: {id} version:{version} failed", id, familyVersion);
                 return NotFound("file not exist");
             }
 
             var familyPath = family.GetFilePath(familyVersion);
-            var url = _fileStorageClient.GetFileUrl(family.Name, familyPath);
+            var url = fileStorageClient.GetFileUrl(family.Name, familyPath);
             family.Downloads += 1;
-            await _familyService.UpdateColumnsAsync(family, f => f.Downloads);
-            _logger.LogInformation("download family by id: {id} version:{version} succeed,file url is {url}", id,
+            await familyService.UpdateColumnsAsync(family, f => f.Downloads);
+            logger.LogInformation("download family by id: {id} version:{version} succeed,file url is {url}", id,
                 familyVersion, url);
             return Redirect(url);
         });
@@ -64,21 +55,21 @@ public class FamilyController : ApiControllerBase
     public async Task<MessageModel<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
     {
         var redisKey = $"familyDetails/{id}";
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            return Success(await _redis.Get<FamilyDetailDTO>(redisKey));
+            return Success(await redis.Get<FamilyDetailDTO>(redisKey));
         }
 
-        var family = await _familyService.GetFamilyDetails(id);
+        var family = await familyService.GetFamilyDetails(id);
         if (family is null)
         {
-            _logger.LogWarning("query family details failed id: {id} ,family not existed", id);
+            logger.LogWarning("query family details failed id: {id} ,family not existed", id);
             return Failed<FamilyDetailDTO>("family not exist", 404);
         }
 
-        _logger.LogInformation("query family details succeed id: {id}", id);
-        var familyDto = _mapper.Map<FamilyDetailDTO>(family);
-        await _redis.Set(redisKey, familyDto, _redisRequirement.CacheTime);
+        logger.LogInformation("query family details succeed id: {id}", id);
+        var familyDto = mapper.Map<FamilyDetailDTO>(family);
+        await redis.Set(redisKey, familyDto, redisRequirement.CacheTime);
         return Success(familyDto);
     }
 
@@ -88,27 +79,27 @@ public class FamilyController : ApiControllerBase
     public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync(
         [FromBody] FamilyCreationDTO familyCreationDto)
     {
-        var family = _mapper.Map<Family>(familyCreationDto);
+        var family = mapper.Map<Family>(familyCreationDto);
         var redisKey = $"family/{family.FileId}";
         var dictionary = default(Dictionary<string, string>);
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            dictionary = await _redis.Get<Dictionary<string, string>>(redisKey);
+            dictionary = await redis.Get<Dictionary<string, string>>(redisKey);
         }
         else
         {
-            var familyUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetFilePath(familyCreationDto.Version));
-            var imageUrl = _fileStorageClient.GetFileUrl(family.Name, family.GetImagePath());
+            var familyUrl = fileStorageClient.GetFileUrl(family.Name, family.GetFilePath(familyCreationDto.Version));
+            var imageUrl = fileStorageClient.GetFileUrl(family.Name, family.GetImagePath());
             dictionary = new Dictionary<string, string>
             {
                 { "family", familyUrl },
                 { "image", imageUrl },
                 { "fileId", family.FileId }
             };
-            await _redis.Set(redisKey, dictionary, TimeSpan.FromMinutes(5));
+            await redis.Set(redisKey, dictionary, TimeSpan.FromMinutes(5));
         }
 
-        _logger.LogInformation("create upload url succeed,file id {fileId}", family.FileId);
+        logger.LogInformation("create upload url succeed,file id {fileId}", family.FileId);
         return Success(dictionary);
     }
 
@@ -117,16 +108,16 @@ public class FamilyController : ApiControllerBase
     [AllowAnonymous]
     public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery] int? parentId = null)
     {
-        _logger.LogInformation("query child categories by parent {parentId}", parentId);
+        logger.LogInformation("query child categories by parent {parentId}", parentId);
         var redisKey = parentId == null ? $"family/categories" : $"family/categories?parentId={parentId}";
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            return Success(await _redis.Get<List<FamilyCategoryDTO>>(redisKey));
+            return Success(await redis.Get<List<FamilyCategoryDTO>>(redisKey));
         }
 
-        var categories = await _categoryService.GetCategoryTreeAsync(parentId);
-        var categoriesDto = _mapper.Map<List<FamilyCategoryDTO>>(categories);
-        await _redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
+        var categories = await categoryService.GetCategoryTreeAsync(parentId);
+        var categoriesDto = mapper.Map<List<FamilyCategoryDTO>>(categories);
+        await redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
         return Success(categoriesDto);
     }
 
@@ -138,22 +129,22 @@ public class FamilyController : ApiControllerBase
         var redisKey =
             $"families?keyword={categoryKeywordQuery.Keyword ?? "null"}&categoryId={categoryKeywordQuery.CategoryId}&pageIndex={categoryKeywordQuery.PageIndex}" +
             $"&pageSize={categoryKeywordQuery.PageSize}&orderField={categoryKeywordQuery.OrderField}";
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await _redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
         }
 
-        _logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
+        logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",
             categoryKeywordQuery.CategoryId, categoryKeywordQuery.Keyword, categoryKeywordQuery.PageIndex);
         var expression = Expressionable.Create<Family>()
             .AndIF(categoryKeywordQuery.CategoryId != null, f => f.CategoryId == categoryKeywordQuery.CategoryId)
             .AndIF(categoryKeywordQuery.Keyword != null, f => f.Name.Contains(categoryKeywordQuery.Keyword))
             .ToExpression();
 
-        var familyPage = await _familyService.GetFamilyPageAsync(expression, categoryKeywordQuery.PageIndex,
+        var familyPage = await familyService.GetFamilyPageAsync(expression, categoryKeywordQuery.PageIndex,
             categoryKeywordQuery.PageSize, $"{categoryKeywordQuery.OrderField} DESC");
-        var familyPageDto = familyPage.ConvertTo<FamilyBasicDTO>(_mapper);
-        await _redis.Set(redisKey, familyPageDto, _redisRequirement.CacheTime);
+        var familyPageDto = familyPage.ConvertTo<FamilyBasicDTO>(mapper);
+        await redis.Set(redisKey, familyPageDto, redisRequirement.CacheTime);
         return SucceedPage(familyPageDto);
     }
 

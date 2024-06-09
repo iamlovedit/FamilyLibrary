@@ -7,10 +7,7 @@ public static class DbSetup
 {
     public static void AddDbSetup(this IServiceCollection services)
     {
-        if (services is null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
+        ArgumentNullException.ThrowIfNull(services);
         services.AddScoped<DatabaseSeed>();
         services.AddScoped<AppDbContext>();
     }

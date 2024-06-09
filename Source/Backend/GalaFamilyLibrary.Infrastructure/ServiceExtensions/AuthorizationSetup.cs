@@ -12,15 +12,9 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
     {
         public static void AddAuthorizationSetup(this IServiceCollection services, IConfiguration configuration)
         {
-            if (services is null)
-            {
-                throw new ArgumentNullException(nameof(services));
-            }
+            ArgumentNullException.ThrowIfNull(services);
 
-            if (configuration is null)
-            {
-                throw new ArgumentNullException(nameof(configuration));
-            }
+            ArgumentNullException.ThrowIfNull(configuration);
 
             var key = configuration["AUDIENCE_KEY"];
             var keyByteArray = Encoding.ASCII.GetBytes(key);

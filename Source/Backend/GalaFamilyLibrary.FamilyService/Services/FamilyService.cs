@@ -8,13 +8,8 @@ using System.Linq.Expressions;
 
 namespace GalaFamilyLibrary.FamilyService.Services;
 
-public class FamilyService : ServiceBase<Family>, IFamilyService
+public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Family>(dbContext), IFamilyService
 {
-    public FamilyService(IRepositoryBase<Family> dbContext) : base(dbContext)
-    {
-
-    }
-
     public async Task<Family> GetFamilyDetails(long id)
     {
         return await DAL.DbContext.Queryable<Family>().

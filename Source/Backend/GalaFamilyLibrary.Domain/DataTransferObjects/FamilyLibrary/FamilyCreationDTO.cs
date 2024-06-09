@@ -5,7 +5,6 @@
         public string Name { get; set; }
 
         public long CategoryId { get; set; }
-
         public ushort Version { get; set; }
 
         public long UploaderId { get; set; }

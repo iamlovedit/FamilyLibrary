@@ -8,7 +8,8 @@ public static class ProduceJsonSetup
 {
     public static void AddProduceJsonSetup(this IMvcBuilder mvcBuilder)
     {
-        if (mvcBuilder == null) throw new ArgumentNullException(nameof(mvcBuilder));
+        ArgumentNullException.ThrowIfNull(mvcBuilder);
+
         mvcBuilder.AddNewtonsoftJson(options =>
         {
             options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;

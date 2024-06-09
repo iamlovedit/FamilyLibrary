@@ -16,7 +16,8 @@ public class CamelCaseModelBinder : IModelBinder
 {
     public Task BindModelAsync(ModelBindingContext bindingContext)
     {
-        if (bindingContext == null) throw new ArgumentNullException(nameof(bindingContext));
+        ArgumentNullException.ThrowIfNull(bindingContext);
+
         var model = Activator.CreateInstance(bindingContext.ModelType);
         var propertyNames = bindingContext.ModelType.GetProperties().Select(p => ConvertToCamelCase(p.Name));
 

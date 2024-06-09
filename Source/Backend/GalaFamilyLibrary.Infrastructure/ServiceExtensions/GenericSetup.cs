@@ -15,10 +15,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
     {
         public static void AddGenericSetup(this WebApplicationBuilder builder)
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
+            ArgumentNullException.ThrowIfNull(builder);
             var configuration = builder.Configuration;
             var services = builder.Services;
 

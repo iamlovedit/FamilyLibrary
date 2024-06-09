@@ -8,7 +8,8 @@ public static class ServiceBaseSetup
 {
     public static void AddRepositorySetup(this IServiceCollection services)
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
+
         services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
         services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
     }

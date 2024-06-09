@@ -8,10 +8,6 @@ namespace GalaFamilyLibrary.ParameterService.Services
     {
 
     }
-    public class ParameterUnitTypeService : ServiceBase<ParameterUnitType>, IParameterUnitTypeService
-    {
-        public ParameterUnitTypeService(IRepositoryBase<ParameterUnitType> dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class ParameterUnitTypeService(IRepositoryBase<ParameterUnitType> dbContext)
+        : ServiceBase<ParameterUnitType>(dbContext), IParameterUnitTypeService;
 }

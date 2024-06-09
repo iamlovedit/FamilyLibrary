@@ -249,7 +249,11 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
                         if (subscription.IsDynamic)
                         {
                             var handler = scope.ResolveOptional(subscription.HandlerType) as IDynamicIntegrationEventHandler;
-                            if (handler == null) continue;
+                            if (handler == null)
+                            {
+                                continue;
+                            }
+
                             dynamic eventData = JObject.Parse(message);
 
                             await Task.Yield();
@@ -258,7 +262,11 @@ namespace GalaFamilyLibrary.EventBus.EventBusRabbitMQ
                         else
                         {
                             var handler = scope.ResolveOptional(subscription.HandlerType);
-                            if (handler == null) continue;
+                            if (handler == null)
+                            {
+                                continue;
+                            }
+
                             var eventType = _subsManager.GetEventTypeByName(eventName);
                             var integrationEvent = JsonConvert.DeserializeObject(message, eventType);
                             var concreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);

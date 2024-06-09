@@ -4,10 +4,6 @@ using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Services
 {
-    public class VersionService : ServiceBase<PackageVersion>, IVersionService
-    {
-        public VersionService(IRepositoryBase<PackageVersion> dbContext) : base(dbContext)
-        {
-        }
-    }
+    public class VersionService(IRepositoryBase<PackageVersion> dbContext)
+        : ServiceBase<PackageVersion>(dbContext), IVersionService;
 }

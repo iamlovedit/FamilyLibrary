@@ -4,14 +4,10 @@ using GalaFamilyLibrary.Infrastructure.Repository;
 
 namespace GalaFamilyLibrary.Infrastructure.Service;
 
-public abstract class ServiceBase<T> : IServiceBase<T> where T : class, new()
+public abstract class ServiceBase<T>(IRepositoryBase<T> dbContext) : IServiceBase<T>
+    where T : class, new()
 {
-    public IRepositoryBase<T> DAL { get; }
-
-    public ServiceBase(IRepositoryBase<T> dbContext)
-    {
-        DAL = dbContext;
-    }
+    public IRepositoryBase<T> DAL { get; } = dbContext;
 
     public async Task<T> GetByIdAsync(object id)
     {
