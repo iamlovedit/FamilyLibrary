@@ -18,7 +18,7 @@ services.AddScoped(typeof(IUserService), typeof(UserService));
 services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
 services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 services.AddScoped<IValidator<UserCreationDTO>, UserCreationValidator>();
-builder.AddGenericSetup();
+builder.AddInfrastructureSetup();
 
 var app = builder.Build();
 
@@ -48,4 +48,4 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "FamilyStars");
     dbSeed.InitSeed<FamilyStar>(file);
 });
-app.UseGeneric();
+app.UseInfrastructure();

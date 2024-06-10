@@ -5,7 +5,7 @@ using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.ParameterService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddGenericSetup();
+builder.AddInfrastructureSetup();
 var services = builder.Services;
 services.AddScoped(typeof(IParameterService), typeof(ParameterService));
 services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefinitionService));
@@ -43,4 +43,4 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "DisplayUnitTypes");
     dbSeed.InitSeed<DisplayUnitType>(file);
 });
-app.UseGeneric();
+app.UseInfrastructure();

@@ -7,9 +7,9 @@ using Serilog;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
 {
-    public static class GenericMiddleware
+    public static class InfrastructureMiddleware
     {
-        public static void UseGeneric(this WebApplication app)
+        public static void UseInfrastructure(this WebApplication app)
         {
             ArgumentNullException.ThrowIfNull(app);
 

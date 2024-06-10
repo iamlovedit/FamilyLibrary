@@ -9,7 +9,7 @@ namespace GalaFamilyLibrary.Infrastructure.Common;
 [Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 [ProducesResponseType(StatusCodes.Status200OK)]
-public class ApiControllerBase : ControllerBase
+public class GalaControllerBase : ControllerBase
 {
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]

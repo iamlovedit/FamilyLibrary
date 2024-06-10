@@ -24,7 +24,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         IAESEncryptionService aesEncryptionService,
         ITokenBuilder tokenBuilder,
         IUserService userService)
-        : ApiControllerBase
+        : GalaControllerBase
     {
         private readonly IRedisBasketRepository _redis = redis;
         private readonly IAESEncryptionService _aesEncryptionService = aesEncryptionService;

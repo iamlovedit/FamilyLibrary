@@ -39,11 +39,11 @@ public static class JwtAuthenticationSetup
         services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = nameof(ApiAuthenticationHandler);
-                options.DefaultForbidScheme = nameof(ApiAuthenticationHandler);
+                options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
+                options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
             })
             .AddJwtBearer(ConfigureJwtBearer)
-            .AddScheme<AuthenticationSchemeOptions, ApiAuthenticationHandler>(nameof(ApiAuthenticationHandler),
+            .AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
                 options => { });
 
         void ConfigureJwtBearer(JwtBearerOptions options)

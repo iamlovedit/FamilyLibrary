@@ -25,7 +25,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         IValidator<UserCreationDTO> userCreationValidator,
         IRedisBasketRepository redis,
         RedisRequirement requirement)
-        : ApiControllerBase
+        : GalaControllerBase
     {
         private readonly ILogger<UserController> _logger = logger;
 

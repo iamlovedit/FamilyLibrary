@@ -23,7 +23,7 @@ public class PackageController(
     IRedisBasketRepository redis,
     RedisRequirement redisRequirement,
     IMapper mapper)
-    : ApiControllerBase
+    : GalaControllerBase
 {
     private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
 

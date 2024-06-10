@@ -7,7 +7,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v2;
 [ApiVersion("2.0")]
 [Route("package/v{version:apiVersion}")]
 public class PackageController(IPackageService packageService, ILogger<PackageController> logger)
-    : ApiControllerBase
+    : GalaControllerBase
 {
     private readonly IPackageService _packageService = packageService;
     private readonly ILogger<PackageController> _logger = logger;

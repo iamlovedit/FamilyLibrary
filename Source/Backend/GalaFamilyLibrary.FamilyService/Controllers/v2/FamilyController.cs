@@ -5,7 +5,7 @@ namespace GalaFamilyLibrary.FamilyService.Controllers.v2;
 
 [ApiVersion("2.0")]
 [Route("family/v{version:apiVersion}")]
-public class FamilyController : ApiControllerBase
+public class FamilyController : GalaControllerBase
 {
 
 }

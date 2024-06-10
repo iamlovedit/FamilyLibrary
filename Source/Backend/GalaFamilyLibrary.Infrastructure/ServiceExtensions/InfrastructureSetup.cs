@@ -11,9 +11,9 @@ using Microsoft.Extensions.Options;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
-    public static class GenericSetup
+    public static class InfrastructureSetup
     {
-        public static void AddGenericSetup(this WebApplicationBuilder builder)
+        public static void AddInfrastructureSetup(this WebApplicationBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
             var configuration = builder.Configuration;

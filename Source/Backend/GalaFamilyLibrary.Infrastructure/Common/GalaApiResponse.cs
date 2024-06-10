@@ -1,12 +1,12 @@
 ﻿namespace GalaFamilyLibrary.Infrastructure.Common;
 
-internal class  ApiResponse
+internal class  GalaApiResponse
 {
     public int Code { get; }
     public string Value { get; }
     public MessageModel<string> Message { get; }
 
-    public ApiResponse(StatusCode code, string message = null)
+    public GalaApiResponse(StatusCode code, string message = null)
     {
         switch (code)
         {

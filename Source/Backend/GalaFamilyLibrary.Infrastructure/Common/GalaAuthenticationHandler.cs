@@ -7,12 +7,11 @@ using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
-public class ApiAuthenticationHandler(
+public class GalaAuthenticationHandler(
     IOptionsMonitor<AuthenticationSchemeOptions> options,
     ILoggerFactory logger,
-    UrlEncoder encoder,
-    ISystemClock clock)
-    : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder, clock)
+    UrlEncoder encoder)
+    : AuthenticationHandler<AuthenticationSchemeOptions>(options, logger, encoder)
 {
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
@@ -23,7 +22,7 @@ public class ApiAuthenticationHandler(
     {
         Response.ContentType = "application/json";
         Response.StatusCode = StatusCodes.Status401Unauthorized;
-        var message = JsonConvert.SerializeObject(new ApiResponse(StatusCode.Code401).Message);
+        var message = JsonConvert.SerializeObject(new GalaApiResponse(StatusCode.Code401).Message);
         await Response.WriteAsync(message);
     }
 
@@ -31,7 +30,7 @@ public class ApiAuthenticationHandler(
     {
         Response.ContentType = "application/json";
         Response.StatusCode = StatusCodes.Status403Forbidden;
-        var message = JsonConvert.SerializeObject(new ApiResponse(StatusCode.Code403).Message);
+        var message = JsonConvert.SerializeObject(new GalaApiResponse(StatusCode.Code403).Message);
         await Response.WriteAsync(message);
     }
 }

@@ -10,7 +10,7 @@ public class LoginController(
     PermissionRequirement permissionRequirement,
     ILogger<LoginController> logger,
     IUserService userService)
-    : ApiControllerBase
+    : GalaControllerBase
 {
     private readonly PermissionRequirement _permissionRequirement = permissionRequirement;
     private readonly ILogger<LoginController> _logger = logger;

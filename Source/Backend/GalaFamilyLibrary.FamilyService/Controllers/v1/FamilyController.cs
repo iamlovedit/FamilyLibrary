@@ -25,7 +25,7 @@ public class FamilyController(
     IValidator<FamilyCreationValidator> familyCreationValidator,
     RedisRequirement redisRequirement,
     FileStorageClient fileStorageClient)
-    : ApiControllerBase
+    : GalaControllerBase
 {
     [HttpGet]
     [Route("{id:long}/{familyVersion:int}")]

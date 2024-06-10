@@ -16,7 +16,7 @@ var services = builder.Services;
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
 services.AddScoped(typeof(IVersionService), typeof(VersionService));
 services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-builder.AddGenericSetup();
+builder.AddInfrastructureSetup();
 services.AddQuartz(options =>
 {
     options.UseMicrosoftDependencyInjectionJobFactory();
@@ -53,4 +53,4 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "PackageVersions");
     dbSeed.InitSeed<PackageVersion>(file);
 });
-app.UseGeneric();
+app.UseInfrastructure();

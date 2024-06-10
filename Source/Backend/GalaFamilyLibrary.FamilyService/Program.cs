@@ -19,7 +19,7 @@ services.AddFileStorageClientSetup(builder.Configuration);
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
-builder.AddGenericSetup();
+builder.AddInfrastructureSetup();
 
 
 var app = builder.Build();
@@ -44,4 +44,4 @@ app.UseInitSeed(dbSeed =>
     dbSeed.InitSeed<FamilyCategory>(file);
 });
 app.UseStaticFiles();
-app.UseGeneric();
+app.UseInfrastructure();
