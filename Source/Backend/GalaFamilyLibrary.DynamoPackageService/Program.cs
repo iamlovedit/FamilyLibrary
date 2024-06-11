@@ -15,7 +15,7 @@ var services = builder.Services;
 
 services.AddScoped(typeof(IPackageService), typeof(PackageService));
 services.AddScoped(typeof(IVersionService), typeof(VersionService));
-services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 builder.AddInfrastructureSetup();
 services.AddQuartz(options =>
 {

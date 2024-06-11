@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using GalaFamilyLibrary.IdentityService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
 using Microsoft.AspNetCore.Authorization;

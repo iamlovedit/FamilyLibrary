@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="11.9.1" />
-    <PackageReference Include="SqlSugarCore" Version="5.1.4.105" />
+    <PackageReference Include="FluentValidation" Version="11.9.2" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.158" />
   </ItemGroup>
 
 </Project>

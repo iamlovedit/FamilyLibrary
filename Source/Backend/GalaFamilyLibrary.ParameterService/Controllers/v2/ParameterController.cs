@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyParameter;
 using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 using GalaFamilyLibrary.Infrastructure.Common;

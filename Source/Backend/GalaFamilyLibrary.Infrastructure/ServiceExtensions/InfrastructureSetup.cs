@@ -3,6 +3,7 @@ using GalaFamilyLibrary.Infrastructure.AutoMapper;
 using GalaFamilyLibrary.Infrastructure.Cors;
 using GalaFamilyLibrary.Infrastructure.Filters;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Security;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,15 +26,15 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerOptionsPostConfigureOptions>();
             services.AddSingleton<ITokenBuilder, TokenBuilder>();
-
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+            
             services.AddDataProtectionSetup();
 
             services.AddAutoMapperSetup();
 
-            services.AddDbSetup();
-
-
-            //services.AddConsulConfigSetup(configuration);
+            services.AddDatabaseSetup();
+            
 
             services.AddRedisCacheSetup(configuration);
 
@@ -43,12 +44,10 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddJwtAuthenticationSetup(configuration);
 
-            //sqlsugar
+            //sql sugar
             services.AddSqlsugarSetup(configuration, builder.Environment);
             //route
             services.AddRoutingSetup();
-            //repository
-            services.AddRepositorySetup();
             //cors 
             services.AddCorsSetup();
             //api version
@@ -56,9 +55,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddControllers(options => { options.Filters.Add(typeof(GlobalExceptionsFilter)); })
                 .AddProduceJsonSetup();
-
-            services.AddVersionedApiExplorerSetup();
-
+            
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen();

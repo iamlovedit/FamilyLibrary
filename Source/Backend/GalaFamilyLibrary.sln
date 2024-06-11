@@ -31,8 +31,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.Domain", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.ParameterService", "GalaFamilyLibrary.ParameterService\GalaFamilyLibrary.ParameterService.csproj", "{9E9AB542-ADD1-4388-A11A-B954CB90CF2A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalaFamilyLibrary.EventBus", "GalaFamilyLibrary.EventBus\GalaFamilyLibrary.EventBus.csproj", "{3CE83C87-459E-4881-8C92-A541B593556C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,10 +81,6 @@ Global
 		{9E9AB542-ADD1-4388-A11A-B954CB90CF2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E9AB542-ADD1-4388-A11A-B954CB90CF2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E9AB542-ADD1-4388-A11A-B954CB90CF2A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CE83C87-459E-4881-8C92-A541B593556C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CE83C87-459E-4881-8C92-A541B593556C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CE83C87-459E-4881-8C92-A541B593556C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CE83C87-459E-4881-8C92-A541B593556C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

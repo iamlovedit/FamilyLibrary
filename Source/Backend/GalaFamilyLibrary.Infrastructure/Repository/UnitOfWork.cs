@@ -1,15 +1,16 @@
 ﻿using SqlSugar;
 
-namespace GalaFamilyLibrary.Infrastructure.Transaction
+namespace GalaFamilyLibrary.Infrastructure.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
         private int _count;
 
-        private SqlSugarScope _dbClient;
+        private readonly SqlSugarScope? _dbClient;
+
         public SqlSugarScope DbClient
         {
-            get => _dbClient;
+            get => _dbClient!;
         }
 
         public UnitOfWork(ISqlSugarClient sqlSugarClient)
@@ -25,7 +26,7 @@ namespace GalaFamilyLibrary.Infrastructure.Transaction
             lock (this)
             {
                 _count++;
-                _dbClient.BeginTran();
+                _dbClient?.BeginTran();
             }
         }
 
@@ -34,17 +35,19 @@ namespace GalaFamilyLibrary.Infrastructure.Transaction
             lock (this)
             {
                 _count--;
-                if (_count == 0)
+                if (_count != 0)
                 {
-                    try
-                    {
-                        _dbClient.CommitTran();
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        _dbClient.RollbackTran();
-                    }
+                    return;
+                }
+
+                try
+                {
+                    _dbClient?.CommitTran();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    _dbClient?.RollbackTran();
                 }
             }
         }
@@ -54,7 +57,7 @@ namespace GalaFamilyLibrary.Infrastructure.Transaction
             lock (this)
             {
                 _count--;
-                _dbClient.RollbackTran();
+                _dbClient?.RollbackTran();
             }
         }
     }

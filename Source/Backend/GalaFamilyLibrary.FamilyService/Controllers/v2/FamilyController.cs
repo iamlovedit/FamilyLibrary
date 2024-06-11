@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
+﻿using Asp.Versioning;
+using GalaFamilyLibrary.Infrastructure.Common;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v2;
