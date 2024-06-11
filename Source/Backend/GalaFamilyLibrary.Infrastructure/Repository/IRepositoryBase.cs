@@ -37,7 +37,7 @@ public interface IRepositoryBase<T> where T : class, new()
 
     Task<T> GetFirstByExpressionAsync(Expression<Func<T, bool>> expression);
 
-    Task<Common.PageModel<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null);
+    Task<Common.PageData<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null);
 
     Task<IList<T>> QueryByOrderAsync(string field, int count, bool isDesc=false);
 }

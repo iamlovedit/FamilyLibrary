@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using GalaFamilyLibrary.Infrastructure.Redis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
 
-namespace GalaFamilyLibrary.Infrastructure.Redis
+namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
     public static class RedisCacheSetup
     {

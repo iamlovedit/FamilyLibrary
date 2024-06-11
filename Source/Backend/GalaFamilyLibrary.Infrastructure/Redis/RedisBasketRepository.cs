@@ -34,7 +34,7 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
             return await _database.KeyExistsAsync(key);
         }
 
-        public async Task<string> GetValue(string key)
+        public async Task<string?> GetValue(string key)
         {
             return await _database.StringGetAsync(key);
         }
@@ -44,7 +44,7 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
             await _database.KeyDeleteAsync(key);
         }
 
-        public async Task Set(string key, object value, TimeSpan cacheTime)
+        public async Task Set(string key, object? value, TimeSpan cacheTime)
         {
             if (value != null)
             {

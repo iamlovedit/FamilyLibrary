@@ -13,34 +13,35 @@ public class GalaControllerBase : ControllerBase
 {
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public MessageModel<T> Success<T>(T data, string message = "成功")
+    protected static MessageData<T?> Success<T>(T data, string message = "成功")
     {
-        return new MessageModel<T>(true, message, data);
+        return new MessageData<T?>(true, message, data);
     }
 
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public MessageModel<T> Failed<T>(string message = "失败", int code = 500)
+    protected static MessageData<T> Failed<T>(string message = "失败", int code = 500)
     {
-        return new MessageModel<T>(false, message) { StatusCode = code };
+        return new MessageData<T>(false, message) { StatusCode = code };
     }
 
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public MessageModel<string> Failed(string message = "失败", int code = 500)
+    protected static MessageData<string?> Failed(string message = "失败", int code = 500)
     {
-        return new MessageModel<string>(false, message) { StatusCode = code };
+        return new MessageData<string?>(false, message) { StatusCode = code };
     }
 
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public MessageModel<PageModel<T>> SucceedPage<T>(int page, int dataCount, int pageSize, List<T> data, int pageCount,
+    protected static MessageData<PageData<T>?> SucceedPage<T>(int page, int dataCount, int pageSize, List<T> data,
+        int pageCount,
         string message = "获取成功")
     {
-        var pageModel = new PageModel<T>()
+        var pageModel = new PageData<T>()
         {
             Data = data,
             PageCount = pageCount,
@@ -48,14 +49,14 @@ public class GalaControllerBase : ControllerBase
             Page = page,
             DataCount = dataCount,
         };
-        return new MessageModel<PageModel<T>>(true, message, pageModel);
+        return new MessageData<PageData<T>?>(true, message, pageModel);
     }
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public MessageModel<PageModel<T>> SucceedPage<T>(PageModel<T> page, string message = "获取成功")
+    protected static MessageData<PageData<T>?> SucceedPage<T>(PageData<T>? page, string message = "获取成功")
     {
-        var response = new PageModel<T>()
+        var response = new PageData<T>()
         {
             Page = page.Page,
             DataCount = page.DataCount,
@@ -63,6 +64,6 @@ public class GalaControllerBase : ControllerBase
             PageSize = page.PageSize,
             PageCount = page.PageCount,
         };
-        return new MessageModel<PageModel<T>>(true, message, response);
+        return new MessageData<PageData<T>?>(true, message, response);
     }
 }

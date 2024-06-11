@@ -8,7 +8,7 @@ using Quartz;
 namespace GalaFamilyLibrary.DynamoPackageService.Jobs
 {
     public class FetchPackagesJob(
-        AppDbContext appDbContext,
+        DatabaseContext databaseContext,
         IUnitOfWork unitOfWork,
         IRedisBasketRepository redis,
         IHttpClientFactory httpClientFactory,
@@ -34,8 +34,8 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                         }
 
                         var newPackages = content.ToObject<List<DynamoPackage>>();
-                        var packageDb = appDbContext.GetEntityDB<DynamoPackage>();
-                        var packageVersionDb = appDbContext.GetEntityDB<PackageVersion>();
+                        var packageDb = databaseContext.GetEntityDatabase<DynamoPackage>();
+                        var packageVersionDb = databaseContext.GetEntityDatabase<PackageVersion>();
                         var oldPackages = await packageDb.GetListAsync();
                         var oldPackageVersions = await packageVersionDb.GetListAsync();
                         unitOfWork.BeginTransaction();

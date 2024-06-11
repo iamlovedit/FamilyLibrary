@@ -2,7 +2,6 @@
 using GalaFamilyLibrary.Domain.Models.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Repository;
-using GalaFamilyLibrary.Infrastructure.Service;
 using SqlSugar;
 using SqlSugar.Extensions;
 
@@ -12,13 +11,13 @@ namespace GalaFamilyLibrary.IdentityService.Services
     {
 
 
-        Task<PageModel<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize, string orderField);
+        Task<PageData<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize, string orderField);
     }
 
     public class FamilyCollectionService(IRepositoryBase<FamilyCollection> dbContext)
         : ServiceBase<FamilyCollection>(dbContext), IFamilyCollectionService
     {
-        public async Task<PageModel<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize,
+        public async Task<PageData<Family>> GetFamilyPageAsync(long userId, int pageIndex, int pageSize,
             string orderField)
         {
             RefAsync<int> totalCount = 0;
@@ -29,7 +28,7 @@ namespace GalaFamilyLibrary.IdentityService.Services
                   .OrderByIF(!string.IsNullOrEmpty(orderField), orderField)
                   .ToPageListAsync(pageIndex, pageSize, totalCount);
             var pageCount = Math.Ceiling(totalCount.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
-            return new PageModel<Family>(pageIndex, pageCount, totalCount, pageSize, families);
+            return new PageData<Family>(pageIndex, pageCount, totalCount, pageSize, families);
         }
     }
 }

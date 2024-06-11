@@ -1,5 +1,5 @@
 ﻿using GalaFamilyLibrary.Domain.Models.Dynamo;
-using GalaFamilyLibrary.Infrastructure.Service;
+using GalaFamilyLibrary.Infrastructure.Repository;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Services
 {

@@ -31,7 +31,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<MessageModel<string>> CreateUser([FromBody] UserCreationDTO userCreationDto)
+        public async Task<MessageData<string?>> CreateUser([FromBody] UserCreationDTO userCreationDto)
         {
             if (await userService.GetFirstByExpressionAsync(u => u.Username == userCreationDto.Username) != null)
             {
@@ -50,7 +50,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 
 
         [HttpGet("{id:long}")]
-        public async Task<MessageModel<ApplicationUserDTO>> Details(long id)
+        public async Task<MessageData<ApplicationUserDTO?>> Details(long id)
         {
             var redisKey = $"user/{id}";
             if (await redis.Exist(redisKey))
@@ -73,12 +73,12 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         [HttpGet]
         [Route("collections/{id:long}")]
         [AllowAnonymous]
-        public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetUserCollection([FromRoute] long id, int pageIndex, int pageSize, string? orderField)
+        public async Task<MessageData<PageData<FamilyBasicDTO>?>> GetUserCollection([FromRoute] long id, int pageIndex, int pageSize, string? orderField)
         {
             var redisKey = $"user/collections/{id}";
             if (await redis.Exist(redisKey))
             {
-                return Success(await redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
+                return Success(await redis.Get<PageData<FamilyBasicDTO>>(redisKey));
             }
 
             var familiyPage = await familyCollectionService.GetFamilyPageAsync(id, pageIndex, pageSize, orderField);
@@ -90,7 +90,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         [HttpDelete]
         [Route("collections")]
         [AllowAnonymous]
-        public async Task<MessageModel<bool>> RemoveCollection([FromBody] CollectionCreationDTO collectionDTO)
+        public async Task<MessageData<bool>> RemoveCollection([FromBody] CollectionCreationDTO collectionDTO)
         {
             var collection = await familyCollectionService.
                 GetFirstByExpressionAsync(c => c.FamilyId == collectionDTO.FamilyId && c.UserId == collectionDTO.UserId);
@@ -122,7 +122,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         [HttpPost]
         [Route("collections")]
         [AllowAnonymous]
-        public async Task<MessageModel<bool>> CreateCollection([FromBody] CollectionCreationDTO creationDTO)
+        public async Task<MessageData<bool>> CreateCollection([FromBody] CollectionCreationDTO creationDTO)
         {
             var collection = mapper.Map<FamilyCollection>(creationDTO);
             var id = await familyCollectionService.AddAsync(collection);
@@ -132,7 +132,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         [HttpDelete]
         [Route("stars")]
         [AllowAnonymous]
-        public async Task<MessageModel<bool>> RemoveStar([FromBody] StarCreationDTO starDTO)
+        public async Task<MessageData<bool>> RemoveStar([FromBody] StarCreationDTO starDTO)
         {
             var star = await familyStarService.
                GetFirstByExpressionAsync(c => c.FamilyId == starDTO.FamilyId && c.UserId == starDTO.UserId);
@@ -149,7 +149,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         [HttpPost]
         [Route("stars")]
         [AllowAnonymous]
-        public async Task<MessageModel<bool>> CreateStar([FromBody] StarCreationDTO starCreationDTO)
+        public async Task<MessageData<bool>> CreateStar([FromBody] StarCreationDTO starCreationDTO)
         {
             var star = mapper.Map<FamilyStar>(starCreationDTO);
             var id = await familyStarService.AddAsync(star);

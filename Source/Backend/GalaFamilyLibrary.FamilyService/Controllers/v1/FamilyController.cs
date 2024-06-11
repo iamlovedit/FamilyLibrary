@@ -52,7 +52,7 @@ public class FamilyController(
 
     [HttpGet]
     [Route("details/{id:long}")]
-    public async Task<MessageModel<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
+    public async Task<MessageData<FamilyDetailDTO?>> GetFamilyDetailAsync(long id)
     {
         var redisKey = $"familyDetails/{id}";
         if (await redis.Exist(redisKey))
@@ -76,7 +76,7 @@ public class FamilyController(
 
     [HttpGet]
     [Route("uploadUrl")]
-    public async Task<MessageModel<Dictionary<string, string>>> GetUploadUrlAsync(
+    public async Task<MessageData<Dictionary<string, string>?>> GetUploadUrlAsync(
         [FromBody] FamilyCreationDTO familyCreationDto)
     {
         var family = mapper.Map<Family>(familyCreationDto);
@@ -106,7 +106,7 @@ public class FamilyController(
     [HttpGet]
     [Route("categories")]
     [AllowAnonymous]
-    public async Task<MessageModel<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery] int? parentId = null)
+    public async Task<MessageData<List<FamilyCategoryDTO>?>> GetCategoriesAsync([FromQuery] int? parentId = null)
     {
         logger.LogInformation("query child categories by parent {parentId}", parentId);
         var redisKey = parentId == null ? $"family/categories" : $"family/categories?parentId={parentId}";
@@ -123,7 +123,7 @@ public class FamilyController(
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<MessageModel<PageModel<FamilyBasicDTO>>> GetFamiliesPageAsync(
+    public async Task<MessageData<PageData<FamilyBasicDTO>?>> GetFamiliesPageAsync(
         [FromQuery] CategoryKeywordQuery categoryKeywordQuery)
     {
         var redisKey =
@@ -131,7 +131,7 @@ public class FamilyController(
             $"&pageSize={categoryKeywordQuery.PageSize}&orderField={categoryKeywordQuery.OrderField}";
         if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await redis.Get<PageModel<FamilyBasicDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageData<FamilyBasicDTO>>(redisKey));
         }
 
         logger.LogInformation("query families by category {category} and keyword {keyword} at page {page}",

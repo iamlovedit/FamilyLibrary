@@ -12,11 +12,12 @@ namespace GalaFamilyLibrary.Infrastructure.Security
             return true;
         }
 
-        public bool CanValidateToken { get; }
+        public bool CanValidateToken { get; } = true;
 
         public int MaximumTokenSizeInBytes { get; set; }
 
-        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
+        public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters,
+            out SecurityToken validatedToken)
         {
             var decodeToken = aesEncryptionService.Decrypt(securityToken);
             return new JwtSecurityTokenHandler().ValidateToken(decodeToken, validationParameters, out validatedToken);

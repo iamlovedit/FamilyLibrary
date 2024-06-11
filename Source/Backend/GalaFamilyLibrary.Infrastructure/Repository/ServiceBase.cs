@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.Infrastructure.Repository;
 
-namespace GalaFamilyLibrary.Infrastructure.Service;
+namespace GalaFamilyLibrary.Infrastructure.Repository;
 
 public abstract class ServiceBase<T>(IRepositoryBase<T> dbContext) : IServiceBase<T>
     where T : class, new()
@@ -59,7 +58,7 @@ public abstract class ServiceBase<T>(IRepositoryBase<T> dbContext) : IServiceBas
         return await DAL.UpdateAsync(entity);
     }
 
-    public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null)
+    public async Task<PageData<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null)
     {
         return await DAL.QueryPageAsync(whereExpression, pageIndex, pageSize, orderByFields);
     }

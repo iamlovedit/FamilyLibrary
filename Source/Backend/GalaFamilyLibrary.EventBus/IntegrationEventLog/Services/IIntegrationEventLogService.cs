@@ -1,6 +1,5 @@
 ﻿using GalaFamilyLibrary.EventBus.Events;
 using GalaFamilyLibrary.Infrastructure.Repository;
-using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.EventBus.IntegrationEventLog.Services
 {

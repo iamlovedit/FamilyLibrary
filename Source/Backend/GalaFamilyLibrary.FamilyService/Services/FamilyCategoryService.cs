@@ -1,6 +1,5 @@
 using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.Infrastructure.Repository;
-using GalaFamilyLibrary.Infrastructure.Service;
 
 namespace GalaFamilyLibrary.FamilyService.Services;
 

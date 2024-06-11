@@ -44,7 +44,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// <returns></returns>
         [AllowAnonymous]
         [HttpPost("token")]
-        public async Task<MessageModel<TokenInfo>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
+        public async Task<MessageData<TokenInfo?>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
@@ -88,7 +88,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// </summary>
         /// <returns></returns>
         [HttpPost("logout")]
-        public Task<MessageModel<bool>> LogoutAsync()
+        public Task<MessageData<bool>> LogoutAsync()
         {
             return Task.FromResult(Success(true));
         }
@@ -98,7 +98,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         /// </summary>
         /// <returns></returns>
         [HttpPost("refresh")]
-        public async Task<MessageModel<TokenInfo>> RefreshTokenAsync(string token)
+        public async Task<MessageData<TokenInfo>> RefreshTokenAsync(string token)
         {
             if (string.IsNullOrEmpty(token))
             {

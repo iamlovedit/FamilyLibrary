@@ -1,5 +1,5 @@
 ﻿using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.Infrastructure.Service;
+using GalaFamilyLibrary.Infrastructure.Repository;
 
 namespace GalaFamilyLibrary.IdentityService.Services
 {

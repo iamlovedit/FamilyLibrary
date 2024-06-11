@@ -4,7 +4,7 @@ internal class  GalaApiResponse
 {
     public int Code { get; }
     public string Value { get; }
-    public MessageModel<string> Message { get; }
+    public MessageData<string> Message { get; }
 
     public GalaApiResponse(StatusCode code, string message = null)
     {
@@ -27,6 +27,6 @@ internal class  GalaApiResponse
                 Value = message;
                 break;
         }
-        Message = new MessageModel<string>(code == StatusCode.Code200, Value) { StatusCode = Code };
+        Message = new MessageData<string>(code == StatusCode.Code200, Value) { StatusCode = Code };
     }
 }

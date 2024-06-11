@@ -8,13 +8,13 @@ namespace GalaFamilyLibrary.Infrastructure.Security
 {
     public interface ITokenBuilder
     {
-        TokenInfo GenerateTokenInfo(IReadOnlyCollection<Claim> claims);
+        TokenInfo? GenerateTokenInfo(IReadOnlyCollection<Claim> claims);
     }
 
     public class TokenBuilder(IAESEncryptionService aesEncryptionService, PermissionRequirement permissionRequirement)
         : ITokenBuilder
     {
-        public TokenInfo GenerateTokenInfo(IReadOnlyCollection<Claim> claims)
+        public TokenInfo? GenerateTokenInfo(IReadOnlyCollection<Claim> claims)
         {
             var jwtToken = new JwtSecurityToken(
                    issuer: permissionRequirement.Issuer,

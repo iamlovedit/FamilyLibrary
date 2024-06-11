@@ -5,11 +5,11 @@ namespace GalaFamilyLibrary.Infrastructure.Redis
     public interface IRedisBasketRepository
     {
 
-        Task<string> GetValue(string key);
+        Task<string?> GetValue(string key);
 
         Task<T> Get<T>(string key);
 
-        Task Set(string key, object value, TimeSpan cacheTime);
+        Task Set(string key, object? value, TimeSpan cacheTime);
 
         Task<bool> Exist(string key);
 

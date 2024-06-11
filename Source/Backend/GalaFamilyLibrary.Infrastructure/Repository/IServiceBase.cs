@@ -1,8 +1,7 @@
 ﻿using System.Linq.Expressions;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.Infrastructure.Repository;
 
-namespace GalaFamilyLibrary.Infrastructure.Service;
+namespace GalaFamilyLibrary.Infrastructure.Repository;
 
 public interface IServiceBase<T> where T : class, new()
 {
@@ -38,7 +37,8 @@ public interface IServiceBase<T> where T : class, new()
 
     Task<bool> UpdateColumnsAsync(T entity, Expression<Func<T, object>> expression);
 
-    Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null);
+    Task<PageData<T>> QueryPageAsync(Expression<Func<T, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20,
+        string? orderByFields = null);
 
     Task<IList<T>> QueryByOrderAsync(string field, int count, bool isDesc = false);
 }

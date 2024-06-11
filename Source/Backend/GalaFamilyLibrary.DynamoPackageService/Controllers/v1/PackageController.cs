@@ -29,14 +29,14 @@ public class PackageController(
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<MessageModel<PageModel<PackageVersionDTO>>> GetVersionAsync([FromRoute] string id,
+    public async Task<MessageData<PageData<PackageVersionDTO>?>> GetVersionAsync([FromRoute] string id,
         [FromServices] IVersionService versionService, [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
         logger.LogInformation("query package versions by id {id}", id);
         var redisKey = $"package/versions/{id}?pageIndex={pageIndex}&pageSize={pageSize}";
         if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await redis.Get<PageModel<PackageVersionDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageData<PackageVersionDTO>>(redisKey));
         }
 
         var versionPage =
@@ -60,7 +60,7 @@ public class PackageController(
     }
 
     [HttpGet]
-    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(int pageIndex = 1,
+    public async Task<MessageData<PageData<PackageDTO>?>> GetPackagesByPage(int pageIndex = 1,
         int pageSize = 30, string orderField = "")
     {
         logger.LogInformation("query packages by pageIndex: {pageIndex} pageSize: {pageSize} orderField: {orderField}",
@@ -68,7 +68,7 @@ public class PackageController(
         var redisKey = $"?pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
         if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await redis.Get<PageModel<PackageDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageData<PackageDTO>>(redisKey));
         }
 
         var packagesPage = await packageService.QueryPageAsync(p => !p.IsDeleted, pageIndex, pageSize,
@@ -80,7 +80,7 @@ public class PackageController(
 
     [HttpGet]
     [Route("packages")]
-    public async Task<MessageModel<PageModel<PackageDTO>>> GetPackagesByPage(string? keyword = null, int pageIndex = 1,
+    public async Task<MessageData<PageData<PackageDTO>?>> GetPackagesByPage(string? keyword = null, int pageIndex = 1,
         int pageSize = 30, string? orderField = "downloads")
     {
         logger.LogInformation(
@@ -90,7 +90,7 @@ public class PackageController(
         var redisKey = $"?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderField={orderField}";
         if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await redis.Get<PageModel<PackageDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageData<PackageDTO>>(redisKey));
         }
 
         Expression<Func<DynamoPackage, bool>> expression = string.IsNullOrEmpty(keyword)
@@ -105,8 +105,8 @@ public class PackageController(
 
     [HttpPost]
     [Authorize(Roles = "Administrator")]
-    public async Task<MessageModel<string>> UpdateAsync([FromServices] IHttpClientFactory clientFactory,
-        [FromServices] AppDbContext appDbContext, [FromServices] IUnitOfWork unitOfWork)
+    public async Task<MessageData<string?>> UpdateAsync([FromServices] IHttpClientFactory clientFactory,
+        [FromServices] DatabaseContext databaseContext, [FromServices] IUnitOfWork unitOfWork)
     {
         var httpClient = clientFactory.CreateClient();
         var responseMessage = await httpClient.GetAsync("https://dynamopackages.com/packages");
@@ -125,8 +125,8 @@ public class PackageController(
                     }
 
                     var newPackages = content.ToObject<List<DynamoPackage>>();
-                    var packageDb = appDbContext.GetEntityDB<DynamoPackage>();
-                    var packageVersionDb = appDbContext.GetEntityDB<PackageVersion>();
+                    var packageDb = databaseContext.GetEntityDatabase<DynamoPackage>();
+                    var packageVersionDb = databaseContext.GetEntityDatabase<PackageVersion>();
                     var oldPackages = await packageDb.GetListAsync();
                     var oldPackageVersions = await packageVersionDb.GetListAsync();
                     unitOfWork.BeginTransaction();
@@ -208,7 +208,7 @@ public class PackageController(
     [HttpPost]
     [Route("parser")]
     [Consumes("multipart/form-data")]
-    public async Task<MessageModel<string>> ParseXmlAsync(IFormFile xmlFile, [FromServices] IWebHostEnvironment webHostEnvironment)
+    public async Task<MessageData<string?>> ParseXmlAsync(IFormFile xmlFile, [FromServices] IWebHostEnvironment webHostEnvironment)
     {
         var fileExtension = Path.GetExtension(xmlFile.FileName);
         if (fileExtension.ToLower() != ".xml")

@@ -9,6 +9,6 @@ public static class DbSetup
     {
         ArgumentNullException.ThrowIfNull(services);
         services.AddScoped<DatabaseSeed>();
-        services.AddScoped<AppDbContext>();
+        services.AddScoped<DatabaseContext>();
     }
 }

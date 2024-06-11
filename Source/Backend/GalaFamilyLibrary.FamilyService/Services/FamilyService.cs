@@ -1,7 +1,6 @@
 ﻿using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Repository;
-using GalaFamilyLibrary.Infrastructure.Service;
 using SqlSugar;
 using SqlSugar.Extensions;
 using System.Linq.Expressions;
@@ -18,7 +17,7 @@ public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Fami
                InSingleAsync(id);
     }
 
-    public async Task<PageModel<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null)
+    public async Task<PageData<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression, int pageIndex = 1, int pageSize = 20, string? orderByFields = null)
     {
         RefAsync<int> totalCount = 0;
         var list = await DAL.DbContext.Queryable<Family>()
@@ -28,6 +27,6 @@ public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Fami
             .WhereIF(whereExpression != null, whereExpression)
             .ToPageListAsync(pageIndex, pageSize, totalCount);
         var pageCount = Math.Ceiling(totalCount.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
-        return new PageModel<Family>(pageIndex, pageCount, totalCount, pageSize, list);
+        return new PageData<Family>(pageIndex, pageCount, totalCount, pageSize, list);
     }
 }

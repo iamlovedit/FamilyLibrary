@@ -1,72 +1,36 @@
 ﻿using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Infrastructure.Seed;
 
-public class DatabaseSeed(AppDbContext appDbContext)
+public class DatabaseSeed(DatabaseContext databaseContext)
 {
-    public void InitTablesByClass(Type model)
+    public void InitTablesByClass<T>() where T : class, new()
     {
-        if (appDbContext.DbType == DbType.Oracle)
+        if (databaseContext.DbType == DbType.Oracle)
         {
             throw new InvalidOperationException("暂不支持Oracle数据库");
         }
         else
         {
-            appDbContext.Database.DbMaintenance.CreateDatabase();
+            databaseContext.Database.DbMaintenance.CreateDatabase();
         }
+
         try
         {
-            var types = model.Assembly.DefinedTypes.
-             Where(ti => ti.Namespace == model.Namespace && ti.IsClass && ti.GetCustomAttribute<SugarTable>() != null).
-             Select(ti => ti.AsType());
+            var modelType = typeof(T);
+            var types = modelType.Assembly.DefinedTypes.Where(ti =>
+                    ti.Namespace == modelType.Namespace && ti.IsClass && ti.GetCustomAttribute<SugarTable>() != null)
+                .Select(ti => ti.AsType());
 
             foreach (var type in types)
             {
-                if (appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
-                {
-                    continue;
-                }
                 var tableName = type.GetCustomAttribute<SugarTable>()?.TableName ?? type.Name;
-                Console.WriteLine($"正在创建表 {tableName}");
-                appDbContext.Database.CodeFirst.InitTables(type);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-            throw;
-        }
-
-    }
-
-    public void InitTables(Type program)
-    {
-        if (appDbContext.DbType == DbType.Oracle)
-        {
-            throw new InvalidOperationException("暂不支持Oracle数据库");
-        }
-        else
-        {
-            appDbContext.Database.DbMaintenance.CreateDatabase();
-        }
-
-        try
-        {
-            var modelTypes = program.Assembly.DefinedTypes.Select(tInfo => tInfo.AsType())
-                .Where(t => t.IsClass && t.GetCustomAttribute<SugarTable>() != null);
-            foreach (var type in modelTypes)
-            {
-                if (appDbContext.Database.DbMaintenance.IsAnyTable(type.Name))
-                {
-                    continue;
-                }
-
-                var tableName = type.GetCustomAttribute<SugarTable>()?.TableName ?? type.Name;
-                Console.WriteLine($"正在创建表 {tableName}");
-                appDbContext.Database.CodeFirst.InitTables(type);
+                Console.WriteLine($"table is initializing: {tableName}");
+                databaseContext.Database.CodeFirst.InitTables(type);
             }
         }
         catch (Exception e)
@@ -75,6 +39,7 @@ public class DatabaseSeed(AppDbContext appDbContext)
             throw;
         }
     }
+
 
     public async void InitSeed<T>(string seedFile) where T : class, new()
     {
@@ -93,7 +58,7 @@ public class DatabaseSeed(AppDbContext appDbContext)
 
         try
         {
-            if (await appDbContext.Database.Queryable<T>().AnyAsync())
+            if (await databaseContext.Database.Queryable<T>().AnyAsync())
             {
                 return;
             }
@@ -105,7 +70,7 @@ public class DatabaseSeed(AppDbContext appDbContext)
             }
 
             var data = JsonConvert.DeserializeObject<List<T>>(json);
-            await appDbContext.GetEntityDB<T>().InsertRangeAsync(data);
+            await databaseContext.GetEntityDatabase<T>().InsertRangeAsync(data);
         }
         catch (Exception e)
         {
@@ -113,5 +78,4 @@ public class DatabaseSeed(AppDbContext appDbContext)
             throw;
         }
     }
-
 }

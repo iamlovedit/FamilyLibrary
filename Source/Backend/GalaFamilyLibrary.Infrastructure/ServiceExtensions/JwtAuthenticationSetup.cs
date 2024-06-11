@@ -1,110 +1,59 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.Infrastructure.Security;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using SqlSugar.Extensions;
+using System.Security.Claims;
+using Microsoft.Extensions.Primitives;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
-public static class JwtAuthenticationSetup
-{
-    public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+ public static class JwtAuthenticationSetup
     {
-        ArgumentNullException.ThrowIfNull(services);
-
-        ArgumentNullException.ThrowIfNull(configuration);
-
-        var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]);
-        var key = new SymmetricSecurityKey(buffer);
-        var issuer = configuration["AUDIENCE_ISSUER"];
-        var audience = configuration["AUDIENCE_AUDIENCE"];
-        var tokenValidationParameters = new TokenValidationParameters()
+        public static void AddJwtAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
         {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key,
-            ValidIssuer = issuer,
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidAudience = audience,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(30),
-            RequireExpirationTime = true,
-        };
-        services.AddAuthentication(options =>
+            ArgumentNullException.ThrowIfNull(services);
+
+            ArgumentNullException.ThrowIfNull(configuration);
+
+            var section = configuration.GetSection("Audience");
+            var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]!);
+            var key = new SymmetricSecurityKey(buffer);
+            var issuer = section["Issuer"];
+            var audience = section["Audience"];
+            var tokenValidationParameters = new TokenValidationParameters()
             {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
-                options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
-            })
-            .AddJwtBearer(ConfigureJwtBearer)
-            .AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
-                options => { });
-
-        void ConfigureJwtBearer(JwtBearerOptions options)
-        {
-            options.TokenValidationParameters = tokenValidationParameters;
-            options.Events = new JwtBearerEvents()
-            {
-                OnChallenge = challengeContext =>
-                {
-                    challengeContext.Response.Headers.Add("Token-Error", challengeContext.ErrorDescription);
-                    return Task.CompletedTask;
-                },
-
-                OnAuthenticationFailed = failedContext =>
-                {
-                    var jwtHandler = new JwtSecurityTokenHandler();
-                    var token = failedContext.Request.Headers["Authorization"].ObjToString().Replace("Bearer ", "");
-                    if (string.IsNullOrEmpty(token) || !jwtHandler.CanReadToken(token))
-                    {
-                        failedContext.Response.Headers.Add("token-error", "can not get token");
-                        return Task.CompletedTask;
-                    }
-
-                    if (failedContext.Exception.GetType() == typeof(SecurityTokenExpiredException))
-                    {
-                        failedContext.Response.Headers.Add("token-expired", "true");
-                        return Task.CompletedTask;
-                    }
-
-                    if (jwtHandler.CanReadToken(token))
-                    {
-                        try
-                        {
-                            var jwtToken = jwtHandler.ReadJwtToken(token);
-                            if (jwtToken.Issuer != issuer)
-                            {
-                                failedContext.Response.Headers.Add("token-error-issuer", "issuer is wrong!");
-                                return Task.CompletedTask;
-                            }
-
-                            if (jwtToken.Audiences.FirstOrDefault() != audience)
-                            {
-                                failedContext.Response.Headers.Add("token-error-audience", "audience is wrong!");
-                                return Task.CompletedTask;
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
-                            return Task.CompletedTask;
-                        }
-                    }
-                    else
-                    {
-                        failedContext.Response.Headers.Add("token-error-format", "token format is wrong!");
-                        return Task.CompletedTask;
-                    }
-
-                    return Task.CompletedTask;
-                }
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidIssuer = issuer,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidAudience = audience,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromSeconds(15),
+                RequireExpirationTime = true,
+                RoleClaimType = ClaimTypes.Role
             };
+
+            services.AddAuthentication(options =>
+             {
+                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                 options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
+                 options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
+             }).AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
+                 options => { }).AddJwtBearer(options =>
+                 {
+                     options.TokenValidationParameters = tokenValidationParameters;
+                     options.Events = new JwtBearerEvents()
+                     {
+                         OnChallenge = challengeContext =>
+                         {
+                             challengeContext.Response.Headers.Append(new KeyValuePair<string, StringValues>("token-error", challengeContext.ErrorDescription));
+                             return Task.CompletedTask;
+                         },
+                     };
+                 });
         }
     }
-}

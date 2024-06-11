@@ -16,13 +16,14 @@ var app = builder.Build();
 
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass(typeof(Parameter));
+    dbSeed.InitTablesByClass<Parameter>();
 
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
         return;
     }
+
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
 
     var file = string.Format(seedFolder, "FamilyParameters");

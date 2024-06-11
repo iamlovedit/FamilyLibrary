@@ -87,7 +87,7 @@ public class RepositoryBase<T>(ISqlSugarClient context) : IRepositoryBase<T>
         return await context.Queryable<T>().FirstAsync(expression);
     }
 
-    public async Task<PageModel<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1,
+    public async Task<PageData<T>> QueryPageAsync(Expression<Func<T, bool>> whereExpression, int pageIndex = 1,
         int pageSize = 20, string? orderByFields = null)
     {
         RefAsync<int> totalCount = 0;
@@ -96,7 +96,7 @@ public class RepositoryBase<T>(ISqlSugarClient context) : IRepositoryBase<T>
             .WhereIF(whereExpression != null, whereExpression)
             .ToPageListAsync(pageIndex, pageSize, totalCount);
         var pageCount = Math.Ceiling(totalCount.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
-        return new PageModel<T>(pageIndex, pageCount, totalCount, pageSize, list);
+        return new PageData<T>(pageIndex, pageCount, totalCount, pageSize, list);
     }
 
     public async Task<IList<T>> QueryByOrderAsync(string field, int count, bool isDesc = false)
