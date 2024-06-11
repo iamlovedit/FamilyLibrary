@@ -18,7 +18,7 @@ namespace GalaFamilyLibrary.ParameterService.Controllers.v1
         IRedisBasketRepository redis,
         RedisRequirement redisRequirement,
         IParameterService parameterService)
-        : ApiControllerBase
+        : GalaControllerBase
     {
         [HttpGet]
         [Route("details/{id:long}")]
