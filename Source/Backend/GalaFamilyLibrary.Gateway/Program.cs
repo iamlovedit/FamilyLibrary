@@ -5,14 +5,11 @@ using Ocelot.Middleware;
 using Ocelot.Provider.Polly;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.ConfigureAppConfiguration((builderContext, builder) =>
-{
-    builder.SetBasePath(builderContext.HostingEnvironment.ContentRootPath)
-        .AddJsonFile("appsettings.json", true, true)
-        .AddJsonFile($"appsettings.{builderContext.HostingEnvironment.EnvironmentName}.json", true, true)
-        .AddJsonFile($"ocelot.{builderContext.HostingEnvironment.EnvironmentName}.json", true, true)
-        .AddEnvironmentVariables();
-});
+builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
+    .AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", false, false)
+    .AddJsonFile("appsettings.json", false, true)
+    .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false)
+    .AddEnvironmentVariables();
 var services = builder.Services;
 services.AddRedisCacheSetup(builder.Configuration);
 
@@ -24,5 +21,5 @@ services.AddOcelot().AddPolly();
 var app = builder.Build();
 
 app.UseAuthentication();
-app.UseOcelot().ConfigureAwait(true);
+await app.UseOcelot().ConfigureAwait(true);
 app.Run();
