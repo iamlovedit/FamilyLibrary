@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Hello
-  </div>
+    <div>
+        family home
+    </div>
 </template>
 
 <script setup lang="ts">
