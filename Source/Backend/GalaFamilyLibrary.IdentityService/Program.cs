@@ -1,12 +1,12 @@
 using FluentValidation;
-using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
-using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.Domain.Validators;
-using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.DataTransferObject.Identity;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Model.Identity;
+using GalaFamilyLibrary.Service.Identity;
+using GalaFamilyLibrary.Service.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -15,8 +15,6 @@ services.AddFileSecurityOptionSetup(builder.Configuration);
 services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IUserService), typeof(UserService));
-services.AddScoped(typeof(IFamilyCollectionService), typeof(FamilyCollectionService));
-services.AddScoped(typeof(IFamilyStarService), typeof(FamilyStarService));
 services.AddScoped<IValidator<UserCreationDTO>, UserCreationValidator>();
 builder.AddInfrastructureSetup();
 
@@ -45,7 +43,7 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "FamilyCollections");
     dbSeed.InitSeed<FamilyCollection>(file);
 
-    file = string.Format(seedFolder, "FamilyStars");
-    dbSeed.InitSeed<FamilyStar>(file);
+    // file = string.Format(seedFolder, "FamilyStars");
+    // dbSeed.InitSeed<FamilyStar>(file);
 });
 app.UseInfrastructure();

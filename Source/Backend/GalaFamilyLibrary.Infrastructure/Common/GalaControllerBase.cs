@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using GalaFamilyLibrary.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
@@ -13,9 +16,9 @@ public class GalaControllerBase : ControllerBase
 {
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    protected static MessageData<T?> Success<T>(T data, string message = "成功")
+    protected static MessageData<T> Success<T>(T data, string message = "成功")
     {
-        return new MessageData<T?>(true, message, data);
+        return new MessageData<T>(true, message, data);
     }
 
 
@@ -65,5 +68,12 @@ public class GalaControllerBase : ControllerBase
             PageCount = page.PageCount,
         };
         return new MessageData<PageData<T>?>(true, message, response);
+    }
+    
+    [NonAction]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public long GetUserIdFromClaims()
+    {
+        return long.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Jti) ?? "0");
     }
 }

@@ -1,17 +1,14 @@
-using GalaFamilyLibrary.Domain.Models.FamilyParameter;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
-using GalaFamilyLibrary.ParameterService.Services;
+using GalaFamilyLibrary.Model.FamilyParameter;
+using GalaFamilyLibrary.Service.FamilyParameter;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddInfrastructureSetup();
 var services = builder.Services;
 services.AddScoped(typeof(IParameterService), typeof(ParameterService));
 services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefinitionService));
-services.AddScoped(typeof(IParameterGroupService), typeof(ParameterGroupService));
-services.AddScoped(typeof(IParameterTypeService), typeof(ParameterTypeService));
-services.AddScoped(typeof(IParameterUnitTypeService), typeof(ParameterUnitTypeService));
 var app = builder.Build();
 
 app.UseInitSeed(dbSeed =>

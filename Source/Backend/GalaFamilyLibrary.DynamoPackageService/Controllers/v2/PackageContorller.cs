@@ -1,6 +1,6 @@
 ﻿using Asp.Versioning;
-using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Service.Package;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v2;

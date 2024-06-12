@@ -1,160 +1,132 @@
-﻿using Asp.Versioning;
+﻿using System.Globalization;
+using System.Security.Claims;
+using Asp.Versioning;
 using AutoMapper;
 using FluentValidation;
-using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
-using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
-using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
-using GalaFamilyLibrary.Domain.Models.Identity;
-using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
+using GalaFamilyLibrary.DataTransferObject.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Infrastructure.Repository;
+using GalaFamilyLibrary.Infrastructure.Security;
+using GalaFamilyLibrary.Model.Identity;
+using GalaFamilyLibrary.Repository;
+using GalaFamilyLibrary.Service.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
+using Microsoft.IdentityModel.Tokens;
+using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Route("user/v{version:apiVersion}")]
     public class UserController(
+        ITokenBuilder tokenBuilder,
         ILogger<UserController> logger,
-        IUserService userService,
-        IMapper mapper,
-        IFamilyCollectionService familyCollectionService,
-        IFamilyStarService familyStarService,
-        IUnitOfWork unitOfWork,
-        IValidator<UserCreationDTO> userCreationValidator,
         IRedisBasketRepository redis,
-        RedisRequirement requirement)
+        IMapper mapper,
+        IUserService userService,
+        IUnitOfWork unitOfWork)
         : GalaControllerBase
     {
-        private readonly ILogger<UserController> _logger = logger;
-
-        [HttpPost("register")]
-        [AllowAnonymous]
-        public async Task<MessageData<string?>> CreateUser([FromBody] UserCreationDTO userCreationDto)
+        [HttpGet("exist")]
+        public async Task<MessageData<bool>> IsExistsAsync(string username)
         {
-            if (await userService.GetFirstByExpressionAsync(u => u.Username == userCreationDto.Username) != null)
-            {
-                return Failed("用户名已存在");
-            }
-
-            var user = mapper.Map<User>(userCreationDto);
-            var id = await userService.AddSnowflakeAsync(user);
-            if (id > 0)
-            {
-                return Success("注册成功");
-            }
-
-            return Failed("注册失败");
-        }
-
-
-        [HttpGet("{id:long}")]
-        public async Task<MessageData<ApplicationUserDTO?>> Details(long id)
-        {
-            var redisKey = $"user/{id}";
+            var redisKey = $"users/username={username}";
+            var user = default(User);
             if (await redis.Exist(redisKey))
             {
-                return Success(await redis.Get<ApplicationUserDTO>(redisKey));
+                user = await redis.Get<User>(redisKey);
+                return Success(true);
             }
-
-            var user = await userService.GetByIdAsync(id);
-            if (user is null)
+            else
             {
-                return Failed<ApplicationUserDTO>("user not found");
-            }
+                user = await userService.GetFirstByExpressionAsync(u => u.Username == username);
+                if (user is null)
+                {
+                    return Failed<bool>("user not exists");
+                }
 
-            var userDto = mapper.Map<ApplicationUserDTO>(user);
-            await redis.Set(redisKey, userDto, requirement.CacheTime);
-            return Success(userDto);
+                await redis.Set(redisKey, user, TimeSpan.FromDays(7));
+                return Success(true);
+            }
         }
 
-
-        [HttpGet]
-        [Route("collections/{id:long}")]
-        [AllowAnonymous]
-        public async Task<MessageData<PageData<FamilyBasicDTO>?>> GetUserCollection([FromRoute] long id, int pageIndex, int pageSize, string? orderField)
+        [HttpGet("me")]
+        public async Task<MessageData<UserDTO>> GetUserDetails()
         {
-            var redisKey = $"user/collections/{id}";
+            var userId = GetUserIdFromClaims();
+            if (userId == 0)
+            {
+                return Failed<UserDTO>("obtain user id failed");
+            }
+
+            var user = await userService.GetByIdAsync(userId);
+
+            return Success(mapper.Map<UserDTO>(user));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<MessageData<TokenInfo>> RegisterAsync([FromBody] UserCreationDTO userCreationDTO,
+            [FromServices] IRoleService roleService, [FromServices] IUserRoleService userRoleService)
+        {
+            var redisKey = $"user/register/username={userCreationDTO.Username}&password={userCreationDTO.Password}";
             if (await redis.Exist(redisKey))
             {
-                return Success(await redis.Get<PageData<FamilyBasicDTO>>(redisKey));
+                return Failed<TokenInfo>("invalid request", 400);
             }
 
-            var familiyPage = await familyCollectionService.GetFamilyPageAsync(id, pageIndex, pageSize, orderField);
-            var familyDTO = familiyPage.ConvertTo<FamilyBasicDTO>(mapper);
-            await redis.Set(redisKey, familyDTO, requirement.CacheTime);
-            return Success(familyDTO);
-        }
+            await redis.Set(redisKey, userCreationDTO, TimeSpan.FromSeconds(1));
 
-        [HttpDelete]
-        [Route("collections")]
-        [AllowAnonymous]
-        public async Task<MessageData<bool>> RemoveCollection([FromBody] CollectionCreationDTO collectionDTO)
-        {
-            var collection = await familyCollectionService.
-                GetFirstByExpressionAsync(c => c.FamilyId == collectionDTO.FamilyId && c.UserId == collectionDTO.UserId);
-            if (collection is null)
+            var user = await userService.GetFirstByExpressionAsync(u => u.Username == userCreationDTO.Username);
+            if (user != null)
             {
-                return Failed<bool>("collection not exist", 404);
+                return Failed<TokenInfo>("user already exists!", 300);
             }
-            var user = await userService.GetByIdAsync(collectionDTO.UserId);
-            if (user is null)
+
+            user = mapper.Map<User>(userCreationDTO);
+            user.Password = userCreationDTO.Password!.MD5Encrypt32(user.Salt!);
+            var role = await roleService.GetFirstByExpressionAsync(r => r.Name == PermissionConstants.ROLE_CONSUMER);
+            if (role is null)
             {
-                return Failed<bool>("user not exist", 404);
+                logger.LogWarning("role: {roleName} not exists", PermissionConstants.ROLE_CONSUMER);
+                return Failed<TokenInfo>("register failed", 500);
             }
+
             try
             {
                 unitOfWork.BeginTransaction();
-                collection.IsDeleted = true;
-                var result = await familyCollectionService.UpdateColumnsAsync(collection, c => c.IsDeleted);
-
+                var userId = await userService.AddSnowflakeAsync(user);
+                var userRole = new UserRole
+                {
+                    UserId = userId,
+                    RoleId = role.Id
+                };
+                await userRoleService.AddSnowflakeAsync(userRole);
                 unitOfWork.CommitTransaction();
-                return result ? Success(true) : Failed<bool>();
+
+                var claims = new List<Claim>()
+                {
+                    new(ClaimTypes.Name, user.Username!),
+                    new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
+                    new(ClaimTypes.Expiration,
+                        DateTime.Now.AddSeconds(tokenBuilder.GetTokenExpirationSeconds()).ToString()),
+                    new(JwtRegisteredClaimNames.Iat,
+                        EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.InvariantCulture),
+                        ClaimValueTypes.Integer64),
+                    new(ClaimTypes.Role, role.Name!)
+                };
+
+                var token = tokenBuilder.GenerateTokenInfo(claims);
+                return Success(token);
             }
             catch (Exception e)
             {
                 unitOfWork.RollbackTransaction();
-                throw;
+                return Failed<TokenInfo>(e.Message, 500);
             }
-        }
-
-        [HttpPost]
-        [Route("collections")]
-        [AllowAnonymous]
-        public async Task<MessageData<bool>> CreateCollection([FromBody] CollectionCreationDTO creationDTO)
-        {
-            var collection = mapper.Map<FamilyCollection>(creationDTO);
-            var id = await familyCollectionService.AddAsync(collection);
-            return id > 0 ? Success(true) : Failed<bool>();
-        }
-
-        [HttpDelete]
-        [Route("stars")]
-        [AllowAnonymous]
-        public async Task<MessageData<bool>> RemoveStar([FromBody] StarCreationDTO starDTO)
-        {
-            var star = await familyStarService.
-               GetFirstByExpressionAsync(c => c.FamilyId == starDTO.FamilyId && c.UserId == starDTO.UserId);
-            if (star is null)
-            {
-                return Failed<bool>("star not exist", 404);
-            }
-            star.IsDeleted = true;
-
-            var result = await familyStarService.UpdateColumnsAsync(star, s => s.IsDeleted);
-            return result ? Success(true) : Failed<bool>();
-        }
-
-        [HttpPost]
-        [Route("stars")]
-        [AllowAnonymous]
-        public async Task<MessageData<bool>> CreateStar([FromBody] StarCreationDTO starCreationDTO)
-        {
-            var star = mapper.Map<FamilyStar>(starCreationDTO);
-            var id = await familyStarService.AddAsync(star);
-            return id > 0 ? Success(true) : Failed<bool>();
         }
     }
 }

@@ -1,14 +1,14 @@
 using AutoMapper;
 using FluentValidation;
-using GalaFamilyLibrary.Domain.DataTransferObjects.FamilyLibrary;
-using GalaFamilyLibrary.Domain.Models.FamilyLibrary;
-using GalaFamilyLibrary.Domain.Validators;
+using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
 using GalaFamilyLibrary.FamilyService.Helpers;
-using GalaFamilyLibrary.FamilyService.Services;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Model.FamilyLibrary;
+using GalaFamilyLibrary.Service.FamilyLibrary;
+using GalaFamilyLibrary.Service.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -17,7 +17,6 @@ services.AddFileSecurityOptionSetup(builder.Configuration);
 services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
-services.AddScoped(typeof(IFamilyCategoryService), typeof(FamilyCategoryService));
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
 builder.AddInfrastructureSetup();
 

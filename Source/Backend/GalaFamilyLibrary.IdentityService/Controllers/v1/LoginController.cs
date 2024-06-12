@@ -1,5 +1,5 @@
-﻿using GalaFamilyLibrary.Domain.DataTransferObjects.Identity;
-using GalaFamilyLibrary.IdentityService.Services;
+﻿
+using System.Globalization;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
@@ -11,8 +11,10 @@ using SqlSugar.Extensions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Asp.Versioning;
-using GalaFamilyLibrary.IdentityService.Services;
+using GalaFamilyLibrary.DataTransferObject.Identity;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Service.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
@@ -30,94 +32,84 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         private readonly IRedisBasketRepository _redis = redis;
         private readonly IAESEncryptionService _aesEncryptionService = aesEncryptionService;
 
-        [HttpGet]
-        [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
-        public IActionResult Test()
-        {
-            return Ok("HelloWorld");
-        }
-
-
-        /// <summary>
-        /// v1/authenticate/token
-        /// </summary>
-        /// <param name="loginUser"></param>
-        /// <returns></returns>
+       [HttpPost("login")]
         [AllowAnonymous]
-        [HttpPost("token")]
-        public async Task<MessageData<TokenInfo?>> GetTokenAsync([FromBody] UserLoginDTO loginUser)
+        public async Task<MessageData<TokenInfo>> LoginAsync([FromBody] UserLoginDTO loginUser)
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                return Failed<TokenInfo>("用户名或者密码不能为空");
+                return Failed<TokenInfo>("password or username is empty");
             }
-
-            var user = await userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
-            if (user != null)
+            var lockKey = $"auth/username={loginUser.Username}&password={loginUser.Password}";
+            if (await _redis.Exist(lockKey))
             {
-                var password = loginUser.Password.MD5Encrypt32(user.Salt);
-                if (!password.Equals(user.Password))
-                {
-                    user.ErrorCount += 1;
-                    await userService.UpdateColumnsAsync(user, u => u.ErrorCount);
-                    return Failed<TokenInfo>("用户名或者密码错误");
-                }
-
-                logger.LogInformation("user {user} logged in", user.Username);
-                user.ErrorCount = 0;
-                user.LastLoginTime = DateTime.Now;
-                await userService.UpdateColumnsAsync(user, u => new { u.ErrorCount, u.LastLoginTime });
-
-                var roleNames = await userService.GetUserRolesByIdAsync(user.Id);
-                var claims = new List<Claim>()
-                {
-                    new(ClaimTypes.Name, loginUser.Username),
-                    new(ClaimTypes.Email, user.Email),
-                    new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
-                    new(ClaimTypes.Expiration,
-                        DateTime.Now.AddSeconds(permissionRequirement.Expiration.TotalSeconds).ToString())
-                };
-                claims.AddRange(roleNames.Select(roleName => new Claim(ClaimTypes.Role, roleName)));
-                var token = tokenBuilder.GenerateTokenInfo(claims);
-                return Success(token);
+                return Failed<TokenInfo>("invalid request", 400);
             }
-            return Failed<TokenInfo>("用户名或者密码错误");
+
+            await _redis.Set(lockKey, loginUser, TimeSpan.FromSeconds(1));
+            var user = await userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
+            if (user is null)
+            {
+                return Failed<TokenInfo>("username or password is incorrect");
+            }
+            var password = loginUser.Password!.MD5Encrypt32(user.Salt!);
+            if (password != user.Password)
+            {
+                return Failed<TokenInfo>("username or password is incorrect");
+            }
+
+            var roles = await userService.GetUserRolesAsync(user.Id);
+
+            var claims = new List<Claim>()
+                {
+                    new(ClaimTypes.Name, user.Username!),
+                    new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
+                    new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.InvariantCulture),ClaimValueTypes.Integer64),
+                    new(ClaimTypes.Expiration,
+                        DateTime.Now.AddSeconds(tokenBuilder.GetTokenExpirationSeconds()).ToString())
+                };
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
+            var token = tokenBuilder.GenerateTokenInfo(claims);
+            return Success(token);
         }
 
-        /// <summary>
-        /// v1/authenticate/logout
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost("logout")]
-        public Task<MessageData<bool>> LogoutAsync()
-        {
-            return Task.FromResult(Success(true));
-        }
-
-        /// <summary>
-        /// v1/authenticate/refresh
-        /// </summary>
-        /// <returns></returns>
         [HttpPost("refresh")]
-        public async Task<MessageData<TokenInfo>> RefreshTokenAsync(string token)
+        public async Task<MessageData<TokenInfo>> RefreshTokenAsync([FromForm] string token)
         {
+            var lockKey = $"auth/token/refresh/token={token}";
+            if (await _redis.Exist(lockKey))
+            {
+                return Failed<TokenInfo>("invalid request");
+            }
+            await _redis.Set(lockKey, token, TimeSpan.FromSeconds(1));
+
             if (string.IsNullOrEmpty(token))
             {
                 return Failed<TokenInfo>("token is invalid");
             }
-
-            var jwtHandler = new JwtSecurityTokenHandler();
-            try
+            token = tokenBuilder.DecryptCipherToken(token);
+            var uid = tokenBuilder.ParseUIdFromToken(token);
+            if (tokenBuilder.VerifyToken(token) && uid > 0)
             {
-                var jwtToken = jwtHandler.ReadJwtToken(token);
+                var user = await userService.GetByIdAsync(uid);
+                if (user is null)
+                {
+                    return Failed<TokenInfo>("refresh failed");
+                }
+                var roles = await userService.GetUserRolesAsync(uid);
+                var claims = new List<Claim>()
+                    {
+                        new(ClaimTypes.Name, user.Username!),
+                        new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
+                        new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.InvariantCulture),ClaimValueTypes.Integer64),
+                        new(ClaimTypes.Expiration,
+                            DateTime.Now.AddSeconds(tokenBuilder.GetTokenExpirationSeconds()).ToString())
+                    };
+                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
+                var tokenInfo = tokenBuilder.GenerateTokenInfo(claims);
+                return Success(tokenInfo);
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-
-            throw new NotImplementedException();
+            return Failed<TokenInfo>("refresh failed");
         }
     }
 }

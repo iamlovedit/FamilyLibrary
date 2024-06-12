@@ -1,11 +1,10 @@
-using AutoMapper;
-using GalaFamilyLibrary.Domain.Models.Dynamo;
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
-using GalaFamilyLibrary.DynamoPackageService.Services;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Model.Package;
+using GalaFamilyLibrary.Service.Package;
 using Polly;
 using Quartz;
 
@@ -39,7 +38,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass<DynamoPackage>();
+    dbSeed.InitTablesByClass<Package>();
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -48,7 +47,7 @@ app.UseInitSeed(dbSeed =>
 
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Packages");
-    dbSeed.InitSeed<DynamoPackage>(file);
+    dbSeed.InitSeed<Package>(file);
 
     file = string.Format(seedFolder, "PackageVersions");
     dbSeed.InitSeed<PackageVersion>(file);

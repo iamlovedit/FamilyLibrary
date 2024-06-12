@@ -17,6 +17,7 @@
       <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.6" />
+      <PackageReference Include="Minio" Version="6.0.2" />
       <PackageReference Include="Ocelot.Provider.Consul" Version="23.3.0" />
       <PackageReference Include="Seq.Extensions.Logging" Version="8.0.0" />
       <PackageReference Include="Serilog" Version="4.0.0" />
@@ -32,7 +33,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\GalaFamilyLibrary.Domain\GalaFamilyLibrary.Domain.csproj" />
+      <ProjectReference Include="..\GalaFamilyLibrary.DataTransferObject\GalaFamilyLibrary.DataTransferObject.csproj" />
+      <ProjectReference Include="..\GalaFamilyLibrary.Model\GalaFamilyLibrary.Model.csproj" />
+      <ProjectReference Include="..\GalaFamilyLibrary.Repository\GalaFamilyLibrary.Repository.csproj" />
+      <ProjectReference Include="..\GalaFamilyLibrary.Service\GalaFamilyLibrary.Service.csproj" />
     </ItemGroup>
 
 </Project>

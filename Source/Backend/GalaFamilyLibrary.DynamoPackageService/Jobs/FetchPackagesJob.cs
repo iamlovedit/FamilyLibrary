@@ -1,7 +1,7 @@
-﻿using GalaFamilyLibrary.Domain.Models.Dynamo;
-using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Infrastructure.Repository;
+﻿using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Seed;
+using GalaFamilyLibrary.Model.Package;
+using GalaFamilyLibrary.Repository;
 using Newtonsoft.Json.Linq;
 using Quartz;
 
@@ -33,13 +33,13 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                             return;
                         }
 
-                        var newPackages = content.ToObject<List<DynamoPackage>>();
-                        var packageDb = databaseContext.GetEntityDatabase<DynamoPackage>();
+                        var newPackages = content.ToObject<List<Package>>();
+                        var packageDb = databaseContext.GetEntityDatabase<Package>();
                         var packageVersionDb = databaseContext.GetEntityDatabase<PackageVersion>();
                         var oldPackages = await packageDb.GetListAsync();
                         var oldPackageVersions = await packageVersionDb.GetListAsync();
                         unitOfWork.BeginTransaction();
-                        var addedPackages = new List<DynamoPackage>();
+                        var addedPackages = new List<Package>();
                         var addedPackageVersions = new List<PackageVersion>();
                         var newPackageVersions = new List<PackageVersion>();
                         foreach (var package in newPackages)

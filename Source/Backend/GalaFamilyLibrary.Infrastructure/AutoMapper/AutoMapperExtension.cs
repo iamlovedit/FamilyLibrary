@@ -12,7 +12,7 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
 
             services.AddSingleton(provider => new MapperConfiguration(config =>
             {
-                config.AddProfile(new MappingProfile(provider.GetService<FileStorageClient>()));
+                config.AddProfile(new MappingProfile());
             }).CreateMapper());
         }
     }
