@@ -15,6 +15,15 @@ const router = createRouter({
         requiresAuth: false
       }
     },
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/home/index.vue'),
+      meta: {
+        title: '首页',
+        requiresAuth: false
+      }
+    },
     ...familyRoutes,
     ...exceptionRoutes,
     ...packageRoutes
