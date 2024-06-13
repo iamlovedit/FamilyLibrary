@@ -1,6 +1,4 @@
-<template>
-  <div>home view</div>
-</template>
+<template>home view</template>
 
 <script setup lang="ts"></script>
 
