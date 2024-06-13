@@ -35,7 +35,7 @@ useEventListener('resize', setFullHeight)
 
 <style scoped>
 .n-config-provider {
-  height: 100%;
+  height: 100vh;
   width: 100%;
 }
 </style>

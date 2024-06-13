@@ -9,7 +9,18 @@ const familyRoutes: RouteRecordRaw[] = [
       title: '族库',
       requiresAuth: false
     },
-    children: []
+    children: [
+      {
+        path: 'broswer',
+        name: 'family-broser',
+        component: () => import('@/views/family/broswer/index.vue')
+      },
+      {
+        path: 'detail',
+        name: 'family-detail',
+        component: () => import('@/views/family/detail/index.vue')
+      }
+    ]
   }
 ]
 

@@ -23,6 +23,11 @@ const packageRoutes: RouteRecordRaw[] = [
         path: 'broswer',
         name: 'package-broswer',
         component: () => import('@/views/dynamo/broswer/index.vue')
+      },
+      {
+        path: 'detail',
+        name: 'package-detail',
+        component: () => import('@/views/dynamo/detail/index.vue')
       }
     ]
   }
