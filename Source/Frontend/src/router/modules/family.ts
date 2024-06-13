@@ -6,7 +6,7 @@ const familyRoutes: RouteRecordRaw[] = [
     name: 'family-home',
     component: () => import('@/views/family/index.vue'),
     meta: {
-      title: '族库首页',
+      title: '族库',
       requiresAuth: false
     }
   }

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import familyRoutes from './modules/family'
 import exceptionRoutes from './modules/exception'
 import packageRoutes from './modules/packages'
+import { createRouterGuards } from './guards'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,4 +32,5 @@ const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 })
 })
 
+createRouterGuards(router)
 export default router

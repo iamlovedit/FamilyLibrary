@@ -6,7 +6,7 @@ const packageRoutes: RouteRecordRaw[] = [
     name: 'package-home',
     component: () => import('@/views/dynamo/index.vue'),
     meta: {
-      title: '节点包首页',
+      title: '节点包',
       requiresAuth: false
     }
   }
