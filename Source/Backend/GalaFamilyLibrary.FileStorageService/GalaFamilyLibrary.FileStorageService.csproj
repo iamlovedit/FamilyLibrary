@@ -15,6 +15,9 @@
       <Compile Remove="files\Images\**" />
       <Content Remove="files\Families\**" />
       <Content Remove="files\Images\**" />
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
       <EmbeddedResource Remove="files\Families\**" />
       <EmbeddedResource Remove="files\Images\**" />
       <None Remove="files\Families\**" />

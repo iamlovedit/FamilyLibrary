@@ -12,6 +12,9 @@
 
     <ItemGroup>
       <Content Remove="appsettings.Staging.json" />
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>
