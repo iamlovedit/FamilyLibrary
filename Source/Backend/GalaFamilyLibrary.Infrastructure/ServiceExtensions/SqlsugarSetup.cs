@@ -19,8 +19,7 @@ public static class SqlsugarSetup
 
         ArgumentNullException.ThrowIfNull(configuration);
 
-        var workId = configuration.GetSection("SnowFlake")["WorkId"].ObjToInt();
-        SnowFlakeSingle.WorkId = workId;
+        SnowFlakeSingle.WorkId = configuration["SNOWFLAKES_WORKID"]?.ObjToInt() ?? throw new ArgumentNullException("Snowflakes workid is null");
         var connectionString = $"server={configuration["DATABASE_HOST"]};" +
                                $"port={configuration["DATABASE_PORT"]};" +
                                $"database={configuration["DATABASE_DATABASE"]};" +

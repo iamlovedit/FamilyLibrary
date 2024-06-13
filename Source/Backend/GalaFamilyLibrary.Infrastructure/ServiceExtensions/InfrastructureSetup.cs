@@ -38,7 +38,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             services.AddRedisCacheSetup(configuration);
 
-            services.AddSeqSetup(configuration);
+            builder.AddSerilogSetup();
 
             services.AddAuthorizationSetup(configuration);
 
