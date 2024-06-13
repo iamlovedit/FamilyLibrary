@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <div>family detail</div>
 </template>
 
 <script setup lang="ts"></script>

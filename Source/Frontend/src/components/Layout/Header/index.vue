@@ -22,17 +22,16 @@ const menuOptions: MenuOption[] = [
   },
   {
     label: '节点包',
-    key: 'package-home'
+    key: 'package'
   },
   {
     label: '族库',
-    key: 'family-home'
+    key: 'family'
   }
 ]
 const currentRoute = useRoute()
 const router = useRouter()
-const activeKey = computed(() => currentRoute.name)
-
+const activeKey = computed(() => currentRoute.matched[0]?.name)
 function handleClickItem(key: string) {
   router.push({
     name: key

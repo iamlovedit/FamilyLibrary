@@ -3,12 +3,13 @@ import type { RouteRecordRaw } from 'vue-router'
 const familyRoutes: RouteRecordRaw[] = [
   {
     path: '/family',
-    name: 'family-home',
+    name: 'family',
     component: () => import('@/views/family/index.vue'),
     meta: {
       title: '族库',
       requiresAuth: false
-    }
+    },
+    children: []
   }
 ]
 

@@ -3,12 +3,28 @@ import type { RouteRecordRaw } from 'vue-router'
 const packageRoutes: RouteRecordRaw[] = [
   {
     path: '/package',
-    name: 'package-home',
+    name: 'package',
     component: () => import('@/views/dynamo/index.vue'),
     meta: {
       title: '节点包',
       requiresAuth: false
-    }
+    },
+    redirect() {
+      return {
+        name: 'package-broswer',
+        query: {
+          page: 1,
+          pageSize: 30
+        }
+      }
+    },
+    children: [
+      {
+        path: 'broswer',
+        name: 'package-broswer',
+        component: () => import('@/views/dynamo/broswer/index.vue')
+      }
+    ]
   }
 ]
 
