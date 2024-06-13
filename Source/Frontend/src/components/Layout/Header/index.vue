@@ -1,12 +1,16 @@
 <template>
   <n-layout-header bordered class="px-3 flex flex-col justify-center">
-    <n-menu
-      mode="horizontal"
-      responsive
-      :options="menuOptions"
-      v-model:value="activeKey"
-      :on-update:value="handleClickItem"
-    />
+    <n-flex justify="space-between" class="w-full">
+      <div>
+        <n-menu mode="horizontal" responsive :options="menuOptions" v-model:value="activeKey"
+          :on-update:value="handleClickItem" />
+      </div>
+      <n-dropdown>
+        <button>
+          111
+        </button>
+      </n-dropdown>
+    </n-flex>
   </n-layout-header>
 </template>
 

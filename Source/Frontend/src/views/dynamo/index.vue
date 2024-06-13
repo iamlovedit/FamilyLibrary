@@ -1,13 +1,7 @@
 <template>
   <n-flex vertical ustify="space-between">
     <n-input-group>
-      <n-input
-        :style="{ width: '50%' }"
-        show-count
-        :maxlength="12"
-        placeholder="搜索节点包"
-        v-model:value="keyword"
-      />
+      <n-input :style="{ width: '50%' }" show-count :maxlength="12" placeholder="搜索节点包" v-model:value="keyword" />
       <n-button type="primary" ghost @click="handleSearch"> 搜索 </n-button>
     </n-input-group>
     <router-view />
@@ -15,17 +9,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 
-const keyword = ref<string>()
+const { query } = route;
 
-const page = computed(() => route.query.page as any as number)
-
-const pageSize = computed(() => route.query.pageSize as any as number)
+const keyword = ref<string>(query.keyword as any as string)
+const page = ref<number>(query.page as any as number);
+const pageSize = ref<number>(query.pageSize as any as number)
 
 function handleSearch(e: Event) {
   e.preventDefault()
@@ -46,12 +40,6 @@ function handleSearch(e: Event) {
   }
 }
 
-watch(
-  () => route.query,
-  () => {
-    console.log(route.fullPath)
-  }
-)
 </script>
 
 <style scoped></style>

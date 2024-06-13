@@ -1,7 +1,7 @@
 <template>
   <n-layout :has-sider="false" class="h-full w-full flex-col flex">
     <page-header> </page-header>
-    <div class="flex-1 flex flex-nowrap flex-col h-full py-5">
+    <div class="flex-1 flex flex-nowrap flex-col h-full p-5">
       <router-view />
     </div>
     <n-layout-footer borderd> 蜀ICP备2022029729号-1 </n-layout-footer>
