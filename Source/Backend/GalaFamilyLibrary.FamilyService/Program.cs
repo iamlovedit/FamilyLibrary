@@ -9,17 +9,24 @@ using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.FamilyLibrary;
 using GalaFamilyLibrary.Service.FamilyLibrary;
 using GalaFamilyLibrary.Service.Validators;
+using Minio;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
-services.AddFileSecurityOptionSetup(builder.Configuration);
-services.AddFileStorageClientSetup(builder.Configuration);
+var configuration = builder.Configuration;
+services.AddFileSecurityOptionSetup(configuration);
+services.AddFileStorageClientSetup(configuration);
 
 services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
 builder.AddInfrastructureSetup();
 
+services.AddMinio(client =>
+{
+    client.WithEndpoint(configuration["MINIO_HOST"])
+        .WithCredentials(configuration["MINIO_ROOT_USER"], configuration["MINIO_ROOT_PASSWORD"]);
+});
 
 var app = builder.Build();
 // Configure the HTTP request pipeline.
