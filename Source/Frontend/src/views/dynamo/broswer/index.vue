@@ -1,6 +1,6 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
-    <n-radio-group v-model:value="orderValue" :on-update:value="handleUpdateValue" :loading="loading">
+    <n-radio-group v-model:value="orderRef" :on-update:value="handleUpdateValue" :loading="loading">
       <n-radio-button v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
     </n-radio-group>
     <div class="flex-1">
@@ -28,19 +28,19 @@
                 {{ packageObj.description }}
               </n-ellipsis>
             </n-thing>
+            <template #suffix>
+              <n-button>详情</n-button>
+            </template>
           </n-list-item>
         </n-list>
       </n-scrollbar>
     </div>
-
-    <n-pagination :item-count="packageCount" v-model:value="pageRef" :on-update:page="handlePageChange">
-
-    </n-pagination>
+    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { useMessage, useLoadingBar } from 'naive-ui'
 
@@ -52,10 +52,9 @@ const currentRoute = useRoute()
 const router = useRouter()
 const loadingBar = useLoadingBar()
 const { orderBy, keyword, page, pageSize } = currentRoute.query;
-
-const keywordRef = ref<string>(keyword as any as string)
-const pageRef = ref<number>(page as any as number);
-const pageSizeRef = ref<number>(pageSize as any as number)
+const keywordRef = ref<string>(keyword as string)
+const pageRef = ref<number>(Number(page) || 1);
+const pageSizeRef = ref<number>(Number(pageSize) || 30)
 const packageCount = ref<number>()
 const packages = ref<PackageDTO[]>([])
 const loading = ref<boolean>()
@@ -83,9 +82,9 @@ const orders = [
   }
 ]
 
-const orderValue = ref<string>(orderBy as any as string || 'default')
+const orderRef = ref<string>(orderBy as string || 'default')
 
-async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: number = 30) {
+async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: number = 30, orderBy?: string) {
   try {
     loadingBar.start()
     var httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
@@ -105,9 +104,19 @@ async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: nu
   }
 }
 function handleUpdateValue(value: string) {
-  orderValue.value = value
+  orderRef.value = value
+  router.push({
+    name: 'package-broswer',
+    query: {
+      keyword: currentRoute.query.keyword,
+      page: currentRoute.query.page,
+      pageSize: currentRoute.query.pageSize,
+      orderBy: value
+    }
+  })
 }
-function handlePageChange(newPage: number) {
+async function handlePageChange(newPage: number) {
+  pageRef.value = newPage
   router.push({
     name: 'package-broswer',
     query: {
@@ -120,15 +129,15 @@ function handlePageChange(newPage: number) {
 }
 
 
-onMounted(async () => {
-  await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value)
+watch(() => currentRoute.fullPath, () => {
+  keywordRef.value = currentRoute.query.keyword as string
+  pageRef.value = Number(currentRoute.query.page)
+  pageSizeRef.value = Number(currentRoute.query.pageSize)
+  orderRef.value = currentRoute.query.orderBy as string
 })
 
-// watch(() => currentRoute.fullPath, async () => {
-//   await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value)
-// })
+watchEffect(async () => {
+  await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value, orderRef.value)
+})
 
-// watchEffect(async () => {
-//   await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value)
-// })
 </script>
