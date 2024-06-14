@@ -17,7 +17,10 @@
         "AUDIENCE_AUDIENCE": "GalaServer",
         "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
         "AUDIENCE_EXPIRATION": "3600",
-        "AES_KEY": "zxcvbnmasdfghjkl"
+        "AES_KEY": "zxcvbnmasdfghjkl",
+        "SEQ_URL": "http://localhost:5341",
+        "SEQ_APIKEY": "tZSCDVnAbyYZB1s4twSl",
+        "SNOWFLAKES_WORKID": "1"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5003;https://localhost:6003"
