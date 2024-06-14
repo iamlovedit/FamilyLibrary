@@ -40,7 +40,7 @@ public class GalaControllerBase : ControllerBase
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    protected static MessageData<PageData<T>?> SucceedPage<T>(int page, int dataCount, int pageSize, List<T> data,
+    protected static MessageData<PageData<T>> SucceedPage<T>(int page, int dataCount, int pageSize, List<T> data,
         int pageCount,
         string message = "获取成功")
     {
@@ -52,12 +52,12 @@ public class GalaControllerBase : ControllerBase
             Page = page,
             DataCount = dataCount,
         };
-        return new MessageData<PageData<T>?>(true, message, pageModel);
+        return new MessageData<PageData<T>>(true, message, pageModel);
     }
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    protected static MessageData<PageData<T>?> SucceedPage<T>(PageData<T>? page, string message = "获取成功")
+    protected static MessageData<PageData<T>> SucceedPage<T>(PageData<T> page, string message = "获取成功")
     {
         var response = new PageData<T>()
         {
@@ -67,7 +67,7 @@ public class GalaControllerBase : ControllerBase
             PageSize = page.PageSize,
             PageCount = page.PageCount,
         };
-        return new MessageData<PageData<T>?>(true, message, response);
+        return new MessageData<PageData<T>>(true, message, response);
     }
     
     [NonAction]

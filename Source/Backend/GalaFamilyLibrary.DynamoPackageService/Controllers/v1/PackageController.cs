@@ -19,25 +19,14 @@ namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 [ApiVersion("1.0")]
 [Route("package/v{version:apiVersion}")]
 [AllowAnonymous]
-[ApiVersion("1.0")]
-[Route("package/v{version:apiVersion}")]
-public class PackageController : GalaControllerBase
+public class PackageController(
+    IPackageService packageService,
+    ILogger<PackageController> logger,
+    IRedisBasketRepository redis,
+    IMapper mapper)
+    : GalaControllerBase
 {
-    private readonly IPackageService _packageService;
-    private readonly ILogger<PackageController> _logger;
-    private readonly IRedisBasketRepository _redis;
-    private readonly IMapper _mapper;
-    private readonly TimeSpan _cacheTime;
-
-    public PackageController(IPackageService packageService, ILogger<PackageController> logger,
-        IRedisBasketRepository redis, IMapper mapper)
-    {
-        _packageService = packageService;
-        _logger = logger;
-        _redis = redis;
-        _mapper = mapper;
-        _cacheTime = TimeSpan.FromDays(1);
-    }
+    private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
 
     [HttpGet]
     [Route("{id}")]
@@ -45,18 +34,18 @@ public class PackageController : GalaControllerBase
         [FromServices] IVersionService versionService,
         [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
     {
-        _logger.LogInformation("query package versions by id {id}", id);
+        logger.LogInformation("query package versions by id {id}", id);
         var redisKey = $"package/versions/{id}?pageIndex={pageIndex}&pageSize={pageSize}";
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            return SucceedPage(await _redis.Get<PageData<PackageVersionDTO>>(redisKey));
+            return SucceedPage(await redis.Get<PageData<PackageVersionDTO>>(redisKey));
         }
 
         var versionPage =
             await versionService.QueryPageAsync(pv => pv.PackageId == id, pageIndex, pageSize, pv => pv.CreatedDate,
                 OrderByType.Desc);
-        var result = versionPage.ConvertTo<PackageVersionDTO>(_mapper);
-        await _redis.Set(redisKey, result, _cacheTime);
+        var result = versionPage.ConvertTo<PackageVersionDTO>(mapper);
+        await redis.Set(redisKey, result, _cacheTime);
         return SucceedPage(result);
     }
 
@@ -66,7 +55,7 @@ public class PackageController : GalaControllerBase
     {
         return Task.Run<IActionResult>(() =>
         {
-            _logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
+            logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
             return Redirect($"https://dynamopackages.com/download/{id}/{packageVersion}");
         });
     }
@@ -77,24 +66,24 @@ public class PackageController : GalaControllerBase
     public async Task<MessageData<PageData<PackageDTO>>> GetPackagesByPage(string? keyword = null, int pageIndex = 1,
         int pageSize = 30, string? orderBy = null)
     {
-        _logger.LogInformation(
+        logger.LogInformation(
             "query packages by keyword: {keyword} pageIndex: {pageIndex} pageSize: {pageSize} orderBy: {orderBy}",
             keyword, pageIndex, pageSize, orderBy);
         var redisKey = $"packages?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderBy={orderBy}";
         var packagesPage = default(PageData<Package>);
-        if (await _redis.Exist(redisKey))
+        if (await redis.Exist(redisKey))
         {
-            packagesPage = await _redis.Get<PageData<Package>>(redisKey);
+            packagesPage = await redis.Get<PageData<Package>>(redisKey);
         }
         else
         {
             var expression = Expressionable.Create<Package>()
                 .AndIF(!string.IsNullOrEmpty(keyword), p => p.Name!.Contains(keyword!)).ToExpression();
-            packagesPage = await _packageService.GetPackagePageAsync(expression, pageIndex, pageSize, orderBy);
-            await _redis.Set(redisKey, packagesPage, _cacheTime);
+            packagesPage = await packageService.GetPackagePageAsync(expression, pageIndex, pageSize, orderBy);
+            await redis.Set(redisKey, packagesPage, _cacheTime);
         }
 
-        return SucceedPage(packagesPage.ConvertTo<PackageDTO>(_mapper));
+        return SucceedPage(packagesPage.ConvertTo<PackageDTO>(mapper));
     }
 
     [HttpPost]
@@ -181,14 +170,14 @@ public class PackageController : GalaControllerBase
                         }
                     }
 
-                    _logger.LogInformation("added new package count {added},added new version count {addedverson}",
+                    logger.LogInformation("added new package count {added},added new version count {addedverson}",
                         addedPackages.Count, addedPackageVersions.Count);
                     unitOfWork.CommitTransaction();
                 }
                 catch (Exception e)
                 {
                     unitOfWork.RollbackTransaction();
-                    _logger.LogError(e, e.Message);
+                    logger.LogError(e, e.Message);
                     return Failed(e.Message);
                 }
 
@@ -270,14 +259,14 @@ public class PackageController : GalaControllerBase
                 }
             }
 
-            _logger.LogInformation("added new package count {added},added new version count {addedverson}",
+            logger.LogInformation("added new package count {added},added new version count {addedverson}",
                 addedPackages.Count, addedPackageVersions.Count);
             unitOfWork.CommitTransaction();
         }
         catch (Exception e)
         {
             unitOfWork.RollbackTransaction();
-            _logger.LogError(e, e.Message);
+            logger.LogError(e, e.Message);
             return Failed(e.Message);
         }
 
