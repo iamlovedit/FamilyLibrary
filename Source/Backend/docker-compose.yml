@@ -63,20 +63,6 @@ services:
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
-
-  gala_services_file_storage:
-    container_name: "gala_services_file_storage"
-    restart: on-failure
-    ports:
-      - "8001:80"
-    networks:
-      - gala_services_net
-    env_file:
-      - .env
-    image: ${DOCKER_REGISTRY-}gala_file_storage
-    build:
-      context: .
-      dockerfile: GalaFamilyLibrary.FileStorageService/Dockerfile
   
   gala_services_family_parameters:
     env_file:
