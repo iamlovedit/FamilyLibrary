@@ -2,12 +2,11 @@ import 'uno.css'
 import '@/assets/main.css'
 import 'vfonts/Lato.css'
 import 'vfonts/FiraCode.css'
-
 import { createApp } from 'vue'
-import { setupStore } from '@/stores'
-import App from './App.vue'
 import router from '@/router'
 import naive from 'naive-ui'
+import App from './App.vue'
+import { setupStore } from '@/stores'
 
 const app = createApp(App)
 
