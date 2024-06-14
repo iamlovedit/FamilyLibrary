@@ -5,11 +5,16 @@
         <n-menu mode="horizontal" responsive :options="menuOptions" v-model:value="activeKey"
           :on-update:value="handleClickItem" />
       </div>
-      <n-dropdown>
-        <button>
-          111
-        </button>
-      </n-dropdown>
+      <div>
+        <n-dropdown v-if="userStore.user?.name">
+          <n-button>
+            个人资料
+          </n-button>
+        </n-dropdown>
+        <n-button v-else>
+          登录
+        </n-button>
+      </div>
     </n-flex>
   </n-layout-header>
 </template>
@@ -18,6 +23,9 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { MenuOption } from 'naive-ui'
+import { useUserStore } from '@/stores/modules/user';
+
+const userStore = useUserStore()
 
 const menuOptions: MenuOption[] = [
   {

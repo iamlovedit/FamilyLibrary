@@ -4,10 +4,11 @@
       <n-input :style="{ width: '50%' }" show-count :maxlength="12" placeholder="搜索节点包" v-model:value="keyword" />
       <n-button type="primary" ghost @click="handleSearch"> 搜索 </n-button>
     </n-input-group>
-    <router-view />
+    <div class="flex-1">
+      <router-view />
+    </div>
   </n-flex>
 </template>
-
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -31,7 +32,8 @@ function handleSearch(e: Event) {
         query: {
           keyword: keyword.value,
           page: page.value,
-          pageSize: pageSize.value
+          pageSize: pageSize.value,
+          orderBy: 'default'
         }
       })
     } catch (error: any) {

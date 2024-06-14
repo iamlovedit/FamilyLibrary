@@ -4,7 +4,7 @@ import router from '@/router'
 
 export interface HttpResponse<T = any> {
   succeed: boolean
-  code: number
+  statusCode: number
   message: string
   response: T
 }
