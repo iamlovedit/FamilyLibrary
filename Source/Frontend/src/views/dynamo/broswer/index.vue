@@ -45,7 +45,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useMessage, useLoadingBar } from 'naive-ui'
 
 
-import { getPackagePagesAsync, type PackageDTO } from '@/api/packages';
+import { getPackagePagesAsync, type PackageDTO } from '@/api/dynamo';
 
 const message = useMessage()
 const currentRoute = useRoute()
