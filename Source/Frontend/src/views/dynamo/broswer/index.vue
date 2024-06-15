@@ -29,7 +29,7 @@
               </n-ellipsis>
             </n-thing>
             <template #suffix>
-              <n-button>详情</n-button>
+              <n-button @click="() => handleDetailClick(packageObj)">详情</n-button>
             </template>
           </n-list-item>
         </n-list>
@@ -104,7 +104,6 @@ async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: nu
   }
 }
 function handleUpdateValue(value: string) {
-  orderRef.value = value
   router.push({
     name: 'package-broswer',
     query: {
@@ -116,7 +115,6 @@ function handleUpdateValue(value: string) {
   })
 }
 async function handlePageChange(newPage: number) {
-  pageRef.value = newPage
   router.push({
     name: 'package-broswer',
     query: {
@@ -126,6 +124,9 @@ async function handlePageChange(newPage: number) {
       orderBy: currentRoute.query.orderBy
     }
   })
+}
+function handleDetailClick(packageObj: PackageDTO) {
+
 }
 
 
