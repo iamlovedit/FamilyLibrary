@@ -5,7 +5,7 @@ using SqlSugar;
 namespace GalaFamilyLibrary.Model.Package
 {
     [SugarTable("library_packages")]
-    public class Package : IDeletable
+    public class DynamoPackage : IDeletable
     {
         [SugarColumn(IsPrimaryKey = true, ColumnName = "package_id")]
         [JsonProperty("_id")]

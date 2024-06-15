@@ -70,14 +70,14 @@ public class PackageController(
             "query packages by keyword: {keyword} pageIndex: {pageIndex} pageSize: {pageSize} orderBy: {orderBy}",
             keyword, pageIndex, pageSize, orderBy);
         var redisKey = $"packages?keyword={keyword}&pageIndex={pageIndex}&pageSize={pageSize}&orderBy={orderBy}";
-        var packagesPage = default(PageData<Package>);
+        var packagesPage = default(PageData<DynamoPackage>);
         if (await redis.Exist(redisKey))
         {
-            packagesPage = await redis.Get<PageData<Package>>(redisKey);
+            packagesPage = await redis.Get<PageData<DynamoPackage>>(redisKey);
         }
         else
         {
-            var expression = Expressionable.Create<Package>()
+            var expression = Expressionable.Create<DynamoPackage>()
                 .AndIF(!string.IsNullOrEmpty(keyword), p => p.Name!.Contains(keyword!)).ToExpression();
             packagesPage = await packageService.GetPackagePageAsync(expression, pageIndex, pageSize, orderBy);
             await redis.Set(redisKey, packagesPage, _cacheTime);
@@ -107,13 +107,13 @@ public class PackageController(
                         return Failed<string>("获取原网站数据失败");
                     }
 
-                    var newPackages = content.ToObject<List<Package>>();
-                    var packageDb = appDbContext.GetEntityDatabase<Package>();
+                    var newPackages = content.ToObject<List<DynamoPackage>>();
+                    var packageDb = appDbContext.GetEntityDatabase<DynamoPackage>();
                     var packageVersionDb = appDbContext.GetEntityDatabase<PackageVersion>();
                     var oldPackages = await packageDb.GetListAsync();
                     var oldPackageVersions = await packageVersionDb.GetListAsync();
                     unitOfWork.BeginTransaction();
-                    var addedPackages = new List<Package>();
+                    var addedPackages = new List<DynamoPackage>();
                     var addedPackageVersions = new List<PackageVersion>();
                     var newPackageVersions = new List<PackageVersion>();
                     foreach (var package in newPackages)
@@ -193,16 +193,16 @@ public class PackageController(
     [RequestSizeLimit(int.MaxValue)]
     [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
     public async Task<MessageData<string>> UpdateByPackagesAsync([FromServices] IUnitOfWork unitOfWork,
-        [FromServices] DatabaseContext appDbContext, [FromBody] List<Package> packages)
+        [FromServices] DatabaseContext appDbContext, [FromBody] List<DynamoPackage> packages)
     {
         try
         {
-            var packageDb = appDbContext.GetEntityDatabase<Package>();
+            var packageDb = appDbContext.GetEntityDatabase<DynamoPackage>();
             var packageVersionDb = appDbContext.GetEntityDatabase<PackageVersion>();
             var oldPackages = await packageDb.GetListAsync();
             var oldPackageVersions = await packageVersionDb.GetListAsync();
             unitOfWork.BeginTransaction();
-            var addedPackages = new List<Package>();
+            var addedPackages = new List<DynamoPackage>();
             var addedPackageVersions = new List<PackageVersion>();
             var newPackageVersions = new List<PackageVersion>();
             foreach (var package in packages)

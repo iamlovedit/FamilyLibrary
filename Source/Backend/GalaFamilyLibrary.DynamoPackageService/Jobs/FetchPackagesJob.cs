@@ -32,14 +32,14 @@ namespace GalaFamilyLibrary.DynamoPackageService.Jobs
                         logger.LogWarning("fetch packages failed,content is empty");
                         return;
                     }
-                    var newPackages = content.ToObject<List<Package>>()!;
-                    var packageDb = databaseContext.GetEntityDatabase<Package>();
+                    var newPackages = content.ToObject<List<DynamoPackage>>()!;
+                    var packageDb = databaseContext.GetEntityDatabase<DynamoPackage>();
                     var packageVersionDb = databaseContext.GetEntityDatabase<PackageVersion>();
                     var oldPackages = await packageDb.GetListAsync();
                     var oldPackageVersions = await packageVersionDb.GetListAsync();
 
                     unitOfWork.BeginTransaction();
-                    var addedPackages = new List<Package>();
+                    var addedPackages = new List<DynamoPackage>();
                     var addedPackageVersions = new List<PackageVersion>();
                     var newPackageVersions = new List<PackageVersion>();
                     foreach (var package in newPackages)

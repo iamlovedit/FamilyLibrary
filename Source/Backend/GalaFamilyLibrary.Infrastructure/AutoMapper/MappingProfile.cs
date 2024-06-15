@@ -23,7 +23,7 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
             CreateMap<Family, FamilyDetailDTO>();
 
 
-            CreateMap<Package, PackageDTO>();
+            CreateMap<DynamoPackage, PackageDTO>();
             CreateMap<PackageVersion, PackageVersionDTO>();
 
             CreateMap<User, UserDTO>();
