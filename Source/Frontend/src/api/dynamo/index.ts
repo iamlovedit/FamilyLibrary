@@ -31,3 +31,10 @@ export function getPackagePagesAsync(keyword?: string, pageIndex: number = 1, pa
         params
     })
 }
+
+export function getPackageVersionPageAsync(id: string): Promise<HttpResponse<Page<PackageVersionDTO>>> {
+    return request<Page<PackageVersionDTO>>({
+        url: `package/v1/${id}`,
+        method: RequestEnum.GET
+    })
+}

@@ -19,9 +19,6 @@ const router = useRouter()
 const { query } = route;
 
 const keyword = ref<string>(query.keyword as any as string)
-const page = ref<number>(query.page as any as number);
-const pageSize = ref<number>(query.pageSize as any as number)
-
 function handleSearch(e: Event) {
   e.preventDefault()
   if (keyword.value) {
@@ -31,8 +28,8 @@ function handleSearch(e: Event) {
         name: 'package-broswer',
         query: {
           keyword: keyword.value,
-          page: page.value,
-          pageSize: pageSize.value,
+          page: 1,
+          pageSize: 30,
           orderBy: 'default'
         }
       })

@@ -10,17 +10,29 @@
             <n-thing :title="packageObj.name" content-style="margin-top: 10px;">
               <template #description>
                 <n-flex>
-                  <n-tag :bordered="false" type="info" size="small">
+                  <n-tag :bordered="false" type="info">
                     {{ packageObj.createdDate }}
+                    <template #icon>
+                      <n-icon :component="NewReleasesOutlined" />
+                    </template>
                   </n-tag>
-                  <n-tag :bordered="false" type="info" size="small">
+                  <n-tag :bordered="false" type="info">
                     {{ packageObj.updatedDate }}
+                    <template #icon>
+                      <n-icon :component="UpdateRound" />
+                    </template>
                   </n-tag>
-                  <n-tag :bordered="false" type="info" size="small">
+                  <n-tag :bordered="false" type="info">
                     {{ packageObj.downloads }}
+                    <template #icon>
+                      <n-icon :component="FileDownloadDoneSharp" />
+                    </template>
                   </n-tag>
-                  <n-tag :bordered="false" type="info" size="small">
+                  <n-tag :bordered="false" type="info">
                     {{ packageObj.votes }}
+                    <template #icon>
+                      <n-icon :component="ThumbUpAltOutlined" />
+                    </template>
                   </n-tag>
                 </n-flex>
               </template>
@@ -43,9 +55,9 @@
 import { ref, watchEffect, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { useMessage, useLoadingBar } from 'naive-ui'
+import { NewReleasesOutlined, UpdateRound, FileDownloadDoneSharp, ThumbUpAltOutlined } from '@vicons/material'
 
-
-import { getPackagePagesAsync, type PackageDTO } from '@/api/dynamo';
+import { getPackagePagesAsync, getPackageVersionPageAsync, type PackageDTO } from '@/api/dynamo';
 
 const message = useMessage()
 const currentRoute = useRoute()
@@ -88,7 +100,6 @@ async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: nu
   try {
     loadingBar.start()
     var httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
-    console.log(httpResponse)
     if (httpResponse.succeed) {
       packages.value = httpResponse.response.data
       packageCount.value = httpResponse.response.dataCount
@@ -126,7 +137,12 @@ async function handlePageChange(newPage: number) {
   })
 }
 function handleDetailClick(packageObj: PackageDTO) {
-
+  router.push({
+    name: 'package-detail',
+    params: {
+      id: packageObj.id
+    }
+  })
 }
 
 
