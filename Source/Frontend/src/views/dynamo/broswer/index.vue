@@ -5,7 +5,7 @@
     </n-radio-group>
     <div class="flex-1">
       <n-scrollbar style="max-height: 1000px;" trigger="none">
-        <n-list hoverable clickable>
+        <n-list hoverable>
           <n-list-item v-for="packageObj in packages" :key="packageObj.id">
             <n-thing :title="packageObj.name" content-style="margin-top: 10px;">
               <template #description>
@@ -47,7 +47,8 @@
         </n-list>
       </n-scrollbar>
     </div>
-    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" />
+    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" :page-slot="8"
+      v-model:page-size="pageSizeRef" show-quick-jumper />
   </div>
 </template>
 
@@ -57,7 +58,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useMessage, useLoadingBar } from 'naive-ui'
 import { NewReleasesOutlined, UpdateRound, FileDownloadDoneSharp, ThumbUpAltOutlined } from '@vicons/material'
 
-import { getPackagePagesAsync, getPackageVersionPageAsync, type PackageDTO } from '@/api/dynamo';
+import { getPackagePagesAsync, type PackageDTO } from '@/api/dynamo';
 
 const message = useMessage()
 const currentRoute = useRoute()

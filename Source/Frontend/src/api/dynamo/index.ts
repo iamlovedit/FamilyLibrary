@@ -38,3 +38,10 @@ export function getPackageVersionPageAsync(id: string): Promise<HttpResponse<Pag
         method: RequestEnum.GET
     })
 }
+
+export function getPackageDescriptionAsync(id: string): Promise<HttpResponse<string>> {
+    return request<string>({
+        url: `package/v1/description/${id}`,
+        method: RequestEnum.GET
+    })
+}
