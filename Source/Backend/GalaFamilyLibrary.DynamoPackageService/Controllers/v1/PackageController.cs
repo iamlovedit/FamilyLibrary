@@ -49,6 +49,13 @@ public class PackageController(
         return SucceedPage(result);
     }
 
+    [HttpGet("/description/{id}")]
+    public async Task<MessageData<string>> GetPackageDescriptionAsync(string id)
+    {
+        var package = await packageService.GetPackageDetailByIdAsync(id);
+        return package is null ? Failed<string>("404", 404) : Success(package.Description!);
+    }
+
     [HttpGet]
     [Route("{id}/{packageVersion}")]
     public Task<IActionResult> Download(string id, string packageVersion)

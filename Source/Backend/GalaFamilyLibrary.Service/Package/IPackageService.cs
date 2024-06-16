@@ -22,7 +22,6 @@ namespace GalaFamilyLibrary.Service.Package
         public async Task<DynamoPackage> GetPackageDetailByIdAsync(string id)
         {
             return await DAL.DbContext.Queryable<DynamoPackage>()
-                 .Includes(p => p.Versions)
                  .InSingleAsync(id);
         }
 
