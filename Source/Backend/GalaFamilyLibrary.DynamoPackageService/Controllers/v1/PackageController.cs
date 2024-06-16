@@ -49,7 +49,7 @@ public class PackageController(
         return SucceedPage(result);
     }
 
-    [HttpGet("/description/{id}")]
+    [HttpGet("description/{id}")]
     public async Task<MessageData<string>> GetPackageDescriptionAsync(string id)
     {
         var package = await packageService.GetPackageDetailByIdAsync(id);
