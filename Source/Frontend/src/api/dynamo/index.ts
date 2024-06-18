@@ -36,12 +36,15 @@ export function getPackagePagesAsync(
   })
 }
 
-export function getPackageVersionPageAsync(
-  id: string
-): Promise<HttpResponse<Page<PackageVersionDTO>>> {
+export function getPackageVersionPageAsync(id: string, pageIndex: number, pageSize: number): Promise<HttpResponse<Page<PackageVersionDTO>>> {
+  const params = {
+    pageIndex,
+    pageSize
+  }
   return request<Page<PackageVersionDTO>>({
     url: `package/v1/versions/${id}`,
-    method: RequestEnum.GET
+    method: RequestEnum.GET,
+    params
   })
 }
 
