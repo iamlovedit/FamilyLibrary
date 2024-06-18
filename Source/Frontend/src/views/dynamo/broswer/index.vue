@@ -1,11 +1,16 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
     <n-radio-group v-model:value="orderRef" :on-update:value="handleUpdateValue" :loading="loading">
-      <n-radio-button v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
+      <n-radio-button
+        v-for="order in orders"
+        :key="order.value"
+        :value="order.value"
+        :label="order.label"
+      />
     </n-radio-group>
     <div class="flex-1">
-      <n-scrollbar style="max-height: 1000px;" trigger="none">
-        <n-list hoverable>
+      <n-scrollbar style="max-height: 800px" trigger="none">
+        <n-list hoverable show-divider>
           <n-list-item v-for="packageObj in packages" :key="packageObj.id">
             <n-thing :title="packageObj.name" content-style="margin-top: 10px;">
               <template #description>
@@ -47,26 +52,37 @@
         </n-list>
       </n-scrollbar>
     </div>
-    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" :page-slot="8"
-      v-model:page-size="pageSizeRef" show-quick-jumper />
+    <n-pagination
+      :item-count="packageCount"
+      v-model:page="pageRef"
+      :on-update:page="handlePageChange"
+      :page-slot="8"
+      v-model:page-size="pageSizeRef"
+      show-quick-jumper
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watchEffect, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router'
 import { useMessage, useLoadingBar } from 'naive-ui'
-import { NewReleasesOutlined, UpdateRound, FileDownloadDoneSharp, ThumbUpAltOutlined } from '@vicons/material'
+import {
+  NewReleasesOutlined,
+  UpdateRound,
+  FileDownloadDoneSharp,
+  ThumbUpAltOutlined
+} from '@vicons/material'
 
-import { getPackagePagesAsync, type PackageDTO } from '@/api/dynamo';
+import { getPackagePagesAsync, type PackageDTO } from '@/api/dynamo'
 
 const message = useMessage()
 const currentRoute = useRoute()
 const router = useRouter()
 const loadingBar = useLoadingBar()
-const { orderBy, keyword, page, pageSize } = currentRoute.query;
+const { orderBy, keyword, page, pageSize } = currentRoute.query
 const keywordRef = ref<string>(keyword as string)
-const pageRef = ref<number>(Number(page) || 1);
+const pageRef = ref<number>(Number(page) || 1)
 const pageSizeRef = ref<number>(Number(pageSize) || 30)
 const packageCount = ref<number>()
 const packages = ref<PackageDTO[]>([])
@@ -95,23 +111,26 @@ const orders = [
   }
 ]
 
-const orderRef = ref<string>(orderBy as string || 'default')
+const orderRef = ref<string>((orderBy as string) || 'default')
 
-async function getPacakgePages(keyword?: string, pageIndex: number = 1, size: number = 30, orderBy?: string) {
+async function getPacakgePages(
+  keyword?: string,
+  pageIndex: number = 1,
+  size: number = 30,
+  orderBy?: string
+) {
   try {
     loadingBar.start()
     var httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
     if (httpResponse.succeed) {
       packages.value = httpResponse.response.data
       packageCount.value = httpResponse.response.dataCount
-    }
-    else {
+    } else {
       throw new Error(httpResponse.message)
     }
   } catch (error: any) {
-    message.error(error.message);
-  }
-  finally {
+    message.error(error.message)
+  } finally {
     loadingBar.finish()
   }
 }
@@ -146,16 +165,17 @@ function handleDetailClick(packageObj: PackageDTO) {
   })
 }
 
-
-watch(() => currentRoute.fullPath, () => {
-  keywordRef.value = currentRoute.query.keyword as string
-  pageRef.value = Number(currentRoute.query.page)
-  pageSizeRef.value = Number(currentRoute.query.pageSize)
-  orderRef.value = currentRoute.query.orderBy as string
-})
+watch(
+  () => currentRoute.fullPath,
+  () => {
+    keywordRef.value = currentRoute.query.keyword as string
+    pageRef.value = Number(currentRoute.query.page)
+    pageSizeRef.value = Number(currentRoute.query.pageSize)
+    orderRef.value = currentRoute.query.orderBy as string
+  }
+)
 
 watchEffect(async () => {
   await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value, orderRef.value)
 })
-
 </script>
