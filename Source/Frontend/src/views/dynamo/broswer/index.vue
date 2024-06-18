@@ -1,12 +1,7 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
     <n-radio-group v-model:value="orderRef" :on-update:value="handleUpdateValue" :loading="loading">
-      <n-radio-button
-        v-for="order in orders"
-        :key="order.value"
-        :value="order.value"
-        :label="order.label"
-      />
+      <n-radio-button v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
     </n-radio-group>
     <div class="flex-1">
       <n-scrollbar style="max-height: 800px" trigger="none">
@@ -52,14 +47,8 @@
         </n-list>
       </n-scrollbar>
     </div>
-    <n-pagination
-      :item-count="packageCount"
-      v-model:page="pageRef"
-      :on-update:page="handlePageChange"
-      :page-slot="8"
-      v-model:page-size="pageSizeRef"
-      show-quick-jumper
-    />
+    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" :page-slot="8"
+      v-model:page-size="pageSizeRef" show-quick-jumper />
   </div>
 </template>
 
@@ -134,8 +123,8 @@ async function getPacakgePages(
     loadingBar.finish()
   }
 }
-function handleUpdateValue(value: string) {
-  router.push({
+async function handleUpdateValue(value: string) {
+  await router.push({
     name: 'package-broswer',
     query: {
       keyword: currentRoute.query.keyword,
@@ -146,7 +135,7 @@ function handleUpdateValue(value: string) {
   })
 }
 async function handlePageChange(newPage: number) {
-  router.push({
+  await router.push({
     name: 'package-broswer',
     query: {
       keyword: currentRoute.query.keyword,
@@ -156,11 +145,15 @@ async function handlePageChange(newPage: number) {
     }
   })
 }
-function handleDetailClick(packageObj: PackageDTO) {
-  router.push({
+
+async function handleDetailClick(packageObj: PackageDTO) {
+  await router.push({
     name: 'package-detail',
     params: {
       id: packageObj.id
+    },
+    query: {
+      page: 1
     }
   })
 }
