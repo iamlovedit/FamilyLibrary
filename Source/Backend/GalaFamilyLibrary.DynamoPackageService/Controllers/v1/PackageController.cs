@@ -29,7 +29,7 @@ public class PackageController(
     private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
 
     [HttpGet]
-    [Route("{id}")]
+    [Route("versions/{id}")]
     public async Task<MessageData<PageData<PackageVersionDTO>>> GetVersionAsync([FromRoute] string id,
         [FromServices] IVersionService versionService,
         [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
@@ -49,11 +49,25 @@ public class PackageController(
         return SucceedPage(result);
     }
 
-    [HttpGet("description/{id}")]
-    public async Task<MessageData<string>> GetPackageDescriptionAsync(string id)
+    [HttpGet("detail/{id}")]
+    public async Task<MessageData<PackageDTO>> GetPackageDescriptionAsync(string id)
     {
-        var package = await packageService.GetPackageDetailByIdAsync(id);
-        return package is null ? Failed<string>("404", 404) : Success(package.Description!);
+        var redisKey = $"package/detail/{id}";
+        var package = default(DynamoPackage);
+        if (await redis.Exist(redisKey))
+        {
+            package = await redis.Get<DynamoPackage>(redisKey);
+            return Success(mapper.Map<PackageDTO>(package));
+        }
+
+        package = await packageService.GetPackageDetailByIdAsync(id);
+        if (package is null)
+        {
+            return Failed<PackageDTO>("404", 404);
+        }
+
+        await redis.Set(redisKey, package, _cacheTime);
+        return Success(mapper.Map<PackageDTO>(package));
     }
 
     [HttpGet]
