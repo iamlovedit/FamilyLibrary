@@ -1,5 +1,5 @@
-﻿using System.Text.Json.Serialization;
-using GalaFamilyLibrary.DataTransferObject.Identity;
+﻿using GalaFamilyLibrary.DataTransferObject.Identity;
+using Newtonsoft.Json;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
