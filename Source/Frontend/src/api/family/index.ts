@@ -5,7 +5,7 @@ import { RequestEnum } from '@/enums/httpEnum'
 export interface FamilyBasic {
   id: string
   name: string
-  catgegory: FamilyCategoryBasic
+  category: FamilyCategoryBasic
   stars: number
   imageUrl: string
   downloads: number
@@ -23,7 +23,7 @@ export interface FamilyCategory extends FamilyCategoryBasic {
   children: FamilyCategory[]
 }
 
-export function getFamilyCatgories(): Promise<HttpResponse<FamilyCategory[]>> {
+export function getFamilyCategories(): Promise<HttpResponse<FamilyCategory[]>> {
   return request({
     url: 'family/v1/categories',
     method: RequestEnum.GET

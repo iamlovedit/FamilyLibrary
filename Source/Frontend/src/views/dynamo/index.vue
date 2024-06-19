@@ -40,5 +40,3 @@ function handleSearch(e: Event) {
 }
 
 </script>
-
-<style scoped></style>
