@@ -102,7 +102,7 @@ const orders = [
 
 const orderRef = ref<string>((orderBy as string) || 'default')
 
-async function getPacakgePages(
+async function getPackagePages(
   keyword?: string,
   pageIndex: number = 1,
   size: number = 30,
@@ -110,7 +110,7 @@ async function getPacakgePages(
 ) {
   try {
     loadingBar.start()
-    var httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
+    const httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
     if (httpResponse.succeed) {
       packages.value = httpResponse.response.data
       packageCount.value = httpResponse.response.dataCount
@@ -169,6 +169,6 @@ watch(
 )
 
 watchEffect(async () => {
-  await getPacakgePages(keywordRef.value, pageRef.value, pageSizeRef.value, orderRef.value)
+  await getPackagePages(keywordRef.value, pageRef.value, pageSizeRef.value, orderRef.value)
 })
 </script>
