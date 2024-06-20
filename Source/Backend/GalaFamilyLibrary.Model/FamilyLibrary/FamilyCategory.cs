@@ -15,7 +15,7 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         [SugarColumn(IsNullable = false, ColumnName = "category_name")]
         public string? Name { get; set; }
 
-        [SugarColumn(IsNullable = true, ColumnName = "category_parent")]
+        [SugarColumn(IsNullable = true, ColumnName = "category_parentId")]
         public long ParentId { get; set; }
 
         [SugarColumn(IsIgnore = true)]
