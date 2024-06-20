@@ -16,7 +16,5 @@ namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
         public long ParentId { get; set; }
 
         public List<FamilyCategoryDTO>? Children { get; set; }
-
-        public FamilyCategoryDTO? Parent { get; set; }
     }
 }

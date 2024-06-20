@@ -18,14 +18,10 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         [SugarColumn(IsNullable = true, ColumnName = "category_parentId")]
         public long ParentId { get; set; }
 
-        [SugarColumn(IsIgnore = true)]
-        public List<FamilyCategory>? Children { get; set; }
+        [SugarColumn(IsIgnore = true)] public List<FamilyCategory>? Children { get; set; }
 
         [Navigate(NavigateType.OneToOne, nameof(ParentId))]
         public FamilyCategory? Parent { get; set; }
-
-        [Navigate(NavigateType.OneToMany, nameof(Family.CategoryId))]
-        public List<Family>? Families { get; set; }
 
         [SugarColumn(ColumnName = "category_isDeleted")]
         public bool IsDeleted { get; set; }
