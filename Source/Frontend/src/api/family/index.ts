@@ -19,7 +19,6 @@ export interface FamilyCategoryBasic {
 
 export interface FamilyCategory extends FamilyCategoryBasic {
   parentId: string
-  parent: FamilyCategory
   children: FamilyCategory[]
 }
 
