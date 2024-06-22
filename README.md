@@ -33,6 +33,6 @@ docker compose up -d
 ## 功能特点
 
 ### 后端
-
-- 采用 Ocelot 作为网关
+- dotnet8 微服务架构
+- 采用 Envoy 作为网关
 - 数据库使用 postgresql
