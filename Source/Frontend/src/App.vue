@@ -21,7 +21,6 @@ const appStore = useAppStore()
 const theme = computed(() => {
   return appStore.theme === 'dark' ? darkTheme : lightTheme
 })
-
 function setFullHeight(): void {
   const headerHeight = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
@@ -34,7 +33,7 @@ useEventListener('resize', setFullHeight)
 </script>
 
 <style scoped>
-.n-config-provider {
+.n-config-provider  {
   height: 100vh;
   width: 100%;
 }
