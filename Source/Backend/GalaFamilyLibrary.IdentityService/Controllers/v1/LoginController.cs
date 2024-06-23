@@ -19,7 +19,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Route("identity/v{version:apiVersion}/authenticate")]
+    [Route("identity/v{version:apiVersion}/auth")]
     public class LoginController(
         PermissionRequirement permissionRequirement,
         ILogger<LoginController> logger,
