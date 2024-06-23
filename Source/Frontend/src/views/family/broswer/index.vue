@@ -1,26 +1,40 @@
 <template>
   <n-flex>
-    <div class="flex-1">
-      <n-tree  expand-on-click :data="categoriesRef" key-field="id" label-field="name">
-
-      </n-tree>
-    </div>
-
-    <n-felx>
-
-    </n-felx>
+    <n-scrollbar class="w-300px min-w-200px max-h-1200px">
+      <n-tree expand-on-click :data="categoriesRef" key-field="id" label-field="name"> </n-tree>
+    </n-scrollbar>
+    <n-flex vertical class="flex-1 gap-8">
+      <n-dynamic-tags v-model:value="tagsRef" />
+      <n-input-group>
+        <n-input :style="{ width: '50%' }" />
+        <n-button type="primary"> 搜索 </n-button>
+      </n-input-group>
+      <n-list class="flex-1" hoverable>
+        <n-list-item v-for="family in familiesRef" :key="family.id">
+          {{ family.name }}
+        </n-list-item>
+      </n-list>
+      <n-pagination v-model:page="pageRef" />
+    </n-flex>
   </n-flex>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { type FamilyCategory, getFamilyCategories } from '@/api/family'
+import { useRoute, useRouter } from 'vue-router'
+import { type FamilyCategory, type FamilyBasic, getFamilyCategories } from '@/api/family'
 import { useMessage, useLoadingBar } from 'naive-ui'
 
-
+const currentRoute = useRoute()
+const router = useRouter()
 const message = useMessage()
 const loadingBar = useLoadingBar()
 const categoriesRef = ref<FamilyCategory[]>([])
+const tagsRef = ref<string[]>(['教师', '程序员'])
+const familiesRef = ref<FamilyBasic[]>([])
+const { page, pageSize } = currentRoute.query
+const pageRef = ref<number>(Number(page || 1))
+const pageSizeRef = ref<number>(Number(pageSize) || 30)
 
 async function getCategories() {
   try {
@@ -28,7 +42,6 @@ async function getCategories() {
     const httpResponse = await getFamilyCategories()
     if (httpResponse.succeed) {
       categoriesRef.value = httpResponse.response
-      console.log(categoriesRef.value)
     } else {
       throw new Error(httpResponse.message)
     }
@@ -42,5 +55,4 @@ async function getCategories() {
 onMounted(async () => {
   await getCategories()
 })
-
 </script>
