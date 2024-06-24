@@ -30,8 +30,8 @@ public class FamilyController(
     : GalaControllerBase
 {
     private readonly IMinioClient _minioClient = minioClient.WithRegion(_region);
-    private static readonly string _bucketName = "family";
-    private static readonly string _region = "ShangHai";
+    private static readonly string _bucketName = "storage";
+    private static readonly string _region = "Shanghai";
     private static readonly int _expiry = 60;
 
     [HttpGet]
