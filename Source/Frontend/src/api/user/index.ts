@@ -6,21 +6,21 @@ import type { HttpResponse, Page } from '@/utils/request/helper'
 
 export interface TokenInfo {
   token: string
-  expiresIn: number,
+  expiresIn: number
   tokenType: string
 }
 
 export interface RoleData {
-  id: string,
-  name: string,
+  id: string
+  name: string
   description: string
 }
 
 export interface UserCreationDTO {
-  name: string,
-  username: string,
-  password: string,
-  email: string,
+  name: string
+  username: string
+  password: string
+  email: string
   roleId: string
 }
 
@@ -34,21 +34,26 @@ export function login(user: LoginDTO): Promise<HttpResponse<TokenInfo>> {
 
 export function getCurrentUser(): Promise<HttpResponse<User>> {
   return request<User>({
-    url: '/identity/v1/user/me',
+    url: '/user/v1/me',
     method: RequestEnum.GET
   })
 }
 
-export function queryUsers(keyword?: string, pageIndex: number = 1, pageSize: number = 10): Promise<HttpResponse<Page<User>>> {
-  const params = keyword ? {
-    keyword,
-    pageIndex,
-    pageSize
-  }
+export function queryUsers(
+  keyword?: string,
+  pageIndex: number = 1,
+  pageSize: number = 10
+): Promise<HttpResponse<Page<User>>> {
+  const params = keyword
+    ? {
+        keyword,
+        pageIndex,
+        pageSize
+      }
     : {
-      pageIndex,
-      pageSize
-    }
+        pageIndex,
+        pageSize
+      }
   return request<Page<User>>({
     url: '/identity/v1/user/query',
     method: RequestEnum.GET,
