@@ -34,8 +34,7 @@ public class FamilyController(
     private static readonly string _region = "Shanghai";
     private static readonly int _expiry = 60;
 
-    [HttpGet]
-    [Route("{id:long}/{familyVersion:int}")]
+    [HttpGet("{id:long}/{familyVersion:int}")]
     public async Task<IActionResult> DownloadFamilyAsync(long id, ushort familyVersion)
     {
         var family = await familyService.GetByIdAsync(id);
@@ -50,8 +49,7 @@ public class FamilyController(
         return Redirect(fileUrl);
     }
 
-    [HttpPost]
-    [Route("upload")]
+    [HttpPost("upload")]
     public async Task<MessageData<string>> GetUploadUrlAsync(FamilyCreationDTO familyCreationDTO)
     {
         var lockKey = $"{familyCreationDTO.Name}{familyCreationDTO.UploaderId}";
@@ -66,9 +64,8 @@ public class FamilyController(
         var url = await _minioClient.PresignedPutObjectAsync(args);
         return Success(url);
     }
-
-    [HttpGet]
-    [Route("details/{id:long}")]
+    
+    [HttpGet("details/{id:long}")]
     public async Task<MessageData<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
     {
         var redisKey = $"familyDetails/{id}";
@@ -90,8 +87,7 @@ public class FamilyController(
         return Success(familyDto);
     }
 
-    [HttpGet]
-    [Route("categories")]
+    [HttpGet("categories")]
     [AllowAnonymous]
     public async Task<MessageData<List<FamilyCategoryDTO>>> GetCategoriesAsync([FromQuery] int? parentId = null)
     {
