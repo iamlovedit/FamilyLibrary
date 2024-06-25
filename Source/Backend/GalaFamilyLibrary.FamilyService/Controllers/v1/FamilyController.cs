@@ -30,11 +30,19 @@ public class FamilyController(
     : GalaControllerBase
 {
     private readonly IMinioClient _minioClient = minioClient.WithRegion(_region);
-    private static readonly string _bucketName = "storage";
-    private static readonly string _region = "Shanghai";
-    private static readonly int _expiry = 60;
+    private const string _bucketName = "storage";
+    private const string _region = "Shanghai";
+    private const int _expiry = 60;
 
-    [HttpGet("{id:long}/{familyVersion:int}")]
+    private readonly Dictionary<string, string> _dirMap = new()
+    {
+        { "rfa", "family" },
+        { "png", "image" },
+        { "jpg", "image" },
+        { "glb", "glb" }
+    };
+
+    [HttpGet("file/{id:long}/{familyVersion:int}")]
     public async Task<IActionResult> DownloadFamilyAsync(long id, ushort familyVersion)
     {
         var family = await familyService.GetByIdAsync(id);
@@ -49,7 +57,7 @@ public class FamilyController(
         return Redirect(fileUrl);
     }
 
-    [HttpPost("upload")]
+    [HttpPost]
     public async Task<MessageData<string>> GetUploadUrlAsync(FamilyCreationDTO familyCreationDTO)
     {
         var lockKey = $"{familyCreationDTO.Name}{familyCreationDTO.UploaderId}";
@@ -58,13 +66,38 @@ public class FamilyController(
             return Failed<string>("invalid request");
         }
 
+        await redis.Set(lockKey, familyCreationDTO, TimeSpan.FromSeconds(5));
         var family = mapper.Map<Family>(familyCreationDTO);
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName)
             .WithObject(family.GetFilePath(familyCreationDTO.Version)).WithExpiry(_expiry);
         var url = await _minioClient.PresignedPutObjectAsync(args);
         return Success(url);
     }
-    
+
+    [HttpPost("file")]
+    public async Task<MessageData<string>> UploadFileAsync([FromForm] string fileName)
+    {
+        var lockKey = $"family/files/{fileName}";
+        if (await redis.Exist(lockKey))
+        {
+            return Failed<string>("invalid request");
+        }
+
+        await redis.Set(lockKey, fileName, TimeSpan.FromSeconds(5));
+        var suffix = Path.GetExtension(fileName)?.ToLower();
+        if (!_dirMap.TryGetValue(suffix, out var dir))
+        {
+            return Failed<string>("invalid file format");
+        }
+
+        var args = new PresignedPutObjectArgs().WithBucket(_bucketName).WithObject($"{dir}/{fileName}")
+            .WithExpiry(_expiry * 5);
+        var url = await _minioClient.PresignedPutObjectAsync(args);
+        return Success(url);
+
+    }
+
+
     [HttpGet("details/{id:long}")]
     public async Task<MessageData<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
     {
@@ -104,7 +137,7 @@ public class FamilyController(
         return Success(categoriesDto);
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     [AllowAnonymous]
     public async Task<MessageData<PageData<FamilyBasicDTO>>> GetFamiliesPageAsync(string? keyword = null,
         long? categoryId = null, int pageIndex = 1, int pageSize = 30, string? order = "name")
