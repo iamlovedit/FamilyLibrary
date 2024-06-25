@@ -89,27 +89,28 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             }
             token = tokenBuilder.DecryptCipherToken(token);
             var uid = tokenBuilder.ParseUIdFromToken(token);
-            if (tokenBuilder.VerifyToken(token) && uid > 0)
+            if (!tokenBuilder.VerifyToken(token) || uid <= 0)
             {
-                var user = await userService.GetByIdAsync(uid);
-                if (user is null)
-                {
-                    return Failed<TokenInfo>("refresh failed");
-                }
-                var roles = await userService.GetUserRolesAsync(uid);
-                var claims = new List<Claim>()
-                    {
-                        new(ClaimTypes.Name, user.Username!),
-                        new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
-                        new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.InvariantCulture),ClaimValueTypes.Integer64),
-                        new(ClaimTypes.Expiration,
-                            DateTime.Now.AddSeconds(tokenBuilder.GetTokenExpirationSeconds()).ToString())
-                    };
-                claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
-                var tokenInfo = tokenBuilder.GenerateTokenInfo(claims);
-                return Success(tokenInfo);
+                return Failed<TokenInfo>("refresh failed");
             }
-            return Failed<TokenInfo>("refresh failed");
+
+            var user = await userService.GetByIdAsync(uid);
+            if (user is null)
+            {
+                return Failed<TokenInfo>("refresh failed");
+            }
+            var roles = await userService.GetUserRolesAsync(uid);
+            var claims = new List<Claim>()
+            {
+                new(ClaimTypes.Name, user.Username!),
+                new(JwtRegisteredClaimNames.Jti, user.Id.ObjToString()),
+                new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(DateTime.Now).ToString(CultureInfo.InvariantCulture),ClaimValueTypes.Integer64),
+                new(ClaimTypes.Expiration,
+                    DateTime.Now.AddSeconds(tokenBuilder.GetTokenExpirationSeconds()).ToString())
+            };
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
+            var tokenInfo = tokenBuilder.GenerateTokenInfo(claims);
+            return Success(tokenInfo);
         }
     }
 }
