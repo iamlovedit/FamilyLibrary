@@ -17,6 +17,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/register/index.vue'),
+      meta: {
+        title: '注册',
+        requiresAuth: false
+      }
+    },
+    {
       path: '/home',
       redirect: '/'
     },
