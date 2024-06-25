@@ -12,6 +12,7 @@
     <None Include=".env" />
     <None Include="deploy.sh" />
     <None Include="deploy_Windows.bat" />
+    <None Include="docker-compose.linux.yml" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="Envoy\envoy.yaml" />
