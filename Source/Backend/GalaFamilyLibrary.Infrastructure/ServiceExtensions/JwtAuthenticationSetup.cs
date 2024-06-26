@@ -10,50 +10,51 @@ using Microsoft.Extensions.Primitives;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
- public static class JwtAuthenticationSetup
+public static class JwtAuthenticationSetup
+{
+    public static void AddJwtAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddJwtAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
+        ArgumentNullException.ThrowIfNull(services);
+
+        ArgumentNullException.ThrowIfNull(configuration);
+
+        var section = configuration.GetSection("Audience");
+        var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]!);
+        var key = new SymmetricSecurityKey(buffer);
+        var issuer = section["Issuer"];
+        var audience = section["Audience"];
+        var tokenValidationParameters = new TokenValidationParameters()
         {
-            ArgumentNullException.ThrowIfNull(services);
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = key,
+            ValidIssuer = issuer,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = audience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(15),
+            RequireExpirationTime = true,
+            RoleClaimType = ClaimTypes.Role
+        };
 
-            ArgumentNullException.ThrowIfNull(configuration);
-
-            var section = configuration.GetSection("Audience");
-            var buffer = Encoding.UTF8.GetBytes(configuration["AUDIENCE_KEY"]!);
-            var key = new SymmetricSecurityKey(buffer);
-            var issuer = section["Issuer"];
-            var audience = section["Audience"];
-            var tokenValidationParameters = new TokenValidationParameters()
+        services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
+            options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
+        }).AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
+            options => { }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = tokenValidationParameters;
+            options.Events = new JwtBearerEvents()
             {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = key,
-                ValidIssuer = issuer,
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidAudience = audience,
-                ValidateLifetime = true,
-                ClockSkew = TimeSpan.FromSeconds(15),
-                RequireExpirationTime = true,
-                RoleClaimType = ClaimTypes.Role
+                OnChallenge = challengeContext =>
+                {
+                    challengeContext.Response.Headers.Append(
+                        new KeyValuePair<string, StringValues>("token-error", challengeContext.ErrorDescription));
+                    return Task.CompletedTask;
+                },
             };
-
-            services.AddAuthentication(options =>
-             {
-                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                 options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
-                 options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
-             }).AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
-                 options => { }).AddJwtBearer(options =>
-                 {
-                     options.TokenValidationParameters = tokenValidationParameters;
-                     options.Events = new JwtBearerEvents()
-                     {
-                         OnChallenge = challengeContext =>
-                         {
-                             challengeContext.Response.Headers.Append(new KeyValuePair<string, StringValues>("token-error", challengeContext.ErrorDescription));
-                             return Task.CompletedTask;
-                         },
-                     };
-                 });
-        }
+        });
     }
+}
