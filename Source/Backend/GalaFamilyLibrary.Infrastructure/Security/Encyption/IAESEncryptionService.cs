@@ -48,12 +48,11 @@ namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
 
         private Aes CreateAes(string aesKey)
         {
-            using var md5 = MD5.Create();
             var aes = Aes.Create();
             aes.Mode = CipherMode.ECB;
             aes.Padding = PaddingMode.PKCS7;
             var key = aesKey ?? configuration["AES_KEY"];
-            aes.Key = md5.ComputeHash(Encoding.UTF8.GetBytes(key!));
+            aes.Key = MD5.HashData(Encoding.UTF8.GetBytes(key!));
             return aes;
         }
     }

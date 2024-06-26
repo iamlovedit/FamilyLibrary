@@ -21,28 +21,27 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             var configuration = builder.Configuration;
             var services = builder.Services;
 
-            services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
-            services.AddSingleton<GalaTokenHandler>();
             services.AddSingleton<JwtSecurityTokenHandler>();
+            services.AddSingleton<GalaTokenHandler>();
+            services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerOptionsPostConfigureOptions>();
             services.AddSingleton<ITokenBuilder, TokenBuilder>();
             services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
             
-            services.AddDataProtectionSetup();
+            //services.AddDataProtectionSetup();
 
             services.AddAutoMapperSetup();
 
             services.AddDatabaseSetup();
-            
 
             services.AddRedisCacheSetup(configuration);
 
             builder.AddSerilogSetup();
+            
+            services.AddJwtAuthenticationSetup(configuration);
 
             services.AddAuthorizationSetup(configuration);
-
-            services.AddJwtAuthenticationSetup(configuration);
 
             //sql sugar
             services.AddSqlsugarSetup(configuration, builder.Environment);
