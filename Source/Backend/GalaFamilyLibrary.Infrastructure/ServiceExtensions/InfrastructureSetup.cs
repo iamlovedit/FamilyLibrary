@@ -22,7 +22,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             var services = builder.Services;
 
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
-            services.AddSingleton<GalaTokenValidator>();
+            services.AddSingleton<GalaTokenHandler>();
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerOptionsPostConfigureOptions>();
             services.AddSingleton<ITokenBuilder, TokenBuilder>();

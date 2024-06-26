@@ -8,14 +8,14 @@ using SqlSugar.Extensions;
 namespace GalaFamilyLibrary.Infrastructure.Security
 {
     public class JwtBearerOptionsPostConfigureOptions(
-        GalaTokenValidator galaTokenValidator,
+        GalaTokenHandler galaTokenHandler,
         JwtSecurityTokenHandler jwtSecurityTokenHandler)
         : IPostConfigureOptions<JwtBearerOptions>
     {
         public void PostConfigure(string? name, JwtBearerOptions options)
         {
-            options.SecurityTokenValidators.Clear();
-            options.SecurityTokenValidators.Add(galaTokenValidator);
+            options.TokenHandlers.Clear();
+            options.TokenHandlers.Add(galaTokenHandler);
             options.Events.OnAuthenticationFailed = failedContext =>
             {
                 var token = failedContext.Request.Headers["Authorization"].ObjToString().Replace("Bearer ", "");
