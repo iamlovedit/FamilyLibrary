@@ -9,7 +9,6 @@ namespace GalaFamilyLibrary.Infrastructure.Common;
 
 [ApiController]
 [Authorize(Policy = PermissionConstants.POLICYNAME)]
-[Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 [ProducesResponseType(StatusCodes.Status200OK)]
 public class GalaControllerBase : ControllerBase
