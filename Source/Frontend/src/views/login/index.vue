@@ -100,15 +100,15 @@ function handleLogin(e: Event): void {
             return
           }
           await router.push({
-            name: 'dashboard'
+            name: 'home'
           })
         } else {
           loadingBar.error()
-          message.error(httpResponse?.message || '登录失败')
+          throw new Error(httpResponse?.message || '登录失败')
         }
-      } catch (error) {
+      } catch (error: any) {
         loadingBar.error()
-        message.info('登录失败')
+        message.info(error.message)
       } finally {
         loading.value = false
         loadingBar.finish()
