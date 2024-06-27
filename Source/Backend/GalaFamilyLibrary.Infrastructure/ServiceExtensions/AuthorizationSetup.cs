@@ -16,23 +16,20 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             ArgumentNullException.ThrowIfNull(configuration);
 
-            var key = configuration["AUDIENCE_KEY"];
-            var keyByteArray = Encoding.ASCII.GetBytes(key);
+            var audienceSection = configuration.GetSection("Audience");
+            var keyByteArray = Encoding.ASCII.GetBytes(configuration["AUDIENCE_KEY"]!);
             var signingKey = new SymmetricSecurityKey(keyByteArray);
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
-            var issuer = configuration["AUDIENCE_ISSUER"];
-            var audience = configuration["AUDIENCE_AUDIENCE"];
-            var expiration = configuration["AUDIENCE_EXPIRATION"];
+            var issuer = audienceSection["Issuer"];
+            var audience = audienceSection["Audience"];
+            var expiration = audienceSection["Expiration"];
 
             services.AddSingleton(new PermissionRequirement(ClaimTypes.Role, issuer, audience,
                 TimeSpan.FromSeconds(expiration.ObjToInt()), signingCredentials));
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(PermissionConstants.POLICYNAME,
-                    policy => policy.RequireRole(PermissionConstants.ROLE_SUPERADMINISTRATOR,
+            services.AddAuthorizationBuilder()
+                .AddPolicy(PermissionConstants.POLICYNAME, policy => policy.RequireRole(PermissionConstants.ROLE_SUPERADMINISTRATOR,
                         PermissionConstants.ROLE_ADMINISTRATOR, PermissionConstants.ROLE_CONSUMER).Build());
-            });
         }
     }
 }

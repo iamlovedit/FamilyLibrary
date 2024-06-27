@@ -1,7 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
+﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace GalaFamilyLibrary.Infrastructure.Security
 {
