@@ -1,18 +1,15 @@
-﻿using System.Globalization;
+﻿using Asp.Versioning;
+using GalaFamilyLibrary.DataTransferObject.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
+using GalaFamilyLibrary.Service.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using SqlSugar.Extensions;
-using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 using System.Security.Claims;
-using Asp.Versioning;
-using GalaFamilyLibrary.DataTransferObject.Identity;
-using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Service.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v1
