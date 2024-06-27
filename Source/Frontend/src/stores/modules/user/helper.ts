@@ -2,11 +2,11 @@ import type { TokenInfo } from '@/api/user'
 import { ss } from '@/utils/storage'
 
 export interface User {
-  id: string,
-  username: string,
-  name: string,
+  id: string
+  username: string
+  nickname: string
   lastLoginDate: string
-  createdDate: string,
+  createdDate: string
   email: string
 }
 

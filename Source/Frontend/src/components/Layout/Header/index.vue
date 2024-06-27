@@ -11,7 +11,7 @@
         />
       </div>
       <n-flex>
-        <n-dropdown v-if="userStore.user?.name">
+        <n-dropdown v-if="userStore.user?.username" :options="dropdownOptions">
           <n-button> 个人资料 </n-button>
         </n-dropdown>
         <n-button-group v-else>
@@ -27,10 +27,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { type Component, computed, h } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import type { MenuOption } from 'naive-ui'
+import type { MenuOption, DropdownOption } from 'naive-ui'
+import { NIcon } from 'naive-ui'
 import { DarkModeRound, LightModeRound } from '@vicons/material'
+import {
+  PersonCircleOutline as UserIcon,
+  Pencil as EditIcon,
+  LogOutOutline as LogoutIcon
+} from '@vicons/ionicons5'
 
 import { useUserStore } from '@/stores/modules/user'
 import { useAppStore } from '@/stores/modules/app'
@@ -44,6 +50,32 @@ const themeIcon = computed(() => {
     return LightModeRound
   }
 })
+
+const renderIcon = (icon: Component) => {
+  return () => {
+    return h(NIcon, null, {
+      default: () => h(icon)
+    })
+  }
+}
+
+const dropdownOptions: DropdownOption[] = [
+  {
+    label: '用户资料',
+    key: 'profile',
+    icon: renderIcon(UserIcon)
+  },
+  {
+    label: '编辑用户资料',
+    key: 'editProfile',
+    icon: renderIcon(EditIcon)
+  },
+  {
+    label: '退出登录',
+    key: 'logout',
+    icon: renderIcon(LogoutIcon)
+  }
+]
 
 const userStore = useUserStore()
 
