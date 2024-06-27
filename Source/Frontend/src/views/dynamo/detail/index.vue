@@ -20,8 +20,13 @@
       <n-list hoverable>
         <n-list-item v-for="version in versionsRef" :key="version.version">
           <template #prefix>
-            <n-button text tag="a" :href="`${url}package/v1/${currentRoute.params.id}/${version.version}`"
-              target="_blank" type="primary">
+            <n-button
+              text
+              tag="a"
+              :href="`${url}package/v1/${currentRoute.params.id}/${version.version}`"
+              target="_blank"
+              type="primary"
+            >
               {{ version.version }}
             </n-button>
           </template>
@@ -29,8 +34,12 @@
         </n-list-item>
       </n-list>
     </div>
-    <n-pagination v-model:page="pageRef" :item-count="versionCountRef" :page-size="10"
-      :on-update:page="handlePageChange" />
+    <n-pagination
+      v-model:page="pageRef"
+      :item-count="versionCountRef"
+      :page-size="10"
+      :on-update:page="handlePageChange"
+    />
   </n-flex>
 </template>
 
@@ -53,7 +62,7 @@ const loadingBar = useLoadingBar()
 const versionsRef = ref<PackageVersionDTO[]>([])
 const packageRef = ref<PackageDTO>()
 const versionCountRef = ref<number>()
-const pageRef = ref<number>(Number(currentRoute.query.page));
+const pageRef = ref<number>(Number(currentRoute.query.page))
 function handleBack() {
   router.back()
 }
@@ -71,7 +80,6 @@ async function handlePageChange(newPage: number) {
     }
   })
 }
-
 
 onMounted(async () => {
   try {
@@ -96,21 +104,27 @@ onMounted(async () => {
   }
 })
 
-watch(() => pageRef.value, async () => {
-  try {
-    loadingBar.start()
-    const versionResponse = await getPackageVersionPageAsync(packageRef.value!.id, pageRef.value, 10)
-    if (versionResponse.succeed) {
-      console.log(versionResponse)
-      versionsRef.value = versionResponse.response.data
-    } else {
-      throw new Error(versionResponse.message)
+watch(
+  () => pageRef.value,
+  async () => {
+    try {
+      loadingBar.start()
+      const versionResponse = await getPackageVersionPageAsync(
+        packageRef.value!.id,
+        pageRef.value,
+        10
+      )
+      if (versionResponse.succeed) {
+        console.log(versionResponse)
+        versionsRef.value = versionResponse.response.data
+      } else {
+        throw new Error(versionResponse.message)
+      }
+    } catch (error: any) {
+      message.error(error.message)
+    } finally {
+      loadingBar.finish()
     }
-  } catch (error: any) {
-    message.error(error.message)
   }
-  finally {
-    loadingBar.finish()
-  }
-})
+)
 </script>
