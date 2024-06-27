@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/launchsettings.json",
   "profiles": {
     "GalaFamilyLibrary.IdentityService": {
       "commandName": "Project",
@@ -13,10 +14,7 @@
         "DATABASE_PASSWORD": "pass@word",
         "REDIS_HOST": "localhost",
         "REDIS_PASSWORD": "pass@word",
-        "AUDIENCE_ISSUER": "Young",
-        "AUDIENCE_AUDIENCE": "GalaServer",
         "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
-        "AUDIENCE_EXPIRATION": "3600",
         "AES_KEY": "zxcvbnmasdfghjkl",
         "SEQ_URL": "http://localhost:5341",
         "SEQ_APIKEY": "tZSCDVnAbyYZB1s4twSl",
@@ -24,13 +22,6 @@
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5003;https://localhost:6003"
-    },
-    "GalaFamilyLibrary.IdentityService.Docker": {
-      "commandName": "Docker",
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "publishAllPorts": true,
-      "useSSL": true
     }
-  },
-  "$schema": "https://json.schemastore.org/launchsettings.json"
+  }
 }
