@@ -22,7 +22,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { type FamilyCategory, type FamilyBasic, getFamilyCategories } from '@/api/family'
+import {
+  type FamilyCategory,
+  type FamilyBasic,
+  getFamilyCategories,
+  getFamiliesPagePromise
+} from '@/api/family'
 import { useMessage, useLoadingBar } from 'naive-ui'
 
 const currentRoute = useRoute()
@@ -52,7 +57,29 @@ async function getCategories() {
   }
 }
 
+async function getFamiliesPage(
+  keyword?: string,
+  categoryId?: string,
+  pageIndex: number = 1,
+  pageSize: number = 30
+) {
+  try {
+    loadingBar.start()
+    const httpResponse = await getFamiliesPagePromise(keyword, categoryId, pageIndex, pageSize)
+    if (httpResponse.succeed) {
+      familiesRef.value = httpResponse.response.data
+    } else {
+      throw new Error(httpResponse.message)
+    }
+  } catch (error: any) {
+    message.error(error.message)
+  } finally {
+    loadingBar.finish()
+  }
+}
+
 onMounted(async () => {
   await getCategories()
+  await getFamiliesPage()
 })
 </script>
