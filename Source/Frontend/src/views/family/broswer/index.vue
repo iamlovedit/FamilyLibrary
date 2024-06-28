@@ -9,11 +9,16 @@
         <n-input :style="{ width: '50%' }" />
         <n-button type="primary"> 搜索 </n-button>
       </n-input-group>
-      <n-list class="flex-1" hoverable>
-        <n-list-item v-for="family in familiesRef" :key="family.id">
-          {{ family.name }}
-        </n-list-item>
-      </n-list>
+      <div class="flex-1 flex flex-wrap gap-4 w-full m-auto" hoverable>
+        <family-card
+          v-for="family in familiesRef"
+          :key="family.id"
+          :name="family.name"
+          cover="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+          class="family-container"
+        >
+        </family-card>
+      </div>
       <n-pagination v-model:page="pageRef" />
     </n-flex>
   </n-flex>
@@ -29,6 +34,7 @@ import {
   getFamiliesPagePromise
 } from '@/api/family'
 import { useMessage, useLoadingBar } from 'naive-ui'
+import FamilyCard from '@/components/FamilyCard/index.vue'
 
 const currentRoute = useRoute()
 const router = useRouter()
@@ -40,7 +46,6 @@ const familiesRef = ref<FamilyBasic[]>([])
 const { page, pageSize } = currentRoute.query
 const pageRef = ref<number>(Number(page || 1))
 const pageSizeRef = ref<number>(Number(pageSize) || 30)
-
 async function getCategories() {
   try {
     loadingBar.start()
