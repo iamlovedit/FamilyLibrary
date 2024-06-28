@@ -11,7 +11,11 @@
         />
       </div>
       <n-flex>
-        <n-dropdown v-if="userStore.user?.username" :options="dropdownOptions">
+        <n-dropdown
+          v-if="userStore.user?.username"
+          :options="dropdownOptions"
+          @select="handleSelect"
+        >
           <n-button> 个人资料 </n-button>
         </n-dropdown>
         <n-button-group v-else>
@@ -27,21 +31,22 @@
 </template>
 
 <script setup lang="ts">
-import { type Component, computed, h } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { MenuOption, DropdownOption } from 'naive-ui'
 import { NIcon } from 'naive-ui'
 import { DarkModeRound, LightModeRound } from '@vicons/material'
-import {
-  PersonCircleOutline as UserIcon,
-  Pencil as EditIcon,
-  LogOutOutline as LogoutIcon
-} from '@vicons/ionicons5'
+import { PersonCircleOutline as UserIcon, LogOutOutline as LogoutIcon } from '@vicons/ionicons5'
 
+import { renderIcon } from '@/utils'
 import { useUserStore } from '@/stores/modules/user'
 import { useAppStore } from '@/stores/modules/app'
 
 const appStore = useAppStore()
+const userStore = useUserStore()
+const currentRoute = useRoute()
+const router = useRouter()
+const activeKey = computed(() => currentRoute.matched[0]?.name)
 
 const themeIcon = computed(() => {
   if (appStore.theme == 'dark') {
@@ -51,14 +56,6 @@ const themeIcon = computed(() => {
   }
 })
 
-const renderIcon = (icon: Component) => {
-  return () => {
-    return h(NIcon, null, {
-      default: () => h(icon)
-    })
-  }
-}
-
 const dropdownOptions: DropdownOption[] = [
   {
     label: '用户资料',
@@ -66,18 +63,11 @@ const dropdownOptions: DropdownOption[] = [
     icon: renderIcon(UserIcon)
   },
   {
-    label: '编辑用户资料',
-    key: 'editProfile',
-    icon: renderIcon(EditIcon)
-  },
-  {
     label: '退出登录',
     key: 'logout',
     icon: renderIcon(LogoutIcon)
   }
 ]
-
-const userStore = useUserStore()
 
 const menuOptions: MenuOption[] = [
   {
@@ -93,9 +83,7 @@ const menuOptions: MenuOption[] = [
     key: 'family'
   }
 ]
-const currentRoute = useRoute()
-const router = useRouter()
-const activeKey = computed(() => currentRoute.matched[0]?.name)
+
 function handleClickItem(key: string) {
   router.push({
     name: key
@@ -112,6 +100,19 @@ function handleLoginClick() {
   router.push({
     name: 'login'
   })
+}
+
+async function handleSelect(key: string) {
+  if (key === 'logout') {
+    await router.push({
+      name: 'login'
+    })
+    userStore.clearUser()
+  } else {
+    router.push({
+      path: '/profile'
+    })
+  }
 }
 </script>
 

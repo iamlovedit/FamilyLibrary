@@ -26,6 +26,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('@/views/profile/index.vue'),
+      meta: {
+        title: '个人中心',
+        requiresAuth: true
+      }
+    },
+    {
       path: '/home',
       redirect: '/'
     },
