@@ -25,8 +25,8 @@
       <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" /><PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
       <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
-      <PackageReference Include="SqlSugarCore" Version="5.1.4.158" />
-      <PackageReference Include="StackExchange.Redis" Version="2.7.33" />
+      <PackageReference Include="SqlSugarCore" Version="5.1.4.160" />
+      <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
     </ItemGroup>
