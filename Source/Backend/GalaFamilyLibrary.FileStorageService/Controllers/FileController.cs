@@ -29,8 +29,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
     {
         private readonly string _fileFolder = Path.Combine(webHostEnvironment.ContentRootPath, "files");
 
-        [HttpGet]
-        [Route("{*path:file}")]
+        [HttpGet("{*path:file}")]
         public async Task<IActionResult> Download(string path, string token)
         {
             return await Task.Run<IActionResult>(() =>
@@ -86,8 +85,7 @@ namespace GalaFamilyLibrary.FileStorageService.Controllers
             });
         }
 
-        [HttpPost]
-        [Route("{*path:file}")]
+        [HttpPost("{*path:file}")]
         public async Task<IActionResult> Upload(string path, string token, IFormFile file,
             [FromForm] CallbackInfo callback)
         {

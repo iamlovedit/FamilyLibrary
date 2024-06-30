@@ -28,8 +28,7 @@ public class PackageController(
 {
     private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
 
-    [HttpGet]
-    [Route("versions/{id}")]
+    [HttpGet("versions/{id}")]
     public async Task<MessageData<PageData<PackageVersionDTO>>> GetVersionAsync([FromRoute] string id,
         [FromServices] IVersionService versionService,
         [FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 20)
@@ -70,8 +69,7 @@ public class PackageController(
         return Success(mapper.Map<PackageDTO>(package));
     }
 
-    [HttpGet]
-    [Route("{id}/{packageVersion}")]
+    [HttpGet("{id}/{packageVersion}")]
     public Task<IActionResult> Download(string id, string packageVersion)
     {
         return Task.Run<IActionResult>(() =>
@@ -81,8 +79,7 @@ public class PackageController(
         });
     }
 
-    [HttpGet]
-    [Route("packages")]
+    [HttpGet("packages")]
     [AllowAnonymous]
     public async Task<MessageData<PageData<PackageDTO>>> GetPackagesByPage(string? keyword = null, int pageIndex = 1,
         int pageSize = 30, string? orderBy = null)
