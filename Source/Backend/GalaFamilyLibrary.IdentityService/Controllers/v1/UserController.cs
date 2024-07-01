@@ -2,14 +2,12 @@
 using System.Security.Claims;
 using Asp.Versioning;
 using AutoMapper;
-using FluentValidation;
-using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
 using GalaFamilyLibrary.DataTransferObject.Identity;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
 using GalaFamilyLibrary.Model.Identity;
-using GalaFamilyLibrary.Repository;
+using GalaFamilyLibrary.Repository.UnitOfWorks;
 using GalaFamilyLibrary.Service.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
