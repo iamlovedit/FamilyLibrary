@@ -14,8 +14,7 @@ const packageRoutes: RouteRecordRaw[] = [
         name: 'package-broswer',
         query: {
           page: 1,
-          pageSize: 30,
-          orderBy: 'default'
+          pageSize: 30
         }
       }
     },
