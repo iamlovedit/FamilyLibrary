@@ -57,8 +57,10 @@
       v-model:page="pageRef"
       :on-update:page="handlePageChange"
       :page-slot="8"
+      :page-sizes="[10, 20, 30, 40]"
       v-model:page-size="pageSizeRef"
       show-quick-jumper
+      show-size-picker
     />
   </div>
 </template>
