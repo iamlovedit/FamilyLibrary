@@ -1,7 +1,12 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
     <n-radio-group v-model:value="orderRef" :on-update:value="handleUpdateValue" :loading="loading">
-      <n-radio-button v-for="order in orders" :key="order.value" :value="order.value" :label="order.label" />
+      <n-radio-button
+        v-for="order in orders"
+        :key="order.value"
+        :value="order.value"
+        :label="order.label"
+      />
     </n-radio-group>
     <div class="flex-1">
       <n-scrollbar style="max-height: 800px" trigger="none">
@@ -47,8 +52,14 @@
         </n-list>
       </n-scrollbar>
     </div>
-    <n-pagination :item-count="packageCount" v-model:page="pageRef" :on-update:page="handlePageChange" :page-slot="8"
-      v-model:page-size="pageSizeRef" show-quick-jumper />
+    <n-pagination
+      :item-count="packageCount"
+      v-model:page="pageRef"
+      :on-update:page="handlePageChange"
+      :page-slot="8"
+      v-model:page-size="pageSizeRef"
+      show-quick-jumper
+    />
   </div>
 </template>
 
@@ -95,8 +106,12 @@ const orders = [
     label: '投票'
   },
   {
-    value: 'created',
+    value: 'createdDate',
     label: '发布时间'
+  },
+  {
+    value: 'updatedDate',
+    label: '更新时间'
   }
 ]
 
@@ -110,7 +125,7 @@ async function getPackagePages(
 ) {
   try {
     loadingBar.start()
-    const httpResponse = await getPackagePagesAsync(keyword, pageIndex, size)
+    const httpResponse = await getPackagePagesAsync(keyword, pageIndex, size, orderBy)
     if (httpResponse.succeed) {
       packages.value = httpResponse.response.data
       packageCount.value = httpResponse.response.dataCount

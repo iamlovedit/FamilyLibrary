@@ -27,7 +27,7 @@ export function getPackagePagesAsync(
     ...(keyword && { keyword }),
     pageIndex,
     pageSize,
-    ...(orderBy && { orderBy })
+    ...(orderBy !== 'default' && { orderBy })
   }
   return request<Page<PackageDTO>>({
     url: 'package/v1/packages',
@@ -36,7 +36,11 @@ export function getPackagePagesAsync(
   })
 }
 
-export function getPackageVersionPageAsync(id: string, pageIndex: number, pageSize: number): Promise<HttpResponse<Page<PackageVersionDTO>>> {
+export function getPackageVersionPageAsync(
+  id: string,
+  pageIndex: number,
+  pageSize: number
+): Promise<HttpResponse<Page<PackageVersionDTO>>> {
   const params = {
     pageIndex,
     pageSize
