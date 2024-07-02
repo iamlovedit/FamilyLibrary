@@ -1,6 +1,6 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
-    <n-radio-group v-model:value="orderRef" :on-update:value="handleUpdateValue" :loading="loading">
+    <n-radio-group v-model:value="orderRef" @update:value="handleUpdateValue" :loading="loading">
       <n-radio-button
         v-for="order in orders"
         :key="order.value"
