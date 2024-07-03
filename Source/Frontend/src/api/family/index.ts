@@ -35,13 +35,15 @@ export function getFamiliesPagePromise(
   keyword?: string,
   categoryId?: string,
   pageIndex: number = 1,
-  pageSize: number = 30
+  pageSize: number = 30,
+  orderBy?: string
 ): Promise<HttpResponse<Page<FamilyBasic>>> {
   const params = {
     ...(keyword && { keyword }),
     ...(categoryId && { categoryId }),
     pageIndex,
-    pageSize
+    pageSize,
+    ...(orderBy !== 'default' && { orderBy })
   }
   return request({
     url: 'family/v1/all',
