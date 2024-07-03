@@ -1,6 +1,6 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
-    <n-radio-group v-model:value="orderRef" @update:value="handleUpdateValue" :loading="loading">
+    <n-radio-group v-model:value="orderRef" @update:value="handleOrderByChanged" :loading="loading">
       <n-radio-button
         v-for="order in orders"
         :key="order.value"
@@ -61,6 +61,7 @@
       v-model:page-size="pageSizeRef"
       show-quick-jumper
       show-size-picker
+      @update:page-size="handleSizeChange"
     />
   </div>
 </template>
@@ -140,7 +141,7 @@ async function getPackagePages(
     loadingBar.finish()
   }
 }
-async function handleUpdateValue(value: string) {
+async function handleOrderByChanged(value: string) {
   await router.push({
     name: 'package-broswer',
     query: {
@@ -171,6 +172,18 @@ async function handleDetailClick(packageObj: PackageDTO) {
     },
     query: {
       page: 1
+    }
+  })
+}
+
+async function handleSizeChange(pageSize: number) {
+  await router.push({
+    name: 'package-broswer',
+    query: {
+      keyword: currentRoute.query.keyword,
+      page: currentRoute.query.page,
+      pageSize: pageSize,
+      orderBy: currentRoute.query.orderBy
     }
   })
 }
