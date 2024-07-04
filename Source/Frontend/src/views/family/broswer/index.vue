@@ -2,11 +2,10 @@
   <n-flex class="flex-1">
     <n-scrollbar class="w-300px min-w-200px max-h-1200px">
       <n-tree
-        expand-on-click
         :data="categoriesRef"
         key-field="id"
         label-field="name"
-        selectable
+        :default-expanded-keys="expandedKeysRef"
         v-model:selected-keys="selectedKeysRef"
         @update:selected-keys="handleSelectedChanged"
       >
@@ -37,7 +36,7 @@
         />
       </n-radio-group>
       <n-input-group>
-        <n-input :style="{ width: '50%' }" v-model:value="keywordRef" />
+        <n-input :style="{ width: '50%' }" v-model:value="keywordRef" clearable />
         <n-button type="primary" ghost @click="handleKeywordSearch"> 搜索 </n-button>
       </n-input-group>
       <div
@@ -82,6 +81,7 @@ import FamilyCard from '@/components/FamilyCard/index.vue'
 
 interface TagInfo {
   value: string
+  id?: string
   type: 'info' | 'success'
 }
 
@@ -99,6 +99,7 @@ const loading = ref<boolean>()
 const orderRef = ref<string>((orderBy as string) || 'default')
 const keywordRef = ref<string>(keyword as string)
 const selectedKeysRef = ref<string[]>([])
+const expandedKeysRef = ref<string[]>([])
 const orders = [
   {
     value: 'default',
@@ -122,16 +123,86 @@ const orders = [
   }
 ]
 
-async function handleTagClosed(tag: TagInfo) {
-  tagsRef.value = tagsRef.value.filter((t) => t.value !== tag.value)
+function findParentPath(items: FamilyCategory[], targetItem: FamilyCategory): string[] {
+  const parents: string[] = []
+
+  function findParentRecursive(
+    currentItems: FamilyCategory[],
+    currentItem: FamilyCategory
+  ): boolean {
+    for (const item of currentItems) {
+      if (item === targetItem) {
+        parents.unshift(item.id)
+        return true
+      }
+
+      const found = findParentRecursive(item.children, currentItem)
+      if (found) {
+        parents.unshift(item.id)
+        return true
+      }
+    }
+
+    return false
+  }
+  findParentRecursive(items, targetItem)
+  return parents
 }
 
+async function handleTagClosed(tag: TagInfo) {
+  tagsRef.value = tagsRef.value.filter((t) => t.value !== tag.value)
+
+  const commonQueryParams = {
+    page: currentRoute.query.page,
+    pageSize: currentRoute.query.pageSize,
+    order: currentRoute.query.order
+  }
+
+  const routeToFamilyBrowser = async (query: Record<string, any>) => {
+    await router.push({
+      name: 'family-browser',
+      query
+    })
+  }
+
+  const handleNonEmptyTags = async () => {
+    const firstTag = tagsRef.value[0]
+    if (firstTag.type === 'info') {
+      keywordRef.value = ''
+      await routeToFamilyBrowser({
+        categoryId: firstTag.id,
+        ...commonQueryParams
+      })
+    } else {
+      expandedKeysRef.value = []
+      selectedKeysRef.value = []
+      await routeToFamilyBrowser({
+        keyword: firstTag.value,
+        ...commonQueryParams
+      })
+    }
+  }
+
+  const handleEmptyTags = async () => {
+    expandedKeysRef.value = []
+    selectedKeysRef.value = []
+    keywordRef.value = ''
+    await routeToFamilyBrowser(commonQueryParams)
+  }
+
+  if (tagsRef.value.length > 0) {
+    await handleNonEmptyTags()
+  } else {
+    await handleEmptyTags()
+  }
+}
 async function handleSelectedChanged(
   keys: Array<string | number>,
   option: Array<TreeOption | null>
 ) {
   handleTags({
     type: 'info',
+    id: keys[0] as string,
     value: option[0]?.name as string
   })
 
@@ -285,9 +356,14 @@ async function getFamiliesPage(
 onMounted(async () => {
   await getCategories()
   const selectedCategory = findItemByCondition(categoriesRef.value, (fc) => fc.id === categoryId)
+  if (selectedCategory) {
+    expandedKeysRef.value = findParentPath(categoriesRef.value, selectedCategory)
+    selectedKeysRef.value.push(selectedCategory.id)
+  }
   const tags: TagInfo[] = [
     {
       type: 'info',
+      id: selectedCategory?.id,
       value: selectedCategory?.name as string
     },
     {
