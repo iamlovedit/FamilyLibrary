@@ -48,7 +48,11 @@
           v-for="family in familiesRef"
           :key="family.id"
           :name="family.name"
+          :category="family.category.name"
+          :downloads="family.downloads"
+          :stars="family.stars"
           cover="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+          @get-detail="() => handleGetDetail(family.id)"
         >
         </family-card>
       </div>
@@ -147,6 +151,15 @@ function findParentPath(items: FamilyCategory[], targetItem: FamilyCategory): st
   }
   findParentRecursive(items, targetItem)
   return parents
+}
+
+async function handleGetDetail(id: string) {
+  await router.push({
+    name: 'family-detail',
+    params: {
+      id: id
+    }
+  })
 }
 
 async function handleTagClosed(tag: TagInfo) {

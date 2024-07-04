@@ -8,8 +8,11 @@
       :preview-disabled="true"
       fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg"
     />
-    <n-button tag="a" text type="primary" target="_blank">
-      {{ props.name }}
+    <span> 下载量:{{ downloads }} </span>
+    <span> 点赞:{{ stars }}</span>
+    <span>类别: {{ category }}</span>
+    <n-button tag="a" text type="primary" target="_blank" class="mb-2" @click="$emit('getDetail')">
+      {{ name }}
     </n-button>
   </div>
 </template>
@@ -21,8 +24,13 @@ import { useThemeVars } from 'naive-ui'
 interface Props {
   cover: string
   name: string
+  category: string
+  downloads?: number
+  stars?: number
 }
-
+const emits = defineEmits<{
+  (e: 'getDetail'): void
+}>()
 const props = defineProps<Props>()
 
 const themeVars = useThemeVars()
