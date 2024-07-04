@@ -6,13 +6,13 @@ const familyRoutes: RouteRecordRaw[] = [
     name: 'family',
     component: () => import('@/views/family/index.vue'),
     redirect() {
-        return{
-          name:'family-browser',
-          query:{
-            page:1,
-            pageSize:30
-          }
+      return {
+        name: 'family-browser',
+        query: {
+          page: 1,
+          pageSize: 30
         }
+      }
     },
     meta: {
       title: '族库',
@@ -25,7 +25,7 @@ const familyRoutes: RouteRecordRaw[] = [
         component: () => import('@/views/family/broswer/index.vue')
       },
       {
-        path: 'detail',
+        path: 'detail/:id(^[1-9][0-9]{18}$)',
         name: 'family-detail',
         component: () => import('@/views/family/detail/index.vue')
       }
