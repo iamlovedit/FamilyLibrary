@@ -15,6 +15,8 @@ namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
         [JsonConverter(typeof(ValueToStringConverter))]
         public long ParentId { get; set; }
 
+        public FamilyCategoryDTO? Parent { get; set; }
+        
         public List<FamilyCategoryDTO>? Children { get; set; }
     }
 }
