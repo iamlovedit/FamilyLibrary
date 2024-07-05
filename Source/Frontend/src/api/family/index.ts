@@ -14,6 +14,16 @@ export interface FamilyBasic {
   uploader: User
 }
 
+export interface FamilySymbol {
+  name: string
+}
+
+export interface FamilyDetail extends FamilyBasic {
+  fileId: string
+  versions: number[]
+  symbols: FamilySymbol[]
+}
+
 export interface FamilyCategoryBasic {
   id: string
   name: string
@@ -49,6 +59,13 @@ export function getFamiliesPagePromise(
   return request({
     url: 'family/v1/all',
     params,
+    method: RequestEnum.GET
+  })
+}
+
+export function getFamilyDetailPromise(id: string): Promise<HttpResponse<FamilyDetail>> {
+  return request({
+    url: `family/v1/details/${id}`,
     method: RequestEnum.GET
   })
 }
