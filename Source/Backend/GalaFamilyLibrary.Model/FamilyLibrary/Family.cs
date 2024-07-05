@@ -53,6 +53,9 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         [SugarColumn(ColumnDataType = "varchar(4000)", IsJson = true, ColumnName = "family_versions")]
         public List<ushort>? Versions { get; set; }
 
+        [Navigate(NavigateType.OneToOne, nameof(FamilyDetail.FamilyId))]
+        public FamilyDetail Detail { get; set; }
+
         [SugarColumn(ColumnName = "family_categoryId")]
         public long CategoryId { get; set; }
 
@@ -69,10 +72,12 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         {
             return Path.Combine($"{version}", $"{FileId}.rfa");
         }
+
         public string GetImagePath()
         {
             return Path.Combine("images", $"{FileId}.png");
         }
+
         public string GetGltfPath()
         {
             return Path.Combine("gltfs", $"{FileId}.gltf");

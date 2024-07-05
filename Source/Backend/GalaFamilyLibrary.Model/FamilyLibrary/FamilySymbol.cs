@@ -1,5 +1,6 @@
 using GalaFamilyLibrary.Repository;
 using SqlSugar;
+using GalaFamilyLibrary.Model.FamilyParameter;
 
 namespace GalaFamilyLibrary.Model.FamilyLibrary
 {
@@ -12,11 +13,14 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         [SugarColumn(ColumnName = "symbol_name", IsPrimaryKey = true)]
         public string? Name { get; set; }
 
-        [Navigate(NavigateType.OneToMany, nameof(FamilyParameter.Parameter.FamilySymbolId))]
-        public List<FamilyParameter.Parameter>? Parameters { get; set; }
+        [Navigate(NavigateType.OneToMany, nameof(Parameter.FamilySymbolId))]
+        public List<Parameter>? Parameters { get; set; }
 
         [SugarColumn(ColumnName = "symbol_familyId")]
         public long FamilyId { get; set; }
+
+        [SugarColumn(ColumnName = "symbol_familyDetail_id")]
+        public long FamilyDetailId { get; set; }
 
         [SugarColumn(ColumnName = "symbol_isDeleted")]
         public bool IsDeleted { get; set; }
