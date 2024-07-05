@@ -118,7 +118,7 @@ const orders = [
     label: '下载'
   },
   {
-    value: 'votes',
+    value: 'stars',
     label: '收藏'
   },
   {
@@ -332,7 +332,7 @@ async function handleOrderByChanged(value: string) {
       categoryId: selectedKeysRef.value[0],
       page: currentRoute.query.page,
       pageSize: currentRoute.query.pageSize,
-      order: value
+      orderBy: value
     }
   })
 }
