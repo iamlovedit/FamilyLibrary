@@ -1,4 +1,4 @@
-import type { RouteRecordRaw, Route } from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router'
 
 const familyRoutes: RouteRecordRaw[] = [
   {
@@ -23,14 +23,14 @@ const familyRoutes: RouteRecordRaw[] = [
         path: 'broswer',
         name: 'family-browser',
         component: () => import('@/views/family/broswer/index.vue'),
-        props: (route: Route) => ({
+        props: (route: any) => ({
           keyword: route.query.keyword || '',
           categoryId: route.query.categoryId || '',
-          order: route.query.order || '',
           page: parseInt(route.query.page) || 1,
-          pageSize: parseInt(route.query.pageSize) || 30
+          pageSize: parseInt(route.query.pageSize) || 30,
+          orderBy: route.query.order || ''
         }),
-        beforeEnter: (to: Route, from: Route, next) => {
+        beforeEnter: (to: any, from: any, next) => {
           const page = parseInt(to.query.page)
           const pageSize = parseInt(to.query.pageSize)
           if (Number.isInteger(page) && Number.isInteger(pageSize)) {

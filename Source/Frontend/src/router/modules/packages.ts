@@ -22,7 +22,22 @@ const packageRoutes: RouteRecordRaw[] = [
       {
         path: 'broswer',
         name: 'package-broswer',
-        component: () => import('@/views/dynamo/broswer/index.vue')
+        component: () => import('@/views/dynamo/broswer/index.vue'),
+        props: (route: any) => ({
+          keyword: route.query.keyword || '',
+          page: parseInt(route.query.page) || 1,
+          pageSize: parseInt(route.query.pageSize) || 30,
+          orderBy: route.query.order || ''
+        }),
+        beforeEnter: (to: any, from: any, next) => {
+          const page = parseInt(to.query.page)
+          const pageSize = parseInt(to.query.pageSize)
+          if (Number.isInteger(page) && Number.isInteger(pageSize)) {
+            next()
+          } else {
+            next('/404')
+          }
+        }
       },
       {
         path: 'detail/:id',
