@@ -18,6 +18,8 @@
     "pinia": "^2.1.7",
     "vue": "^3.4.31",
     "vue-router": "^4.4.0"
+    "vue": "^3.4.31",
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.3",
@@ -39,10 +41,10 @@
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.26.0",
+    "eslint-plugin-vue": "^9.27.0",
     "less": "^4.2.0",
     "naive-ui": "^2.38.2",
-    "npm-run-all2": "^6.2.0",
+    "npm-run-all2": "^6.2.2",
     "prettier": "^3.3.2",
     "typescript": "~5.4.5",
     "unocss": "^0.58.9",
