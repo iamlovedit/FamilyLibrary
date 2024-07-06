@@ -1630,22 +1630,15 @@ packages:
     resolution: {integrity: sha512-VGkTani8SOoVkZNds1PfJ/T1SlAIOf8E58PGAhIOUDYPC4GAmFA2u/E14TDAFcf3vVDKunc4QqCe/SHr8xC65Q==}
     dependencies:
       '@vue/shared': 3.4.31
-      '@vue/shared': 3.4.31
 
   /@vue/runtime-core@3.4.31:
     resolution: {integrity: sha512-LDkztxeUPazxG/p8c5JDDKPfkCDBkkiNLVNf7XZIUnJ+66GVGkP+TIh34+8LtPisZ+HMWl2zqhIw0xN5MwU1cw==}
     dependencies:
       '@vue/reactivity': 3.4.31
       '@vue/shared': 3.4.31
-      '@vue/reactivity': 3.4.31
-      '@vue/shared': 3.4.31
-
   /@vue/runtime-dom@3.4.31:
     resolution: {integrity: sha512-2Auws3mB7+lHhTFCg8E9ZWopA6Q6L455EcU7bzcQ4x6Dn4cCPuqj6S2oBZgN2a8vJRS/LSYYxwFFq2Hlx3Fsaw==}
     dependencies:
-      '@vue/reactivity': 3.4.31
-      '@vue/runtime-core': 3.4.31
-      '@vue/shared': 3.4.31
       '@vue/reactivity': 3.4.31
       '@vue/runtime-core': 3.4.31
       '@vue/shared': 3.4.31
