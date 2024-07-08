@@ -45,6 +45,7 @@ onMounted(() => {
 
     scene.add(stars)
 
+    // eslint-disable-next-line no-inner-declarations
     function animate() {
       requestAnimationFrame(animate)
       stars.rotation.y += 0.001
@@ -54,6 +55,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <style scoped>
 #container {
   position: fixed;
