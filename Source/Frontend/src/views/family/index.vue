@@ -1,4 +1,3 @@
 <template>
-  <router-view />
+  <router-view class="p-5" />
 </template>
-

@@ -1,7 +1,13 @@
 <template>
-  <n-flex vertical ustify="space-between">
+  <n-flex vertical ustify="space-between" class="p-5">
     <n-input-group>
-      <n-input :style="{ width: '50%' }" show-count :maxlength="12" placeholder="搜索节点包" v-model:value="keyword" />
+      <n-input
+        :style="{ width: '50%' }"
+        show-count
+        :maxlength="12"
+        placeholder="搜索节点包"
+        v-model:value="keyword"
+      />
       <n-button type="primary" ghost @click="handleSearch"> 搜索 </n-button>
     </n-input-group>
     <div class="flex-1">
@@ -16,7 +22,7 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const { query } = route;
+const { query } = route
 
 const keyword = ref<string>(query.keyword as any as string)
 function handleSearch(e: Event) {
@@ -38,5 +44,4 @@ function handleSearch(e: Event) {
     }
   }
 }
-
 </script>
