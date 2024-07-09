@@ -1,11 +1,9 @@
 <template>
-  <n-layout :has-sider="false" class="h-full w-full flex-col flex">
-    <page-header> </page-header>
-    <div class="flex-1 flex flex-nowrap flex-col h-full">
-      <router-view />
-    </div>
+  <n-flex vertical class="h-full w-full flex-col flex flex-nowrap" justify="space-between">
+    <page-header />
+    <router-view class="flex-1 flex flex-nowrap flex-col layout-container" />
     <n-layout-footer borderd> 蜀ICP备2022029729号-1 </n-layout-footer>
-  </n-layout>
+  </n-flex>
 </template>
 
 <script setup lang="ts">
@@ -17,5 +15,9 @@ import PageHeader from './Header'
   height: var(--footer-height);
   text-align: center;
   line-height: var(--footer-height);
+}
+
+.layout-container {
+  height: calc(100% - var(--footer-height) - var(--header-height));
 }
 </style>

@@ -1,21 +1,26 @@
 <template>
   <n-flex vertical>
-    <n-page-header @back="handleBack" class="w-full">
-      <template #title>
-        {{ packageRef?.name }}
-      </template>
-      <n-flex justify="space-around" size="large">
-        <n-statistic label="发布版本" :value="`${versionCountRef} 个`" />
-        <n-statistic label="下载" :value="`${packageRef?.downloads} 次`" />
-        <n-statistic label="点赞" :value="`${packageRef?.votes} 次`" />
-        <n-statistic label="发布时间" :value="`${packageRef?.createdDate}`" />
-        <n-statistic label="更新时间" :value="`${packageRef?.updatedDate}`" />
-      </n-flex>
-    </n-page-header>
-    <n-h1>{{ packageRef?.name }}</n-h1>
-    <n-p>
-      {{ packageRef?.description }}
-    </n-p>
+    <n-card>
+      <n-page-header @back="handleBack" class="w-full">
+        <template #title>
+          {{ packageRef?.name }}
+        </template>
+        <n-flex justify="space-around" size="large">
+          <n-statistic label="发布版本" :value="`${versionCountRef} 个`" />
+          <n-statistic label="下载" :value="`${packageRef?.downloads} 次`" />
+          <n-statistic label="点赞" :value="`${packageRef?.votes} 次`" />
+          <n-statistic label="发布时间" :value="`${packageRef?.createdDate}`" />
+          <n-statistic label="更新时间" :value="`${packageRef?.updatedDate}`" />
+        </n-flex>
+      </n-page-header>
+    </n-card>
+
+    <n-card>
+      <n-h1>{{ packageRef?.name }}</n-h1>
+      <n-p>
+        {{ packageRef?.description }}
+      </n-p>
+    </n-card>
     <div class="flex-1">
       <n-list hoverable>
         <n-list-item v-for="version in versionsRef" :key="version.version">

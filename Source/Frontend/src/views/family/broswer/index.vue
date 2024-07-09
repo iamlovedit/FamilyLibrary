@@ -1,6 +1,6 @@
 <template>
   <n-flex class="flex-1">
-    <n-scrollbar class="w-300px min-w-200px max-h-1200px">
+    <n-card class="w-300px min-w-200px">
       <n-tree
         :data="categoriesRef"
         key-field="id"
@@ -10,64 +10,66 @@
         @update:selected-keys="handleSelectedChanged"
       >
       </n-tree>
-    </n-scrollbar>
-    <n-flex vertical class="flex-1 gap-8">
-      <n-flex>
-        <n-tag
-          v-for="tag in tagsRef"
-          :key="tag.value"
-          :type="tag.type"
-          closable
-          @close="handleTagClosed(tag)"
+    </n-card>
+    <n-card class="flex-1">
+      <n-flex vertical class="gap-8 h-full" justify="space-between">
+        <n-flex>
+          <n-tag
+            v-for="tag in tagsRef"
+            :key="tag.value"
+            :type="tag.type"
+            closable
+            @close="handleTagClosed(tag)"
+          >
+            {{ tag.value }}
+          </n-tag>
+        </n-flex>
+        <n-radio-group
+          v-model:value="orderRef"
+          @update:value="handleOrderByChanged"
+          :loading="loading"
         >
-          {{ tag.value }}
-        </n-tag>
-      </n-flex>
-      <n-radio-group
-        v-model:value="orderRef"
-        @update:value="handleOrderByChanged"
-        :loading="loading"
-      >
-        <n-radio-button
-          v-for="order in orders"
-          :key="order.value"
-          :value="order.value"
-          :label="order.label"
+          <n-radio-button
+            v-for="order in orders"
+            :key="order.value"
+            :value="order.value"
+            :label="order.label"
+          />
+        </n-radio-group>
+        <n-input-group>
+          <n-input :style="{ width: '50%' }" v-model:value="keywordRef" clearable />
+          <n-button type="primary" ghost @click="handleKeywordSearch"> 搜索 </n-button>
+        </n-input-group>
+        <div
+          class="flex-1 flex flex-wrap gap-4 w-full m-auto"
+          hoverable
+          v-if="familiesRef.length !== 0"
+        >
+          <family-card
+            v-for="family in familiesRef"
+            :key="family.id"
+            :name="family.name"
+            :category="family.category.name"
+            :downloads="family.downloads"
+            :stars="family.stars"
+            cover="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
+            @get-detail="() => handleGetDetail(family.id)"
+          >
+          </family-card>
+        </div>
+        <n-empty v-else size="huge" description="暂无数据" />
+        <n-pagination
+          v-model:page="pageRef"
+          show-quick-jumper
+          show-size-picker
+          :page-slot="8"
+          @update:page="handlePageChange"
+          v-model:page-size="pageSizeRef"
+          :page-sizes="[20, 30, 40]"
+          @update:page-size="handleSizeChange"
         />
-      </n-radio-group>
-      <n-input-group>
-        <n-input :style="{ width: '50%' }" v-model:value="keywordRef" clearable />
-        <n-button type="primary" ghost @click="handleKeywordSearch"> 搜索 </n-button>
-      </n-input-group>
-      <div
-        class="flex-1 flex flex-wrap gap-4 w-full m-auto"
-        hoverable
-        v-if="familiesRef.length !== 0"
-      >
-        <family-card
-          v-for="family in familiesRef"
-          :key="family.id"
-          :name="family.name"
-          :category="family.category.name"
-          :downloads="family.downloads"
-          :stars="family.stars"
-          cover="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-          @get-detail="() => handleGetDetail(family.id)"
-        >
-        </family-card>
-      </div>
-      <n-empty v-else size="huge" description="暂无数据" />
-      <n-pagination
-        v-model:page="pageRef"
-        show-quick-jumper
-        show-size-picker
-        :page-slot="8"
-        @update:page="handlePageChange"
-        v-model:page-size="pageSizeRef"
-        :page-sizes="[20, 30, 40]"
-        @update:page-size="handleSizeChange"
-      />
-    </n-flex>
+      </n-flex>
+    </n-card>
   </n-flex>
 </template>
 

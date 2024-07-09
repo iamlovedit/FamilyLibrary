@@ -1,22 +1,24 @@
 <template>
-  <n-flex vertical ustify="space-between" class="p-5">
-    <n-input-group>
-      <n-input
-        :style="{ width: '50%' }"
-        show-count
-        :maxlength="12"
-        placeholder="搜索节点包"
-        v-model:value="keyword"
-      />
-      <n-button type="primary" ghost @click="handleSearch"> 搜索 </n-button>
-    </n-input-group>
+  <n-flex vertical justify="space-between" class="p-5">
+    <n-card>
+      <n-input-group>
+        <n-input
+          :style="{ width: '50%', margin: 0 }"
+          show-count
+          :maxlength="12"
+          placeholder="搜索节点包"
+          v-model:value="keyword"
+        />
+        <n-button type="primary" ghost @click="handleSearch"> 搜索 </n-button>
+      </n-input-group>
+    </n-card>
     <div class="flex-1">
       <router-view />
     </div>
   </n-flex>
 </template>
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -44,11 +46,4 @@ function handleSearch(e: Event) {
     }
   }
 }
-
-watch(
-  () => route.fullPath,
-  () => {
-    keyword.value = route.query.keyword as string
-  }
-)
 </script>
