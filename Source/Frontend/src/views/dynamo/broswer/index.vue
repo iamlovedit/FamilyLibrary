@@ -1,5 +1,5 @@
 <template>
-  <n-card>
+  <n-card class="h-full">
     <div class="w-full h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
       <n-flex>
         <n-tag v-for="tag in tagsRef" :key="tag" type="info" closable @close="handleTagClosed">
@@ -18,51 +18,46 @@
           :label="order.label"
         />
       </n-radio-group>
-      <div class="flex-1">
-        <n-scrollbar style="height: 100%" trigger="none">
-          <n-list hoverable show-divider>
-            <n-list-item v-for="packageObj in packages" :key="packageObj.id">
-              <n-thing :title="packageObj.name" content-style="margin-top: 10px;">
-                <template #description>
-                  <n-flex>
-                    <n-tag :bordered="false" type="info">
-                      {{ packageObj.createdDate }}
-                      <template #icon>
-                        <n-icon :component="NewReleasesOutlined" />
-                      </template>
-                    </n-tag>
-                    <n-tag :bordered="false" type="info">
-                      {{ packageObj.updatedDate }}
-                      <template #icon>
-                        <n-icon :component="UpdateRound" />
-                      </template>
-                    </n-tag>
-                    <n-tag :bordered="false" type="info">
-                      {{ packageObj.downloads }}
-                      <template #icon>
-                        <n-icon :component="FileDownloadDoneSharp" />
-                      </template>
-                    </n-tag>
-                    <n-tag :bordered="false" type="info">
-                      {{ packageObj.votes }}
-                      <template #icon>
-                        <n-icon :component="ThumbUpAltOutlined" />
-                      </template>
-                    </n-tag>
-                  </n-flex>
-                </template>
-                <n-ellipsis style="max-width: 800px">
-                  {{ packageObj.description }}
-                </n-ellipsis>
-              </n-thing>
-              <template #suffix>
-                <n-button @click="() => handleDetailClick(packageObj)">详情</n-button>
-              </template>
-            </n-list-item>
-          </n-list>
-        </n-scrollbar>
-      </div>
-
+      <n-list hoverable show-divider class="flex-1">
+        <n-list-item v-for="packageObj in packages" :key="packageObj.id">
+          <n-thing :title="packageObj.name" content-style="margin-top: 10px;">
+            <template #description>
+              <n-flex>
+                <n-tag :bordered="false" type="info">
+                  {{ packageObj.createdDate }}
+                  <template #icon>
+                    <n-icon :component="NewReleasesOutlined" />
+                  </template>
+                </n-tag>
+                <n-tag :bordered="false" type="info">
+                  {{ packageObj.updatedDate }}
+                  <template #icon>
+                    <n-icon :component="UpdateRound" />
+                  </template>
+                </n-tag>
+                <n-tag :bordered="false" type="info">
+                  {{ packageObj.downloads }}
+                  <template #icon>
+                    <n-icon :component="FileDownloadDoneSharp" />
+                  </template>
+                </n-tag>
+                <n-tag :bordered="false" type="info">
+                  {{ packageObj.votes }}
+                  <template #icon>
+                    <n-icon :component="ThumbUpAltOutlined" />
+                  </template>
+                </n-tag>
+              </n-flex>
+            </template>
+            <n-ellipsis style="max-width: 800px">
+              {{ packageObj.description }}
+            </n-ellipsis>
+          </n-thing>
+          <template #suffix>
+            <n-button @click="() => handleDetailClick(packageObj)">详情</n-button>
+          </template>
+        </n-list-item>
+      </n-list>
       <n-pagination
         :item-count="packageCount"
         v-model:page="pageRef"

@@ -1,7 +1,7 @@
 <template>
   <n-flex vertical class="h-full w-full flex-col flex flex-nowrap" justify="space-between">
     <page-header />
-    <router-view class="flex-1 flex flex-nowrap flex-col layout-container" />
+    <router-view class="flex-1 flex flex-nowrap flex-col" />
     <n-layout-footer borderd> 蜀ICP备2022029729号-1 </n-layout-footer>
   </n-flex>
 </template>
@@ -15,9 +15,5 @@ import PageHeader from './Header'
   height: var(--footer-height);
   text-align: center;
   line-height: var(--footer-height);
-}
-
-.layout-container {
-  height: calc(100% - var(--footer-height) - var(--header-height));
 }
 </style>

@@ -12,7 +12,7 @@
       </n-tree>
     </n-card>
     <n-card class="flex-1">
-      <n-flex vertical class="gap-8 h-full" justify="space-between">
+      <n-flex vertical class="gap-8 h-full">
         <n-flex>
           <n-tag
             v-for="tag in tagsRef"
