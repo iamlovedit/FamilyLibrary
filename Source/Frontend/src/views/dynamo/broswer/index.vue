@@ -1,5 +1,10 @@
 <template>
   <div class="w-full box-border h-full flex flex-col flex-nowrap gap-5 justify-between flex-1">
+    <n-flex>
+      <n-tag v-for="tag in tagsRef" :key="tag" type="info" closable @close="handleTagClosed">
+        {{ tag }}
+      </n-tag>
+    </n-flex>
     <n-radio-group v-model:value="orderRef" @update:value="handleOrderByChanged" :loading="loading">
       <n-radio-button
         v-for="order in orders"
@@ -90,7 +95,7 @@ const pageSizeRef = ref<number>(Number(pageSize) || 30)
 const packageCount = ref<number>()
 const packages = ref<PackageDTO[]>([])
 const loading = ref<boolean>()
-
+const tagsRef = ref<string[]>([])
 const orders = [
   {
     value: 'default',
@@ -119,6 +124,18 @@ const orders = [
 ]
 
 const orderRef = ref<string>((orderBy as string) || 'default')
+
+async function handleTagClosed() {
+  tagsRef.value = []
+  await router.push({
+    name: 'package-broswer',
+    query: {
+      page: currentRoute.query.page,
+      pageSize: currentRoute.query.pageSize,
+      orderBy: currentRoute.query.orderBy
+    }
+  })
+}
 
 async function getPackagePages(
   keyword?: string,
@@ -195,6 +212,9 @@ watch(
     pageRef.value = Number(currentRoute.query.page)
     pageSizeRef.value = Number(currentRoute.query.pageSize)
     orderRef.value = currentRoute.query.orderBy as string
+    if (keywordRef.value) {
+      tagsRef.value.push(keywordRef.value)
+    }
   }
 )
 
