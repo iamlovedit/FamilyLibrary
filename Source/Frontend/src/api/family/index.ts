@@ -20,6 +20,7 @@ export interface FamilySymbol {
 
 export interface FamilyDetail extends FamilyBasic {
   fileId: string
+  views: number
   versions: number[]
   symbols: FamilySymbol[]
 }
