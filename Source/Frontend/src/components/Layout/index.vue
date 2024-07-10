@@ -1,9 +1,9 @@
 <template>
-  <n-flex vertical class="h-full w-full flex-col flex flex-nowrap" justify="space-between">
+  <div class="h-full w-full flex-col flex flex-nowrap justify-between">
     <page-header />
     <router-view class="flex-1 flex flex-nowrap flex-col" />
     <n-layout-footer borderd> 蜀ICP备2022029729号-1 </n-layout-footer>
-  </n-flex>
+  </div>
 </template>
 
 <script setup lang="ts">
