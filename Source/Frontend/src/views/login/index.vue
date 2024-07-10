@@ -91,14 +91,6 @@ function handleLogin(e: Event): void {
           await userStore.getCurrentUserAsync()
           message.destroyAll()
           message.success('登录成功，即将进入系统')
-          const { redirect, ...query } = currentRoute.query
-          if (redirect) {
-            await router.push({
-              name: redirect as string,
-              query
-            })
-            return
-          }
           await router.push({
             name: 'home'
           })
