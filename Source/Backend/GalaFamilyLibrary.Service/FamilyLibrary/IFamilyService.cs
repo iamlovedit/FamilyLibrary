@@ -8,9 +8,9 @@ namespace GalaFamilyLibrary.Service.FamilyLibrary;
 
 public interface IFamilyService : IServiceBase<Family>
 {
-    Task<IList<FamilyCategory>> GetCategoryTreeAsync(int? rootId);
+    Task<IList<FamilyCategory>?> GetCategoryTreeAsync(int? rootId);
 
-    Task<Family> GetFamilyDetails(long id);
+    Task<FamilyDetail?> GetFamilyDetails(long id);
 
     Task<PageData<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression, int pageIndex = 1,
         int pageSize = 20, string? orderByFields = null);
@@ -18,10 +18,13 @@ public interface IFamilyService : IServiceBase<Family>
 
 public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Family>(dbContext), IFamilyService
 {
-    public async Task<Family> GetFamilyDetails(long id)
+    public async Task<FamilyDetail?> GetFamilyDetails(long familyId)
     {
-        return await DAL.DbContext.Queryable<Family>().Includes(f => f.Category)
-            .Includes(f => f.Detail, s => s.Symbols, s => s.Parameters).InSingleAsync(id);
+        var family = await DAL.DbContext.Queryable<Family>()
+            .Includes(f => f.Detail, d => d.Uploader)
+            .Includes(f => f.Detail, d => d.Symbols, s => s.Parameters)
+            .InSingleAsync(familyId);
+        return family.Detail;
     }
 
     public async Task<PageData<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression,
@@ -45,7 +48,7 @@ public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Fami
         return new PageData<Family>(pageIndex, pageCount, totalCount, pageSize, list);
     }
 
-    public async Task<IList<FamilyCategory>> GetCategoryTreeAsync(int? rootId)
+    public async Task<IList<FamilyCategory>?> GetCategoryTreeAsync(int? rootId)
     {
         return await DAL.DbContext.Queryable<FamilyCategory>()
             .Includes(c => c.Parent)

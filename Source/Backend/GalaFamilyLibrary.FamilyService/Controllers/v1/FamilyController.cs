@@ -108,17 +108,17 @@ public class FamilyController(
             return Success(await redis.Get<FamilyDetailDTO>(redisKey));
         }
 
-        var family = await familyService.GetFamilyDetails(id);
-        if (family is null)
+        var familyDetail = await familyService.GetFamilyDetails(id);
+        if (familyDetail is null)
         {
             logger.LogWarning("query family details failed id: {id} ,family not existed", id);
             return Failed<FamilyDetailDTO>("family not exist", 404);
         }
 
         logger.LogInformation("query family details succeed id: {id}", id);
-        var familyDto = mapper.Map<FamilyDetailDTO>(family);
-        await redis.Set(redisKey, familyDto, redisRequirement.CacheTime);
-        return Success(familyDto);
+        var detailDto = mapper.Map<FamilyDetailDTO>(familyDetail);
+        await redis.Set(redisKey, detailDto, redisRequirement.CacheTime);
+        return Success(detailDto);
     }
 
     [HttpGet("categories")]
