@@ -26,7 +26,7 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
         [SugarColumn(ColumnName = "family_categoryId")]
         public long CategoryId { get; set; }
 
-        [Navigate(NavigateType.OneToOne, nameof(Detail))]
+        [Navigate(NavigateType.OneToOne, nameof(DetailId))]
         public FamilyDetail? Detail { get; set; }
 
         [SugarColumn(ColumnName = "family_detailId")]
