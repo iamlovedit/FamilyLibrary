@@ -50,10 +50,8 @@
             :key="family.id"
             :name="family.name"
             :category="family.category.name"
-            :downloads="family.downloads"
-            :stars="family.stars"
             cover="https://gw.alipayobjects.com/zos/antfincdn/aPkFc8Sj7n/method-draw-image.svg"
-            @get-detail="() => handleGetDetail(family.id)"
+            @handle-detail-click="() => handleGetDetail(family.id)"
           >
           </family-card>
         </div>
