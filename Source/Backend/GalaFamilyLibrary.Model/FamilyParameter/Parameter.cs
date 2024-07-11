@@ -14,10 +14,7 @@ namespace GalaFamilyLibrary.Model.FamilyParameter
 
         [SugarColumn(ColumnName = "parameter_value")]
         public string? Value { get; set; }
-
-        [SugarColumn(ColumnName = "parameter_stoargeType")]
-        public StorageType StorageType { get; set; }
-
+        
         [Navigate(NavigateType.OneToOne, nameof(DefinitionId))]
         public ParameterDefinition? Definition { get; set; }
 
