@@ -1,13 +1,36 @@
 <template>
   <n-flex vertical>
     <n-card>
-      <n-page-header :title="familyRef?.name" @back="handleBack" class="w-full">
-        <n-flex justify="space-around" size="large">
-          <n-statistic label="浏览" :value="`${familyRef?.views} 次`" />
-          <n-statistic label="类别" :value="`${familyRef?.category.name}`" />
-          <n-statistic label="下载" :value="`${familyRef?.downloads} 次`" />
-          <n-statistic label="点赞" :value="`${familyRef?.stars} 次`" />
-          <n-statistic label="发布时间" :value="`${familyRef?.createdDate}`" />
+      <n-page-header title="族详情" @back="handleBack" class="w-full">
+        <n-flex justify="space-between">
+          <n-flex>
+            <n-statistic label="浏览" :value="`${familyRef?.views} 次`" />
+            <n-statistic label="下载" :value="`${familyRef?.downloads} 次`" />
+            <n-statistic label="点赞" :value="`${familyRef?.stars} 次`" />
+          </n-flex>
+          <n-flex>
+            <n-button :bordered="false" ghost>
+              <template #icon>
+                <n-icon>
+                  <StarOutline />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button :bordered="false" ghost>
+              <template #icon>
+                <n-icon>
+                  <MdThumbsUp />
+                </n-icon>
+              </template>
+            </n-button>
+            <n-button :bordered="false" ghost>
+              <template #icon>
+                <n-icon>
+                  <CloudDownloadOutline />
+                </n-icon>
+              </template>
+            </n-button>
+          </n-flex>
         </n-flex>
       </n-page-header>
     </n-card>
@@ -59,6 +82,8 @@ import { ref } from 'vue'
 import { useMessage, useLoadingBar } from 'naive-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { type FamilyDetail, getFamilyDetailPromise } from '@/api/family'
+import { StarOutline, CloudDownloadOutline } from '@vicons/ionicons5'
+import { MdThumbsUp } from '@vicons/ionicons4'
 
 const router = useRouter()
 const currentRoute = useRoute()
