@@ -99,6 +99,7 @@ public class FamilyController(
 
 
     [HttpGet("details/{id:long}")]
+    [AllowAnonymous]
     public async Task<MessageData<FamilyDetailDTO>> GetFamilyDetailAsync(long id)
     {
         var redisKey = $"familyDetails/{id}";
@@ -139,7 +140,7 @@ public class FamilyController(
 
     [HttpGet("all")]
     [AllowAnonymous]
-    public async Task<MessageData<PageData<FamilyBasicDTO>>> GetFamiliesPageAsync(string? keyword = null,
+    public async Task<MessageData<PageData<FamilyDTO>>> GetFamiliesPageAsync(string? keyword = null,
         long? categoryId = null, int pageIndex = 1, int pageSize = 30, string? order = "name")
     {
         logger.LogInformation(
@@ -153,7 +154,7 @@ public class FamilyController(
         var familyPage = await familyService.GetFamilyPageAsync(expression, pageIndex, pageSize, order);
         var args = new PresignedGetObjectArgs().WithBucket(_bucketName).WithExpiry(_expiry);
         familyPage.Data.ForEach(f => _minioClient.PresignedGetObjectAsync(args.WithObject(f.GetImagePath())));
-        var familyPageDto = familyPage.ConvertTo<FamilyBasicDTO>(mapper);
+        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(mapper);
         return SucceedPage(familyPageDto);
     }
 }

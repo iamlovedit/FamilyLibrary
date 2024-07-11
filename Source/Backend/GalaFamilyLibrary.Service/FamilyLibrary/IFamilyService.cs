@@ -9,22 +9,19 @@ namespace GalaFamilyLibrary.Service.FamilyLibrary;
 public interface IFamilyService : IServiceBase<Family>
 {
     Task<IList<FamilyCategory>> GetCategoryTreeAsync(int? rootId);
+
     Task<Family> GetFamilyDetails(long id);
 
     Task<PageData<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression, int pageIndex = 1,
         int pageSize = 20, string? orderByFields = null);
 }
 
-public class FamilyService : ServiceBase<Family>, IFamilyService
+public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Family>(dbContext), IFamilyService
 {
-    public FamilyService(IRepositoryBase<Family> dbContext) : base(dbContext)
-    {
-    }
-
     public async Task<Family> GetFamilyDetails(long id)
     {
         return await DAL.DbContext.Queryable<Family>().Includes(f => f.Category)
-            .Includes(f => f.Symbols, s => s.Parameters, s => s.DisplayUnitType).InSingleAsync(id);
+            .Includes(f => f.Detail, s => s.Symbols, s => s.Parameters).InSingleAsync(id);
     }
 
     public async Task<PageData<Family>> GetFamilyPageAsync(Expression<Func<Family, bool>>? whereExpression,
@@ -40,7 +37,6 @@ public class FamilyService : ServiceBase<Family>, IFamilyService
 
         RefAsync<int> totalCount = 0;
         var list = await DAL.DbContext.Queryable<Family>()
-            .Includes(f => f.Uploader)
             .Includes(f => f.Category)
             .OrderBy(orderModels)
             .WhereIF(whereExpression != null, whereExpression)
