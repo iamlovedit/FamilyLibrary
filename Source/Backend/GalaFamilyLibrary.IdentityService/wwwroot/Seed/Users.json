@@ -2,7 +2,7 @@
   {
     "id": 1673990253930749954,
     "username": "admin",
-    "name": "管理员",
+    "nickname": "管理员",
     "salt": "2d9f649bc7074e56965918cffec6eccf",
     "password": "a9b50deff9a033ecd1ee9e301fccdb7e",
     "createdDate": "\/Date(1546272000000+0800)\/",
@@ -15,7 +15,7 @@
   {
     "id": 1673990253930749955,
     "username": "youngala",
-    "name": "普通用户",
+    "nickname": "普通用户",
     "salt": "2d9f649bc7074e56965918cffec6eccf",
     "password": "a9b50deff9a033ecd1ee9e301fccdb7e",
     "createdDate": "\/Date(1546272000000+0800)\/",
