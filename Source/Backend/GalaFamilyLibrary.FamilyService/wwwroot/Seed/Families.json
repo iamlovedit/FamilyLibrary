@@ -2,41 +2,19 @@
   {
     "id": 1674247048507039744,
     "name": "test1",
-    "createTime": "\/Date(1546272000000+0800)\/",
-    "updateTime": "\/Date(1546272000000+0800)\/",
-    "uploaderId": 1673990253930749954,
+    "createdDate": "\/Date(1546272000000+0800)\/",
+    "updatedDate": "\/Date(1546272000000+0800)\/",
+    "uniqueId": "d2e98a03-48d5-0beb-39c5-fabdc3c1ef0e",
     "categoryId": 1674636656487043100,
-    "md5": "a91303fe029dcfd7ef51f21fb28d724b",
-    "fileId": "d2e98a03-48d5-0beb-39c5-fabdc3c1ef0e",
-    "stars": 1024,
-    "favorites": 3389,
-    "downloads": 3359,
-    "versions": [
-      2018,
-      2019,
-      2020,
-      2021,
-      2022
-    ]
+    "detailId": 1674247048507039344
   },
   {
     "id": 1674247048511234048,
     "name": "test2",
-    "stars": 5532,
-    "downloads": 3320,
-    "favorites": 345,
-    "md5": "4e337f229adc2cda6a3deaf3183dcf57",
-    "createTime": "\/Date(1546272000000+0800)\/",
-    "updateTime": "\/Date(1546272000000+0800)\/",
-    "uploaderId": 1673990253930749955,
+    "createdDate": "\/Date(1546272000000+0800)\/",
+    "updatedDate": "\/Date(1546272000000+0800)\/",
+    "uniqueId": "9a7fd1ef-b3bb-950d-648b-a48cdc0be1f9",
     "categoryId": 1674636656487043100,
-    "fileId": "9a7fd1ef-b3bb-950d-648b-a48cdc0be1f9",
-    "versions": [
-      2018,
-      2019,
-      2020,
-      2021,
-      2022
-    ]
+    "detailId": 1674247048507039345
   }
 ]
