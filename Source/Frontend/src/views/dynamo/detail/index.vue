@@ -42,8 +42,13 @@
     <n-pagination
       v-model:page="pageRef"
       :item-count="versionCountRef"
-      :page-size="10"
-      :on-update:page="handlePageChange"
+      v-model:page-size="pageSizeRef"
+      :page-slot="8"
+      :page-sizes="[10, 20, 30, 40]"
+      @update:page="handlePageChange"
+      @update:page-size="handleSizeChange"
+      show-quick-jumper
+      show-size-picker
     />
   </n-flex>
 </template>
@@ -61,27 +66,41 @@ import {
 const url = import.meta.env.VITE_APP_API_BASE_URL
 
 const currentRoute = useRoute()
+const { page, pageSize } = currentRoute.query
 const router = useRouter()
 const message = useMessage()
 const loadingBar = useLoadingBar()
 const versionsRef = ref<PackageVersionDTO[]>([])
 const packageRef = ref<PackageDTO>()
 const versionCountRef = ref<number>()
-const pageRef = ref<number>(Number(currentRoute.query.page))
+const pageRef = ref<number>(Number(page) || 1)
+const pageSizeRef = ref<number>(Number(pageSize) || 10)
 function handleBack() {
   router.back()
 }
 
 async function handlePageChange(newPage: number) {
-  pageRef.value = newPage
   await router.push({
     name: 'package-detail',
-    replace: true,
     params: {
       id: currentRoute.params.id
     },
     query: {
-      page: newPage
+      page: newPage,
+      pageSize: currentRoute.query.pageSize
+    }
+  })
+}
+
+async function handleSizeChange(pageSize: number) {
+  await router.push({
+    name: 'package-detail',
+    params: {
+      id: currentRoute.params.id
+    },
+    query: {
+      page: currentRoute.query.page,
+      pageSize: pageSize
     }
   })
 }
@@ -91,7 +110,7 @@ onMounted(async () => {
     loadingBar.start()
     const id = currentRoute.params.id as string
     const [versionResponse, detailResponse] = await Promise.all([
-      getPackageVersionPageAsync(id, pageRef.value, 10),
+      getPackageVersionPageAsync(id, pageRef.value, pageSizeRef.value),
       getPackageDetailAsync(id)
     ])
     if (versionResponse.succeed && detailResponse.succeed) {
@@ -110,17 +129,16 @@ onMounted(async () => {
 })
 
 watch(
-  () => pageRef.value,
+  () => currentRoute.fullPath,
   async () => {
     try {
       loadingBar.start()
       const versionResponse = await getPackageVersionPageAsync(
         packageRef.value!.id,
         pageRef.value,
-        10
+        pageSizeRef.value
       )
       if (versionResponse.succeed) {
-        console.log(versionResponse)
         versionsRef.value = versionResponse.response.data
       } else {
         throw new Error(versionResponse.message)

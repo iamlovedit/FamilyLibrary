@@ -190,7 +190,8 @@ async function handleDetailClick(packageObj: PackageDTO) {
       id: packageObj.id
     },
     query: {
-      page: 1
+      page: 1,
+      pageSize: 10
     }
   })
 }
