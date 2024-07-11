@@ -24,9 +24,6 @@ namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
         public long Favorites { get; set; }
         
         public long Downloads { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-
-        public string? Description { get; set; }
+        
     }
 }
