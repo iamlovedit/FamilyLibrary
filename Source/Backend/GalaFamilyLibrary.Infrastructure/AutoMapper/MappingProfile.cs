@@ -20,8 +20,8 @@ namespace GalaFamilyLibrary.Infrastructure.AutoMapper
             CreateMap<FamilyCategory, FamilyCategoryDTO>();
             CreateMap<FamilyCategory, FamilyCategoryBasicDTO>();
             CreateMap<FamilySymbol, FamilySymbolDTO>();
-            CreateMap<Family, FamilyDetailDTO>();
-            CreateMap<Family, FamilyBasicDTO>();
+            CreateMap<FamilyDetail, FamilyDetailDTO>();
+            CreateMap<Family, FamilyDTO>();
 
             CreateMap<DynamoPackage, PackageDTO>();
             CreateMap<PackageVersion, PackageVersionDTO>();
