@@ -18,12 +18,13 @@ namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
         public List<FamilySymbolDTO>? Symbols { get; set; }
 
         public List<ushort>? Versions { get; set; }
-        
+
         public long Views { get; set; }
 
         public long Favorites { get; set; }
-        
+
         public long Downloads { get; set; }
-        
+
+        public List<string> Covers { get; set; }
     }
 }
