@@ -22,6 +22,7 @@ export interface FamilyDetail extends FamilyBasic {
   fileId: string
   views: number
   versions: number[]
+  covers: string[]
   symbols: FamilySymbol[]
 }
 
