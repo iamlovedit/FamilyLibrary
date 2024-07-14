@@ -25,6 +25,8 @@ namespace GalaFamilyLibrary.DataTransferObject.FamilyLibrary
 
         public long Downloads { get; set; }
 
+        public long Stars { get; set; }
+
         public List<string> Covers { get; set; }
     }
 }
