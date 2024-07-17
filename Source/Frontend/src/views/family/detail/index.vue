@@ -40,20 +40,10 @@
           <n-tab-pane name="covers" tab="封面">
             <n-carousel show-arrow>
               <img
+                v-for="cover in familyRef?.covers"
+                :key="cover"
                 class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel1.jpeg"
-              />
-              <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel2.jpeg"
-              />
-              <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel3.jpeg"
-              />
-              <img
-                class="carousel-img"
-                src="https://naive-ui.oss-cn-beijing.aliyuncs.com/carousel-img/carousel4.jpeg"
+                :src="cover"
               />
             </n-carousel>
           </n-tab-pane>
