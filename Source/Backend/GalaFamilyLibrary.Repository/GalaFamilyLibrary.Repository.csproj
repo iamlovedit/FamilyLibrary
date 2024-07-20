@@ -9,7 +9,7 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-      <PackageReference Include="SqlSugarCore" Version="5.1.4.160" />
+      <PackageReference Include="SqlSugarCore" Version="5.1.4.166" />
     </ItemGroup>
 
 </Project>

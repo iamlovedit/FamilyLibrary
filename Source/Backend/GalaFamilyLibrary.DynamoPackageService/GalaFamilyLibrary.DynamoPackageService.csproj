@@ -22,7 +22,8 @@
         <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.7" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
         <PackageReference Include="Quartz.AspNetCore" Version="3.11.0" />
-        <PackageReference Include="SqlSugarCore" Version="5.1.4.160" />
+        <PackageReference Include="Roller" Version="1.0.6" />
+        <PackageReference Include="SqlSugarCore" Version="5.1.4.166" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
     </ItemGroup>
 
