@@ -18,7 +18,7 @@ var configuration = builder.Configuration;
 services.AddFileSecurityOptionSetup(configuration);
 services.AddFileStorageClientSetup(configuration);
 
-services.AddScoped(typeof(IFamilyService), typeof(FamilyService));
+services.AddScoped<IFamilyService, FamilyService>();
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
 builder.AddInfrastructureSetup();
 

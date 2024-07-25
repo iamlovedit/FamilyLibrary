@@ -1,24 +1,19 @@
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
-using GalaFamilyLibrary.Infrastructure.Security.Encyption;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.Package;
 using GalaFamilyLibrary.Service.Package;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Polly;
 using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 // Add services to the container.
-services.Configure<KestrelServerOptions>(options =>
-{
-    options.Limits.MaxRequestBodySize = long.MaxValue;
-});
+services.Configure<KestrelServerOptions>(options => { options.Limits.MaxRequestBodySize = long.MaxValue; });
 
-services.AddScoped(typeof(IPackageService), typeof(PackageService));
-services.AddScoped(typeof(IVersionService), typeof(VersionService));
+services.AddScoped<IPackageService, PackageService>();
+services.AddScoped<IVersionService, VersionService>();
 
 builder.AddInfrastructureSetup();
 services.AddQuartz(options =>

@@ -7,8 +7,8 @@ using GalaFamilyLibrary.Service.FamilyParameter;
 var builder = WebApplication.CreateBuilder(args);
 builder.AddInfrastructureSetup();
 var services = builder.Services;
-services.AddScoped(typeof(IParameterService), typeof(ParameterService));
-services.AddScoped(typeof(IParameterDefinitionService), typeof(ParameterDefinitionService));
+services.AddScoped<IParameterService, ParameterService>();
+services.AddScoped<IParameterDefinitionService, ParameterDefinitionService>();
 var app = builder.Build();
 
 app.UseInitSeed(dbSeed =>
