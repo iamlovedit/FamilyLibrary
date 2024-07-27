@@ -1,4 +1,5 @@
-﻿using GalaFamilyLibrary.Repository;
+﻿using GalaFamilyLibrary.Model.FamilyLibrary;
+using GalaFamilyLibrary.Repository;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Model.Identity
@@ -9,7 +10,7 @@ namespace GalaFamilyLibrary.Model.Identity
         [SugarColumn(IsPrimaryKey = true, ColumnName = "user_id")]
         public long Id { get; set; }
 
-        [SugarColumn(ColumnName = "user_username",Length =16)]
+        [SugarColumn(ColumnName = "user_username", Length = 16)]
         public string? Username { get; set; }
 
         [SugarColumn(ColumnName = "user_nickname", IsNullable = true)]
@@ -18,7 +19,7 @@ namespace GalaFamilyLibrary.Model.Identity
         [SugarColumn(ColumnName = "user_password", Length = 32)]
         public string? Password { get; set; }
 
-        [SugarColumn(ColumnName = "user_email",Length =32)]
+        [SugarColumn(ColumnName = "user_email", Length = 32)]
         public string? Email { get; set; }
 
         [SugarColumn(ColumnName = "user_salt")]
@@ -26,6 +27,12 @@ namespace GalaFamilyLibrary.Model.Identity
 
         [Navigate(typeof(UserRole), nameof(UserRole.UserId), nameof(UserRole.RoleId))]
         public List<Role>? Roles { get; set; }
+
+        [Navigate(typeof(FamilyLikes), nameof(FamilyLikes.UserId), nameof(FamilyLikes.FamilyId))]
+        public List<FamilyLikes>? Likes { get; set; }
+
+        [Navigate(typeof(FamilyCollections), nameof(FamilyCollections.UserId), nameof(FamilyCollections.FamilyId))]
+        public List<FamilyCollections>? Collections { get; set; }
 
         [SugarColumn(ColumnName = "user_createdDate")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;

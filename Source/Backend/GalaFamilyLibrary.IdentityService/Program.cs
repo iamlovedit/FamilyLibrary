@@ -41,7 +41,7 @@ app.UseInitSeed(dbSeed =>
     dbSeed.InitSeed<UserRole>(file);
 
     file = string.Format(seedFolder, "FamilyCollections");
-    dbSeed.InitSeed<FamilyCollection>(file);
+    dbSeed.InitSeed<FamilyCollections>(file);
 
     // file = string.Format(seedFolder, "FamilyStars");
     // dbSeed.InitSeed<FamilyStar>(file);
