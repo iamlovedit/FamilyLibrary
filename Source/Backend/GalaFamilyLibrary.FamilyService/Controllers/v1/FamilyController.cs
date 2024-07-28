@@ -1,20 +1,17 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
-using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
-using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.Infrastructure.Common;
-using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Model.FamilyLibrary;
 using GalaFamilyLibrary.Repository;
 using GalaFamilyLibrary.Service.FamilyLibrary;
-using GalaFamilyLibrary.Service.Validators;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Minio;
 using Minio.DataModel.Args;
 using SqlSugar;
+using FamilyCollections = GalaFamilyLibrary.Model.Identity.FamilyCollections;
 
 namespace GalaFamilyLibrary.FamilyService.Controllers.v1;
 
@@ -25,6 +22,8 @@ public class FamilyController(
     ILogger<FamilyController> logger,
     IRedisBasketRepository redis,
     IMapper mapper,
+    IFamilyLikesService familyLikesService,
+    IFamilyCollectionsService familyCollectionsService,
     IFamilyService familyService,
     RedisRequirement redisRequirement)
     : GalaControllerBase
@@ -94,7 +93,6 @@ public class FamilyController(
             .WithExpiry(_expiry * 5);
         var url = await _minioClient.PresignedPutObjectAsync(args);
         return Success(url);
-
     }
 
 
@@ -156,5 +154,106 @@ public class FamilyController(
         familyPage.Data.ForEach(f => _minioClient.PresignedGetObjectAsync(args.WithObject(f.GetImagePath())));
         var familyPageDto = familyPage.ConvertTo<FamilyDTO>(mapper);
         return SucceedPage(familyPageDto);
+    }
+
+    [HttpPost("like/{familyId:long}")]
+    public async Task<MessageData<bool>> LikeFamilyAsync(long familyId)
+    {
+        var userId = GetUserIdFromClaims();
+        if (userId == 0)
+        {
+            return Failed<bool>("get user`s information failed");
+        }
+
+        var redisKey = $"family/family_likes/userId={userId}&&familyId={familyId}";
+        if (await redis.Exist(redisKey))
+        {
+            return Failed<bool>("invalid request");
+        }
+
+        await redis.Set(redisKey, 0, TimeSpan.FromSeconds(5));
+
+        var familyLike =
+            await familyLikesService.GetFamilyLikesByExpressionAsync(fl =>
+                fl.UserId == userId && fl.FamilyId == familyId);
+        if (familyLike is null)
+        {
+            familyLike = new FamilyLikes()
+            {
+                UserId = userId,
+                FamilyId = familyId
+            };
+            var id = await familyLikesService.AddSnowflakeAsync(familyLike);
+            if (id > 0)
+            {
+                return Success(true);
+            }
+        }
+        else
+        {
+            if (familyLike.IsDeleted)
+            {
+                familyLike.IsDeleted = false;
+                familyLike.CreatedDate = DateTime.Now;
+                if (await familyLikesService.UpdateColumnsAsync(familyLike,
+                        fl => new { fl.IsDeleted, fl.CreatedDate }))
+                {
+                    return Success(true);
+                }
+            }
+        }
+
+        return Failed<bool>();
+    }
+
+    [HttpPost("collect/{familyId:long}")]
+    public async Task<MessageData<bool>> CollectFamilyAsync(long familyId)
+    {
+        var userId = GetUserIdFromClaims();
+        if (userId == 0)
+        {
+            return Failed<bool>("get user`s information failed");
+        }
+
+        var redisKey = $"family/family_collections/userId={userId}&&familyId={familyId}";
+        if (await redis.Exist(redisKey))
+        {
+            return Failed<bool>("invalid request");
+        }
+
+        await redis.Set(redisKey, 0, TimeSpan.FromSeconds(5));
+
+        var familyCollection =
+            await familyCollectionsService.GetCollectionByExpressionAsync(fc =>
+                fc.UserId == userId && fc.FamilyId == familyId);
+        if (familyCollection is null)
+        {
+            familyCollection = new FamilyCollections()
+            {
+                UserId = userId,
+                FamilyId = familyId
+            };
+
+            var id = await familyCollectionsService.AddSnowflakeAsync(familyCollection);
+            if (id > 0)
+            {
+                return Success(true);
+            }
+        }
+        else
+        {
+            if (familyCollection.IsDeleted)
+            {
+                familyCollection.IsDeleted = false;
+                familyCollection.CreateDate = DateTime.Now;
+                if (await familyCollectionsService.UpdateColumnsAsync(familyCollection,
+                        fc => new { fc.IsDeleted, fc.CreateDate }))
+                {
+                    return Success(true);
+                }
+            }
+        }
+
+        return Failed<bool>();
     }
 }
