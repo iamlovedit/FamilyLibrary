@@ -27,6 +27,7 @@
     "@unocss/core": "latest",
     "@unocss/preset-attributify": "latest",
     "@unocss/preset-icons": "latest",
+    "@unocss/preset-uno": "^0.61.6",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
