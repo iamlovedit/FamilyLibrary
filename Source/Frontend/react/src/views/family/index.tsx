@@ -1,8 +1,8 @@
+import { Outlet } from "react-router-dom"
+
 function FamilyHome() {
     return (
-        <div>
-            family home
-        </div>
+        <Outlet />
     )
 }
 

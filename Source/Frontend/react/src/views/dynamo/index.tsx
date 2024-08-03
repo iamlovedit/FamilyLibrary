@@ -1,9 +1,12 @@
-import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 function DynamoHome() {
     return (
         <div>
-            dynamo home
+            <div>
+                Dynamo Home
+            </div>
+            <Outlet />
         </div>
     );
 }
