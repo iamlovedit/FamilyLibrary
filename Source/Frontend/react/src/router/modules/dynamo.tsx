@@ -5,7 +5,8 @@ const DynamoHome = lazy(() => import('@/views/dynamo/index'))
 
 const dynamoRoutes: RouteObject[] = [
   {
-    path: '/dynamo'
+    path: '/dynamo',
+    element: <DynamoHome />
   }
 ]
 
