@@ -25,17 +25,17 @@ const items: MenuItem[] = [
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider theme={{ algorithm: theme.compactAlgorithm }}>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
       <Layout className='h-full w-full flex flex-col flex-nowrap'>
         <Header >
-
+          <Menu items={items} mode='horizontal' theme="dark" />
         </Header>
         <Content>
           <BrowserRouter>
             <MainRoutes />
           </BrowserRouter>
         </Content>
-        <Footer >
+        <Footer className='text-align-center'>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
