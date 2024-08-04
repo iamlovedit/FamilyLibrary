@@ -1,14 +1,44 @@
-import './App.css'
+import '@/App.css'
 import { BrowserRouter } from 'react-router-dom';
 import MainRoutes from '@/router';
-import { ConfigProvider, theme } from "antd";
+import { Layout, Menu, ConfigProvider, theme } from 'antd';
+import type { MenuProps } from 'antd';
 
-function App() {
+type MenuItem = Required<MenuProps>['items'][number];
+
+const { Header, Content, Footer } = Layout;
+
+const items: MenuItem[] = [
+  {
+    label: '首页',
+    key: 'home'
+  },
+  {
+    label: '节点包',
+    key: 'dynamo'
+  },
+  {
+    label: '族库',
+    key: 'family'
+  }
+]
+
+const App: React.FC = () => {
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-      <BrowserRouter>
-        <MainRoutes />
-      </BrowserRouter>
+    <ConfigProvider theme={{ algorithm: theme.compactAlgorithm }}>
+      <Layout className='h-full w-full flex flex-col flex-nowrap'>
+        <Header >
+
+        </Header>
+        <Content>
+          <BrowserRouter>
+            <MainRoutes />
+          </BrowserRouter>
+        </Content>
+        <Footer >
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
+      </Layout>
     </ConfigProvider>
   )
 }
