@@ -5,6 +5,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
     public class GiteeAuthenticationOAuthOptions : AuthenticationOAuthOptions
     {
+        public static string SchemaName = "Gitee";
         public string UserEmailsEndpoint { get; set; }
 
         public string Url { get; set; } = "urn:gitee:url";
@@ -13,7 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 
         public GiteeAuthenticationOAuthOptions()
         {
-            ClaimsIssuer = "Gitee";
+            ClaimsIssuer = SchemaName;
             CallbackPath = "/signin-gitee";
             AuthorizationEndpoint = "https://gitee.com/oauth/authorize";
             TokenEndpoint = "https://gitee.com/oauth/token";

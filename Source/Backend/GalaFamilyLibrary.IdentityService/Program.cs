@@ -1,6 +1,5 @@
 using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.Identity;
-using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
@@ -10,9 +9,6 @@ using GalaFamilyLibrary.Service.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
-// Add services to the container.
-services.AddFileSecurityOptionSetup(builder.Configuration);
-services.AddFileStorageClientSetup(builder.Configuration);
 
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<IValidator<UserCreationDTO>, UserCreationValidator>();
