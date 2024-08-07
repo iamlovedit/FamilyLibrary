@@ -16,7 +16,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth
         : AuthenticationHandler<TOptions>(options, logger, encoder)
         where TOptions : AuthenticationSchemeOptions, new()
     {
-        private HttpClient _httpClient = httpClientFactory.CreateClient();
+        private readonly HttpClient _httpClient = httpClientFactory.CreateClient();
         protected abstract string AuthenticationSchemeName { get; set; }
         protected abstract Task<IList<Claim>> GenerateClaimsByCode(string code);
 
