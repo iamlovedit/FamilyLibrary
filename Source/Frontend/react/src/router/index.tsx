@@ -3,6 +3,7 @@ import { RouteObject, useRoutes } from 'react-router-dom'
 import dynamoRoutes from './modules/dynamo'
 import familyRoutes from './modules/family'
 import excptionRoutes from './modules/exceptions'
+import authRoutes from './modules/auth'
 
 const Home = lazy(() => import('@/views/home/index'))
 
@@ -13,7 +14,8 @@ const routes: RouteObject[] = [
   },
   ...dynamoRoutes,
   ...familyRoutes,
-  ...excptionRoutes
+  ...excptionRoutes,
+  ...authRoutes
 ]
 
 const MainRoutes = () => {
