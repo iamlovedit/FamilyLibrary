@@ -1,23 +1,33 @@
-import { lazy } from 'react'
+import { lazy, Suspense } from 'react'
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
 import dynamoRoutes from './modules/dynamo'
 import familyRoutes from './modules/family'
 import excptionRoutes from './modules/exceptions'
 import authRoutes from './modules/auth'
 
-const Home = lazy(() => import('@/views/home/index'))
+const Home = lazy(() => import('@/views/home'))
+const Loading = lazy(() => import('@/components/Loading'))
 
 const routes: RouteObject[] = [
   {
+    path: "*",
+    element: <Navigate to='/404' />
+  },
+  {
     path: '/home',
-    element: <Home />
+    element: <Navigate to='/' />
   },
   {
     path: '/',
-    element: <Navigate to="/home" />
+    element:
+      <Suspense fallback={<Loading />}>
+        <Home />
+      </Suspense>,
+    children: [
+      ...dynamoRoutes,
+      ...familyRoutes,
+    ]
   },
-  ...dynamoRoutes,
-  ...familyRoutes,
   ...excptionRoutes,
   ...authRoutes
 ]
