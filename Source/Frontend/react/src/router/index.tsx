@@ -6,6 +6,7 @@ import excptionRoutes from './modules/exceptions'
 import authRoutes from './modules/auth'
 
 const Home = lazy(() => import('@/views/home'))
+const MainLayout = lazy(() => import('@/views/layout'))
 const Loading = lazy(() => import('@/components/Loading'))
 
 const routes: RouteObject[] = [
@@ -14,16 +15,19 @@ const routes: RouteObject[] = [
     element: <Navigate to='/404' />
   },
   {
-    path: '/home',
-    element: <Navigate to='/' />
-  },
-  {
-    path: '/',
+    path: '',
     element:
       <Suspense fallback={<Loading />}>
-        <Home />
+        <MainLayout />
       </Suspense>,
     children: [
+      {
+        path: '/home',
+        element:
+          <Suspense fallback={<Loading />}>
+            <Home />
+          </Suspense>
+      },
       ...dynamoRoutes,
       ...familyRoutes,
     ]
