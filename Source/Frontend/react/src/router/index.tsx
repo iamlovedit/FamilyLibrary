@@ -15,14 +15,14 @@ const routes: RouteObject[] = [
     element: <Navigate to='/404' />
   },
   {
-    path: '',
+    path: '/',
     element:
       <Suspense fallback={<Loading />}>
         <MainLayout />
       </Suspense>,
     children: [
       {
-        path: '/home',
+        path: '',
         element:
           <Suspense fallback={<Loading />}>
             <Home />
