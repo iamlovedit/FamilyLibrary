@@ -23,6 +23,8 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 app.UseVersionedSwaggerUI();
             }
 
+            app.UseMiddleware<NotFoundMiddleware>();
+
             app.UseForwardedHeaders(new ForwardedHeadersOptions
                 { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
 
@@ -32,13 +34,13 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 builder.Run(async context =>
                 {
                     context.Response.ContentType = "application/json";
-                    context.Response.StatusCode = (int)HttpStatusCode.OK;
+                    context.Response.StatusCode = StatusCodes.Status200OK;
                     var message = new MessageData(false, "An exception was thrown", 500);
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(message));
                 });
             });
-            
-            
+
+
             app.UseCorsService();
 
             app.UseAuthentication();
@@ -48,9 +50,9 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
             app.UseAuthorization();
 
             app.MapControllers();
-            
+
             app.UseSerilogLogging();
-            
+
             app.Run();
 
             Log.CloseAndFlush();
