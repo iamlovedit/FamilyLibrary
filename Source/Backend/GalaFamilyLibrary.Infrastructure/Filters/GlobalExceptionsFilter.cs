@@ -16,7 +16,7 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
                 if (!context.ExceptionHandled)
                 {
                     Log.Logger.Error($"{context.Exception.StackTrace}");
-                    var message = new MessageData<Exception>(false, context.Exception.Message, 500);
+                    var message = new MessageData(false, context.Exception.Message, 500);
                     context.Result = new ContentResult
                     {
                         StatusCode = StatusCodes.Status200OK,

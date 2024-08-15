@@ -107,7 +107,7 @@ public class PackageController(
 
     [HttpPost]
     [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
-    public async Task<MessageData<string>> UpdateAsync([FromServices] IHttpClientFactory clientFactory,
+    public async Task<MessageData> UpdateAsync([FromServices] IHttpClientFactory clientFactory,
         [FromServices] DatabaseContext appDbContext, [FromServices] IUnitOfWork unitOfWork)
     {
         var httpClient = clientFactory.CreateClient();
@@ -123,7 +123,7 @@ public class PackageController(
                     var content = jObject["content"];
                     if (content is null)
                     {
-                        return Failed<string>("获取原网站数据失败");
+                        return Failed("获取原网站数据失败");
                     }
 
                     var newPackages = content.ToObject<List<DynamoPackage>>();
@@ -211,7 +211,7 @@ public class PackageController(
     [DisableRequestSizeLimit]
     [RequestSizeLimit(int.MaxValue)]
     [Authorize(Roles = PermissionConstants.ROLE_ADMINISTRATOR)]
-    public async Task<MessageData<string>> UpdateByPackagesAsync([FromServices] IUnitOfWork unitOfWork,
+    public async Task<MessageData> UpdateByPackagesAsync([FromServices] IUnitOfWork unitOfWork,
         [FromServices] DatabaseContext appDbContext, [FromBody] List<DynamoPackage> packages)
     {
         try

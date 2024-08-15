@@ -13,13 +13,24 @@ namespace GalaFamilyLibrary.Infrastructure.Common;
 [ProducesResponseType(StatusCodes.Status200OK)]
 public class GalaControllerBase : ControllerBase
 {
-    [NonAction]
-    [ApiExplorerSettings(IgnoreApi = true)]
     protected static MessageData<T> Success<T>(T data, string message = "成功")
     {
         return new MessageData<T>(true, message, data);
     }
 
+    [NonAction]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    protected static MessageData Success(string message = "成功")
+    {
+        return new MessageData(true, message);
+    }
+
+    [NonAction]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    protected static MessageData Failed(string message = "失败", int code = 500)
+    {
+        return new MessageData(false, message, code);
+    }
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
@@ -27,15 +38,6 @@ public class GalaControllerBase : ControllerBase
     {
         return new MessageData<T>(false, message) { StatusCode = code };
     }
-
-
-    [NonAction]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    protected static MessageData<string?> Failed(string message = "失败", int code = 500)
-    {
-        return new MessageData<string?>(false, message) { StatusCode = code };
-    }
-
 
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]

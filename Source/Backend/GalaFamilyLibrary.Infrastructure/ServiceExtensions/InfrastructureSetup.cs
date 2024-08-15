@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 {
@@ -18,9 +20,18 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
         public static void AddInfrastructureSetup(this WebApplicationBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                DateFormatString = "yyyy-MM-dd HH:mm:ss",
+                DateTimeZoneHandling = DateTimeZoneHandling.Local
+            };
+            
             var configuration = builder.Configuration;
             var services = builder.Services;
-
+                
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddSingleton<GalaTokenHandler>();
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();

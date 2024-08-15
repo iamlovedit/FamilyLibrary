@@ -70,7 +70,7 @@ public class FamilyController(
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName)
             .WithObject(family.GetFilePath(familyCreationDTO.Version)).WithExpiry(_expiry);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Success(url);
+        return Success<string>(url);
     }
 
     [HttpPost("file")]
@@ -92,7 +92,7 @@ public class FamilyController(
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName).WithObject($"{dir}/{fileName}")
             .WithExpiry(_expiry * 5);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Success(url);
+        return Success<string>(url);
     }
 
 

@@ -33,7 +33,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                 {
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = (int)HttpStatusCode.OK;
-                    var message = new MessageData<Exception>(false, "An exception was thrown", 500);
+                    var message = new MessageData(false, "An exception was thrown", 500);
                     await context.Response.WriteAsync(JsonConvert.SerializeObject(message));
                 });
             });
