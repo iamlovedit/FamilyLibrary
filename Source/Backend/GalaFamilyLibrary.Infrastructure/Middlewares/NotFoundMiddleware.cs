@@ -1,6 +1,5 @@
 using GalaFamilyLibrary.Infrastructure.Common;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares;
 
@@ -14,7 +13,7 @@ public class NotFoundMiddleware(RequestDelegate next)
         {
             var message = new MessageData(false, $"路径: {context.Request.Path.Value} 不存在", 404);
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(message));
+            await context.Response.WriteAsync(message.Serialize());
         }
     }
 }

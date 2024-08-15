@@ -20,15 +20,15 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
         public static void AddInfrastructureSetup(this WebApplicationBuilder builder)
         {
             ArgumentNullException.ThrowIfNull(builder);
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                DateFormatString = "yyyy-MM-dd HH:mm:ss",
-                DateTimeZoneHandling = DateTimeZoneHandling.Local
-            };
-            
+            // JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            // {
+            //     NullValueHandling = NullValueHandling.Ignore,
+            //     ContractResolver = new CamelCasePropertyNamesContractResolver(),
+            //     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            //     DateFormatString = "yyyy-MM-dd HH:mm:ss",
+            //     DateTimeZoneHandling = DateTimeZoneHandling.Local
+            // };
+            //
             var configuration = builder.Configuration;
             var services = builder.Services;
                 

@@ -36,7 +36,7 @@ namespace GalaFamilyLibrary.Infrastructure.Middlewares
                     context.Response.ContentType = "application/json";
                     context.Response.StatusCode = StatusCodes.Status200OK;
                     var message = new MessageData(false, "An exception was thrown", 500);
-                    await context.Response.WriteAsync(JsonConvert.SerializeObject(message));
+                    await context.Response.WriteAsync(message.Serialize());
                 });
             });
 
