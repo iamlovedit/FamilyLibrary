@@ -31,7 +31,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             //
             var configuration = builder.Configuration;
             var services = builder.Services;
-                
+
             services.AddSingleton<JwtSecurityTokenHandler>();
             services.AddSingleton<GalaTokenHandler>();
             services.AddSingleton<IAESEncryptionService, AESEncryptionService>();
@@ -63,7 +63,11 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             //api version
             services.AddApiVersionSetup();
 
-            services.AddControllers(options => { options.Filters.Add(typeof(GlobalExceptionsFilter)); })
+            services.AddControllers(options =>
+                {
+                    options.Filters.Add<GlobalExceptionsFilter>();
+                    options.Filters.Add<IdempotencyFilter>();
+                })
                 .AddProduceJsonSetup();
 
             services.AddEndpointsApiExplorer();
