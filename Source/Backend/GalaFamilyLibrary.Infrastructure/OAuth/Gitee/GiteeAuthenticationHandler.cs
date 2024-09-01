@@ -12,7 +12,8 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
         UrlEncoder encoder)
         : OAuthenticationHandlerBase<GiteeAuthenticationOAuthOptions>(options, logger, httpClientFactory, encoder)
     {
-        protected override string AuthenticationSchemeName { get; set; } = "Gitee";
+        protected override string AuthenticationSchemeName { get; set; } =
+            GiteeAuthenticationExtensions.AuthenticationScheme;
 
         protected override async Task<IList<Claim>> GenerateClaimsByCode(string code)
         {
