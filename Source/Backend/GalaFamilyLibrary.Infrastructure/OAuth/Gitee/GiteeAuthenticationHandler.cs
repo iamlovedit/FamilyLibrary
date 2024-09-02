@@ -27,13 +27,13 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
             };
             var giteeToken = await SeedHttpMessageAsync<GiteeToken>(Options.TokenEndpoint, tokenQueryPairs);
 
-            var userInfoQueryPais = new List<KeyValuePair<string, string?>>()
+            var userInfoQueryPairs = new List<KeyValuePair<string, string?>>()
             {
                 new("access_token", giteeToken.AccessToken),
             };
 
             var userInfo =
-                await SeedHttpMessageAsync<GiteeUserInfo>(Options.UserInformationEndpoint, userInfoQueryPais);
+                await SeedHttpMessageAsync<GiteeUserInfo>(Options.UserInformationEndpoint, userInfoQueryPairs);
             var claims = new List<Claim>()
             {
                 new(Options.AvatarUrl, userInfo.AvatarUrl),
