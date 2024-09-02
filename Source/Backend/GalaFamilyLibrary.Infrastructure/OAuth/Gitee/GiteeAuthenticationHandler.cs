@@ -6,11 +6,11 @@ using Microsoft.Extensions.Options;
 namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
     public class GiteeAuthenticationHandler(
-        IOptionsMonitor<GiteeAuthenticationOAuthOptions> options,
+        IOptionsMonitor<GiteeAuthenticationOptions> options,
         ILoggerFactory logger,
         IHttpClientFactory httpClientFactory,
         UrlEncoder encoder)
-        : OAuthenticationHandlerBase<GiteeAuthenticationOAuthOptions>(options, logger, httpClientFactory, encoder)
+        : OAuthenticationHandlerBase<GiteeAuthenticationOptions>(options, logger, httpClientFactory, encoder)
     {
         protected override string AuthenticationSchemeName { get; set; } =
             GiteeAuthenticationExtensions.AuthenticationScheme;

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
-    public class GiteeAuthenticationOAuthOptions : AuthenticationOAuthOptions
+    public class GiteeAuthenticationOptions : AuthenticationOAuthOptions
     {
         public static string SchemaName = "Gitee";
         public string UserEmailsEndpoint { get; set; }
@@ -12,7 +12,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 
         public string AvatarUrl { get; set; } = "urn:gitee:avatarUrl";
 
-        public GiteeAuthenticationOAuthOptions()
+        public GiteeAuthenticationOptions()
         {
             ClaimsIssuer = SchemaName;
             CallbackPath = "/signin-gitee";

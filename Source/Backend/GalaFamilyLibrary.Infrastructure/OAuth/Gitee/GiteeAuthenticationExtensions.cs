@@ -13,22 +13,22 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder,
-            Action<GiteeAuthenticationOAuthOptions> configuration)
+            Action<GiteeAuthenticationOptions> configuration)
         {
             return builder.AddGiteeAuthentication(AuthenticationScheme, configuration);
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder, string scheme,
-            Action<GiteeAuthenticationOAuthOptions> configureOptions)
+            Action<GiteeAuthenticationOptions> configureOptions)
         {
             return builder.AddGiteeAuthentication(scheme, AuthenticationScheme, configureOptions);
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder, string scheme,
             string caption,
-            Action<GiteeAuthenticationOAuthOptions> configureOptions)
+            Action<GiteeAuthenticationOptions> configureOptions)
         {
-            return builder.AddScheme<GiteeAuthenticationOAuthOptions, GiteeAuthenticationHandler>(scheme, caption,
+            return builder.AddScheme<GiteeAuthenticationOptions, GiteeAuthenticationHandler>(scheme, caption,
                 configureOptions);
         }
     }
