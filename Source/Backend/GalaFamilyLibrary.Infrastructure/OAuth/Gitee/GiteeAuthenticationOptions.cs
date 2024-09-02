@@ -5,16 +5,17 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
     public class GiteeAuthenticationOptions : AuthenticationOAuthOptions
     {
-        public static string SchemaName = "Gitee";
         public string UserEmailsEndpoint { get; set; }
 
         public string Url { get; set; } = "urn:gitee:url";
 
         public string AvatarUrl { get; set; } = "urn:gitee:avatarUrl";
 
+        public override string RedirectUri { get; set; }
+
         public GiteeAuthenticationOptions()
         {
-            ClaimsIssuer = SchemaName;
+            ClaimsIssuer = GiteeAuthenticationExtensions.AuthenticationScheme;
             CallbackPath = "/signin-gitee";
             AuthorizationEndpoint = "https://gitee.com/oauth/authorize";
             TokenEndpoint = "https://gitee.com/oauth/token";
