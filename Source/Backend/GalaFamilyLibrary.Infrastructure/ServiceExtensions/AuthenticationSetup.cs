@@ -6,12 +6,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using GalaFamilyLibrary.Infrastructure.OAuth.Gitee;
 using GalaFamilyLibrary.Infrastructure.Security;
 using Microsoft.Extensions.Primitives;
 
 namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
-public static class JwtAuthenticationSetup
+public static class AuthenticationSetup
 {
     public static void AddJwtAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
     {
@@ -56,6 +57,7 @@ public static class JwtAuthenticationSetup
                     return Task.CompletedTask;
                 },
             };
-        });
+        })
+        .AddGiteeAuthentication();
     }
 }
