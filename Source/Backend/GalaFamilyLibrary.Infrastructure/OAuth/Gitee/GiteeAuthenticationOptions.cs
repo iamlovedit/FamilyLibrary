@@ -11,8 +11,6 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 
         public string AvatarUrl { get; } = "urn:gitee:avatarUrl";
 
-        public override string RedirectUri { get; set; }
-
         public GiteeAuthenticationOptions()
         {
             ClaimsIssuer = GiteeAuthenticationExtensions.AuthenticationSchemeName;
