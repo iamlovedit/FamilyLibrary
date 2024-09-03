@@ -13,7 +13,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
         : OAuthenticationHandlerBase<GiteeAuthenticationOptions>(options, logger, httpClientFactory, encoder)
     {
         protected override string AuthenticationSchemeName { get; set; } =
-            GiteeAuthenticationExtensions.AuthenticationScheme;
+            GiteeAuthenticationExtensions.AuthenticationSchemeName;
 
         protected override async Task<IList<Claim>> GenerateClaimsByCode(string code)
         {
