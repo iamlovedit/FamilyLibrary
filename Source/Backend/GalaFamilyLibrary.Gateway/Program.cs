@@ -16,7 +16,7 @@ services.AddRedisCacheSetup(builder.Configuration);
 services.AddSeqSetup(builder.Configuration);
 
 services.AddAuthorizationSetup(builder.Configuration);
-services.AddJwtAuthenticationSetup(builder.Configuration);
+services.AddAuthenticationSetup(builder.Configuration);
 services.AddOcelot().AddPolly();
 var app = builder.Build();
 

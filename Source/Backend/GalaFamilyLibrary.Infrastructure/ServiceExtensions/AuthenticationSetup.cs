@@ -14,7 +14,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 
 public static class AuthenticationSetup
 {
-    public static void AddJwtAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
+    public static void AddAuthenticationSetup(this IServiceCollection services, IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
 

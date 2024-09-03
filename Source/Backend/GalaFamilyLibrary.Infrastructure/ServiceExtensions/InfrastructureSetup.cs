@@ -50,7 +50,7 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
 
             builder.AddSerilogSetup();
 
-            services.AddJwtAuthenticationSetup(configuration);
+            services.AddAuthenticationSetup(configuration);
 
             services.AddAuthorizationSetup(configuration);
 
