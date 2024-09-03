@@ -13,9 +13,9 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder,
-            Action<GiteeAuthenticationOptions> configuration)
+            Action<GiteeAuthenticationOptions> configureOptions)
         {
-            return builder.AddGiteeAuthentication(AuthenticationSchemeName, configuration);
+            return builder.AddGiteeAuthentication(AuthenticationSchemeName, configureOptions);
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder, string scheme,
@@ -25,10 +25,10 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
         }
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder, string scheme,
-            string caption,
+            string displayName,
             Action<GiteeAuthenticationOptions> configureOptions)
         {
-            return builder.AddScheme<GiteeAuthenticationOptions, GiteeAuthenticationHandler>(scheme, caption,
+            return builder.AddScheme<GiteeAuthenticationOptions, GiteeAuthenticationHandler>(scheme, displayName,
                 configureOptions);
         }
     }
