@@ -34,30 +34,30 @@ public static class AuthenticationSetup
             ValidateAudience = true,
             ValidAudience = audience,
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.FromSeconds(15),
+            ClockSkew = TimeSpan.FromSeconds(300),
             RequireExpirationTime = true,
             RoleClaimType = ClaimTypes.Role
         };
 
         services.AddAuthentication(options =>
-        {
-            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
-            options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
-        }).AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
-            options => { }).AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = tokenValidationParameters;
-            options.Events = new JwtBearerEvents()
             {
-                OnChallenge = challengeContext =>
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = nameof(GalaAuthenticationHandler);
+                options.DefaultForbidScheme = nameof(GalaAuthenticationHandler);
+            }).AddScheme<AuthenticationSchemeOptions, GalaAuthenticationHandler>(nameof(GalaAuthenticationHandler),
+                options => { }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = tokenValidationParameters;
+                options.Events = new JwtBearerEvents()
                 {
-                    challengeContext.Response.Headers.Append(
-                        new KeyValuePair<string, StringValues>("token-error", challengeContext.ErrorDescription));
-                    return Task.CompletedTask;
-                },
-            };
-        })
-        .AddGiteeAuthentication();
+                    OnChallenge = challengeContext =>
+                    {
+                        challengeContext.Response.Headers.Append(
+                            new KeyValuePair<string, StringValues>("token-error", challengeContext.ErrorDescription));
+                        return Task.CompletedTask;
+                    },
+                };
+            })
+            .AddGiteeAuthentication(options => { configuration.Bind("OAuth:Gitee", options); });
     }
 }

@@ -25,7 +25,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
                 new("redirect_uri", Options.RedirectUri),
                 new("code", code)
             };
-            var giteeToken = await SeedHttpMessageAsync<GiteeToken>(Options.TokenEndpoint, tokenQueryPairs);
+            var giteeToken = await SeedHttpMessageAsync<GiteeToken>(Options.TokenEndpoint, tokenQueryPairs,HttpMethod.Post);
 
             var userInfoQueryPairs = new List<KeyValuePair<string, string?>>()
             {

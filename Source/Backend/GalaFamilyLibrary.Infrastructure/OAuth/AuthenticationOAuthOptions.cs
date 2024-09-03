@@ -10,6 +10,6 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth
 
         public virtual string AccessToken { get; set; } = "urn:access_token";
 
-        public virtual string Name { get; set; } = "urn:access_token";
+        public virtual string Name { get; set; } = "urn:name";
     }
 }
