@@ -13,7 +13,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.QQ
         OAuthenticationHandlerBase<QQAuthenticationOptions>(options, logger, httpClientFactory, encoder)
     {
         protected override string AuthenticationSchemeName { get; set; } =
-            QQAuthenticationExtension.AuthenticationScheme;
+            QQAuthenticationExtension.AuthenticationSchemeName;
 
         protected override async Task<IList<Claim>> GenerateClaimsByCode(string code)
         {
