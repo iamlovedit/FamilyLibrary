@@ -17,6 +17,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/auth/gitee',
+      name: 'gitee',
+      component: () => import('@/views/oauth/index.vue'),
+      meta: {
+        title: '认证',
+        requiresAuth: false
+      }
+    },
+    {
       path: '/register',
       name: 'register',
       component: () => import('@/views/register/index.vue'),
