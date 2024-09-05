@@ -51,13 +51,6 @@ static_resources:
                             auto_host_rewrite: true
                             cluster: identity
                             
-                        - name: "files"
-                          match:
-                            prefix: "/files"
-                          route:
-                            auto_host_rewrite: true
-                            cluster: files
-                        
                         - name: "parameter"
                           match:
                             prefix: "/parameter"
@@ -92,7 +85,7 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: gala_services_dynamo_packages
+            address: dynamo-packages
             port_value: 80
 
     - name: family
@@ -101,7 +94,7 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: gala_services_family_library
+            address: family-library
             port_value: 80
 
     - name: identity
@@ -110,16 +103,7 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: gala_services_identity
-            port_value: 80
-
-    - name: files
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      hosts:
-        - socket_address:
-            address: gala_services_file_storage
+            address: identity
             port_value: 80
 
     - name: parameter
@@ -128,5 +112,5 @@ static_resources:
       lb_policy: round_robin
       hosts:
         - socket_address:
-            address: gala_services_family_parameters
+            address: family-parameters
             port_value: 80            
