@@ -14,22 +14,22 @@
       <PackageReference Include="FluentValidation" Version="11.9.2" />
       <PackageReference Include="Mapster" Version="7.4.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
       <PackageReference Include="Microsoft.AspNetCore.HttpOverrides" Version="2.2.0" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
       <PackageReference Include="Minio" Version="6.0.3" />
       <PackageReference Include="Ocelot.Provider.Consul" Version="23.3.3" />
       <PackageReference Include="Seq.Extensions.Logging" Version="8.0.0" />
-      <PackageReference Include="Serilog" Version="4.0.0" />
-      <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+      <PackageReference Include="Serilog" Version="4.0.1" />
+      <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" /><PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
       <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
       <PackageReference Include="SqlSugarCore" Version="5.1.4.166" />
-      <PackageReference Include="StackExchange.Redis" Version="2.8.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.6.2" />
+      <PackageReference Include="StackExchange.Redis" Version="2.8.16" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.7.3" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.7.3" />
     </ItemGroup>
 
     <ItemGroup>
