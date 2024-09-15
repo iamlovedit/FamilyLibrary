@@ -236,7 +236,7 @@ async function getCategories() {
     loadingBar.start()
     const httpResponse = await getFamilyCategories()
     if (httpResponse.succeed) {
-      categoriesRef.value = httpResponse.response
+      categoriesRef.value = httpResponse.data
     } else {
       throw new Error(httpResponse.message)
     }
@@ -354,8 +354,7 @@ async function getFamiliesPage(
       orderBy
     )
     if (httpResponse.succeed) {
-      console.log(httpResponse.data)
-      familiesRef.value = httpResponse.response.data
+      familiesRef.value = httpResponse.data
     } else {
       throw new Error(httpResponse.message)
     }
