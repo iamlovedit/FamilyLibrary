@@ -1,7 +1,5 @@
-using AutoMapper;
 using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
-using GalaFamilyLibrary.FamilyService.Helpers;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
