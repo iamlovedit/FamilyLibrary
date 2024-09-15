@@ -31,8 +31,4 @@
        <InternalsVisibleTo Include="Application.FunctionalTests" />
     </ItemGroup>
 
-    <ItemGroup>
-      <None Include="appsettings.Staging.json" />
-    </ItemGroup>
-
 </Project>
