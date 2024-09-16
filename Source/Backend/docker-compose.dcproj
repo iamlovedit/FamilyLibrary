@@ -19,6 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".env" />
+    <Content Include="Envoy\Dockerfile" />
     <Content Include="Envoy\envoy.yaml" />
   </ItemGroup>
 </Project>
