@@ -18,6 +18,7 @@ services.AddFileStorageClientSetup(configuration);
 
 services.AddScoped<IFamilyService, FamilyService>();
 services.AddScoped<IFamilyLikesService, FamilyLikesService>();
+services.AddScoped<IFamilyVersionService, FamilyVersionService>();
 services.AddScoped<IFamilyCollectionsService, FamilyCollectionsService>();
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
 builder.AddInfrastructureSetup();
