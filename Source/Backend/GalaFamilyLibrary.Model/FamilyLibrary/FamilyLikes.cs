@@ -4,7 +4,7 @@ using SqlSugar;
 namespace GalaFamilyLibrary.Model.FamilyLibrary
 {
     [SugarTable(TableName = "library_family_likes")]
-    public class FamilyLikes : IDeletable
+    public class FamilyLikes 
     {
         [SugarColumn(IsPrimaryKey = true, ColumnName = "family_likes_id")]
         public long Id { get; set; }
@@ -17,8 +17,6 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
 
         [SugarColumn(ColumnName = "family_likes_createdDate")]
         public DateTime CreatedDate { get; set; } = DateTime.Now;
-
-        [SugarColumn(ColumnName = "family_likes_isDeleted")]
-        public bool IsDeleted { get; set; }
+        
     }
 }

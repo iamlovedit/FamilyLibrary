@@ -189,20 +189,6 @@ public class FamilyController(
                 return Success(true);
             }
         }
-        else
-        {
-            if (familyLike.IsDeleted)
-            {
-                familyLike.IsDeleted = false;
-                familyLike.CreatedDate = DateTime.Now;
-                if (await familyLikesService.UpdateColumnsAsync(familyLike,
-                        fl => new { fl.IsDeleted, fl.CreatedDate }))
-                {
-                    return Success(true);
-                }
-            }
-        }
-
         return Failed<bool>();
     }
 

@@ -27,10 +27,10 @@ namespace GalaFamilyLibrary.Model.FamilyLibrary
 
         [SugarColumn(ColumnName = "detail_favorites")]
         public long Favorites { get; set; }
-    
-        [SugarColumn(ColumnDataType = "varchar(4000)", IsJson = true, ColumnName = "family_versions")]
-        public List<ushort>? Versions { get; set; }
-        
+
+        [Navigate(NavigateType.OneToMany, nameof(FamilyVersion.FamilyId))]
+        public List<FamilyVersion> Versions { get; set; }
+
         [Navigate(NavigateType.OneToMany, nameof(FamilySymbol.FamilyId))]
         public List<FamilySymbol> Symbols { get; set; }
 
