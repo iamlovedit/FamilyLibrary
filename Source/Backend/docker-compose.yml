@@ -1,33 +1,36 @@
 services:
-  gateway:
+  gala-gateway:
     restart: unless-stopped
     networks:
-      - gala_services_net
-    image: envoyproxy/envoy:v1.11.1
+      - gala-services-net
     ports:
       - "5000:80"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    image: ${DOCKER_REGISTRY-}gala-gateway
+    build:
+      context: .
+      dockerfile: ./Envoy/Dockerfile
   
-  dynamo-packages:
+  gala-package:
     restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
       - seq
     env_file:
       - .env
-    image: ${DOCKER_REGISTRY-}gala_dynamo_packages
+    image: ${DOCKER_REGISTRY-}gala-dynamo-packages
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
   
-  family-library:
+  gala-family:
     restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
@@ -36,48 +39,48 @@ services:
       - .env
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro      
-    image: ${DOCKER_REGISTRY-}gala_family_library
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    image: ${DOCKER_REGISTRY-}gala-family-library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
-  identity:
-    restart: on-failure
+  gala-identity:
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
       - seq
     env_file:
       - .env
-    image: ${DOCKER_REGISTRY-}gala_identity
+    image: ${DOCKER_REGISTRY-}gala-identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
   
-  family-parameters:
+  gala-parameter:
     env_file:
       - .env
-    restart: on-failure
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    image: ${DOCKER_REGISTRY-}gala-family-parameters
     depends_on:
       - postgresql
       - redis
       - seq
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    image: ${DOCKER_REGISTRY-}gala_family_parameters
     build:
       context: .
       dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
 
   postgresql:
     networks:
-      - gala_services_net
+      - gala-services-net
     restart: unless-stopped
     image: postgres
     ports:
@@ -87,11 +90,11 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_DATABASE}
       TZ: "GMT+8"
-      PGTZ: "GMT+8"      
-
+      PGTZ: "GMT+8"
+  
   redis:
     networks:
-      - gala_services_net
+      - gala-services-net
     restart: unless-stopped
     image: "redis"
     ports:
@@ -106,18 +109,19 @@ services:
       - seq
     restart: on-failure:5
     networks:
-      - gala_services_net
+      - gala-services-net
   seq:
     image: datalust/seq:latest
+    restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
       - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMINPASSWORD}
     ports:
       - "5341:80"
     networks:
-      - gala_services_net
+      - gala-services-net
 
 networks:
-  gala_services_net:
+  gala-services-net:
     driver: bridge
 

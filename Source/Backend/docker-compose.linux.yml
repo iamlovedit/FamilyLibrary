@@ -1,91 +1,87 @@
 services:
-  gala_services_gateway:
-    restart: on-failure
-    container_name: "gala_services_gateway"
+  gala-gateway:
+    restart: unless-stopped
     networks:
-      - gala_services_net
-    image: envoyproxy/envoy:v1.11.1
+      - gala-services-net
     ports:
       - "5000:80"
     volumes:
       - ./Envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    image: ${DOCKER_REGISTRY-}gala-gateway
+    build:
+      context: .
+      dockerfile: ./Envoy/Dockerfile
   
-  gala_services_dynamo_packages:
-    container_name: "gala_services_dynamo_packages"
-    restart: on-failure
+  gala-package:
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
-    ports:
-      - "5001:80"
+      - seq
     env_file:
       - .env
-    image: ${DOCKER_REGISTRY-}gala_dynamo_packages
+    image: ${DOCKER_REGISTRY-}gala-dynamo-packages
     build:
       context: .
       dockerfile: GalaFamilyLibrary.DynamoPackageService/Dockerfile
   
-  gala_services_family_library:
-    container_name: "gala_services_family_library"
-    restart: on-failure
+  gala-family:
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
-    ports:
-      - "6001:80"
+      - seq
     env_file:
       - .env
     volumes:
       - ~/microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb/:/root/.microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb
-    image: ${DOCKER_REGISTRY-}gala_family_library
+    image: ${DOCKER_REGISTRY-}gala-family-library
     build:
       context: .
       dockerfile: GalaFamilyLibrary.FamilyService/Dockerfile
 
-  gala_services_identity:
-    container_name: "gala_services_identity"
-    restart: on-failure
+  gala-identity:
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     depends_on:
       - postgresql
       - redis
-    ports:
-      - "7001:80"
+      - seq
     env_file:
       - .env
-    image: ${DOCKER_REGISTRY-}gala_identity
+    image: ${DOCKER_REGISTRY-}gala-identity
     build:
       context: .
       dockerfile: GalaFamilyLibrary.IdentityService/Dockerfile
   
-  gala_services_family_parameters:
+  gala-parameter:
     env_file:
       - .env
-    container_name: "gala_services_family_parameters"
-    restart: on-failure
-    ports:
-      - "9001:80"
+    restart: unless-stopped
     networks:
-      - gala_services_net
+      - gala-services-net
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    image: ${DOCKER_REGISTRY-}gala_family_parameters
+    image: ${DOCKER_REGISTRY-}gala-family-parameters
+    depends_on:
+      - postgresql
+      - redis
+      - seq
     build:
       context: .
       dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
 
   postgresql:
     networks:
-      - gala_services_net
+      - gala-services-net
     restart: unless-stopped
     image: postgres
-    container_name: "postgresql"
     ports:
       - "${DATABASE_PORT}:5432"
     environment:
@@ -93,13 +89,12 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_DATABASE}
       TZ: "GMT+8"
-      PGTZ: "GMT+8"      
-
+      PGTZ: "GMT+8"
+  
   redis:
     networks:
-      - gala_services_net
+      - gala-services-net
     restart: unless-stopped
-    container_name: "redis"
     image: "redis"
     ports:
       - "${REDIS_PORT}:6379"
@@ -114,19 +109,19 @@ services:
       - seq
     restart: on-failure:5
     networks:
-      - gala_services_net
+      - gala-services-net
   seq:
     image: datalust/seq:latest
-    container_name: "seq"
+    restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
       - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMINPASSWORD}
     ports:
       - "5341:80"
     networks:
-      - gala_services_net
+      - gala-services-net
 
 networks:
-  gala_services_net:
+  gala-services-net:
     driver: bridge
 
