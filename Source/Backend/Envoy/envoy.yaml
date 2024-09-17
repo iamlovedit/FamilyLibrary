@@ -6,111 +6,125 @@
       port_value: 4321
 static_resources:
   listeners:
-    - address:
+    - name: gala_services_listener
+      address:
         socket_address:
           address: 0.0.0.0
           port_value: 80
       filter_chains:
         - filters:
-            - name: envoy.http_connection_manager
-              config:
-                codec_type: auto
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
                 stat_prefix: ingress_http
+                access_log:
+                  - name: envoy.access_loggers.stdout
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
+                http_filters:
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
                 route_config:
                   name: gala_services_route
                   virtual_hosts:
                     - name: gala_services_backend
-                      domains:
-                        - "*"
+                      domains: [ "*" ]
                       routes:
-                        - name: "package"
-                          match:
+                        - match:
                             prefix: "/package"
                           route:
                             auto_host_rewrite: true
                             cluster: package
-
-                        - name: "family"
-                          match:
+                        - match:
                             prefix: "/family"
                           route:
                             auto_host_rewrite: true
                             cluster: family
-
-                        - name: "identity"
-                          match:
-                            prefix: "/identity"
-                          route:
-                            auto_host_rewrite: true
-                            cluster: identity
-
-                        - name: "user"
-                          match:
+                        - match:
                             prefix: "/user"
                           route:
                             auto_host_rewrite: true
                             cluster: identity
-                            
-                        - name: "parameter"
-                          match:
+                        - match:
                             prefix: "/parameter"
                           route:
                             auto_host_rewrite: true
                             cluster: parameter
 
-                http_filters:
-                  - name: envoy.router
-                access_log:
-                  - name: envoy.file_access_log
-                    filter:
-                      not_health_check_filter: { }
-                    config:
-                      json_format:
-                        time: "%START_TIME%"
-                        protocol: "%PROTOCOL%"
-                        duration: "%DURATION%"
-                        request_method: "%REQ(:METHOD)%"
-                        request_host: "%REQ(HOST)%"
-                        path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                        response_flags: "%RESPONSE_FLAGS%"
-                        route_name: "%ROUTE_NAME%"
-                        upstream_host: "%UPSTREAM_HOST%"
-                        upstream_cluster: "%UPSTREAM_CLUSTER%"
-                        upstream_local_address: "%UPSTREAM_LOCAL_ADDRESS%"
-                      path: "/tmp/access.log"
   clusters:
-    - name: package
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      hosts:
-        - socket_address:
-            address: dynamo-packages
-            port_value: 80
-
-    - name: family
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      hosts:
-        - socket_address:
-            address: family-library
-            port_value: 80
-
     - name: identity
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      hosts:
-        - socket_address:
-            address: identity
-            port_value: 80
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: identity
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: gala-identity
+                      port_value: 80
+      load_balancing_policy:
+        policies:
+          - typed_extension_config:
+              name: envoy.load_balancing_policies.round_robin
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.load_balancing_policies.round_robin.v3.RoundRobin
+                
+    - name: family
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: family
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: gala-family
+                      port_value: 80
+      load_balancing_policy:
+        policies:
+          - typed_extension_config:
+              name: envoy.load_balancing_policies.round_robin
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.load_balancing_policies.round_robin.v3.RoundRobin
+                
+    - name: package
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: package
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: gala-package
+                      port_value: 80
+      load_balancing_policy:
+        policies:
+          - typed_extension_config:
+              name: envoy.load_balancing_policies.round_robin
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.load_balancing_policies.round_robin.v3.RoundRobin
 
     - name: parameter
-      connect_timeout: 0.25s
-      type: logical_dns
-      lb_policy: round_robin
-      hosts:
-        - socket_address:
-            address: family-parameters
-            port_value: 80            
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      load_assignment:
+        cluster_name: parameter
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: gala-parameter
+                      port_value: 80
+      load_balancing_policy:
+        policies:
+          - typed_extension_config:
+              name: envoy.load_balancing_policies.round_robin
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.load_balancing_policies.round_robin.v3.RoundRobin                     
