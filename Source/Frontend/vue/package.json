@@ -15,16 +15,16 @@
   "dependencies": {
     "@types/three": "^0.166.0",
     "@vueuse/core": "^10.11.1",
-    "axios": "^1.7.4",
+    "axios": "^1.7.7",
     "pinia": "^2.2.2",
     "three": "^0.166.1",
-    "vue": "^3.4.38",
-    "vue-router": "^4.4.3"
+    "vue": "^3.5.6",
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.10.4",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.15.0",
+    "@types/node": "^20.16.5",
     "@unocss/preset-attributify": "^0.58.9",
     "@unocss/preset-icons": "^0.58.9",
     "@unocss/preset-uno": "^0.58.9",
@@ -35,21 +35,21 @@
     "@vicons/ionicons5": "^0.12.0",
     "@vicons/material": "^0.12.0",
     "@vicons/tabler": "^0.12.0",
-    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue": "^5.1.4",
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^13.0.0",
     "@vue/tsconfig": "^0.5.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.27.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-vue": "^9.28.0",
     "less": "^4.2.0",
     "naive-ui": "^2.39.0",
-    "npm-run-all2": "^6.2.2",
+    "npm-run-all2": "^6.2.3",
     "prettier": "^3.3.3",
     "typescript": "~5.4.5",
     "unocss": "^0.58.9",
     "vfonts": "^0.0.3",
-    "vite": "^5.4.1",
-    "vue-tsc": "^2.0.29"
+    "vite": "^5.4.6",
+    "vue-tsc": "^2.1.6"
   }
 }
