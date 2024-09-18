@@ -42,6 +42,8 @@ namespace GalaFamilyLibrary.Infrastructure.ServiceExtensions
             services.AddScoped<IUnitOfWorkManager, UnitOfWorkManager>();
             //services.AddDataProtectionSetup();
 
+            services.AddHttpClient();
+
             services.AddAutoMapperSetup();
 
             services.AddDatabaseSetup();
