@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace GalaFamilyLibrary.IdentityService.Controllers.v2;
 
-[ApiVersion("1.0")]
+[ApiVersion("2.0")]
 [Authorize]
 [Route("/identity/v{version:apiVersion}")]
 public class UserController(IUserService userService) : GalaControllerBase
 {
-    private readonly IUserService _userService = userService;
+    [HttpGet]
+    public IActionResult Get()
+    {
+        return Ok("V2");
+    }
 }

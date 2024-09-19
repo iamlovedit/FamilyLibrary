@@ -12,11 +12,11 @@ public static class SwaggerUI
         ArgumentNullException.ThrowIfNull(app);
         var apiVersionDescriptionProvider =
             app.ApplicationServices.GetRequiredService<IApiVersionDescriptionProvider>();
-        app.UseSwaggerUI(builder =>
+        app.UseSwaggerUI(options =>
         {
             foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
             {
-                builder.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
+                options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json",
                     description.GroupName.ToUpperInvariant());
             }
         });
