@@ -1,6 +1,5 @@
 using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
-using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
@@ -13,9 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var services = builder.Services;
 var configuration = builder.Configuration;
-services.AddFileSecurityOptionSetup(configuration);
-services.AddFileStorageClientSetup(configuration);
 
+services.AddScoped<IFamilyLikeCountService, FamilyLikeCountService>();
 services.AddScoped<IFamilyService, FamilyService>();
 services.AddScoped<IFamilyLikesService, FamilyLikesService>();
 services.AddScoped<IFamilyVersionService, FamilyVersionService>();
