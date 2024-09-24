@@ -5,7 +5,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.QQ
 {
     public static class QQAuthenticationExtension
     {
-        public static string AuthenticationSchemeName = "QQ";
+        public const string AuthenticationSchemeName = "QQ";
 
         public static AuthenticationBuilder AddQQAuthentication(this AuthenticationBuilder builder)
         {

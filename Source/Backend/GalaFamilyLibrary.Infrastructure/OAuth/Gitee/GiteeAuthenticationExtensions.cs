@@ -5,7 +5,7 @@ namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
     public static class GiteeAuthenticationExtensions
     {
-        public static string AuthenticationSchemeName = "Gitee";
+        public const string AuthenticationSchemeName = "Gitee";
 
         public static AuthenticationBuilder AddGiteeAuthentication(this AuthenticationBuilder builder)
         {
