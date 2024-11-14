@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
-namespace GalaFamilyLibrary.Infrastructure.FileStorage
+﻿namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {
     public static class FileStorageClientSetup
     {

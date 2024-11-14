@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace GalaFamilyLibrary.Infrastructure.Common
+﻿namespace GalaFamilyLibrary.Infrastructure.Common
 {
     public class PermissionRequirement(
         string claimType,

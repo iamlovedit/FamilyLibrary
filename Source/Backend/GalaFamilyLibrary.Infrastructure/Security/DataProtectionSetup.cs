@@ -1,8 +1,6 @@
-﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
-using Microsoft.AspNetCore.DataProtection;
+﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GalaFamilyLibrary.Infrastructure.Security
 {

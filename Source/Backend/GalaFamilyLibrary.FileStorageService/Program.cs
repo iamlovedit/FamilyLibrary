@@ -1,16 +1,16 @@
-using GalaFamilyLibrary.Infrastructure.FileStorage;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Infrastructure.Cors;
+using GalaFamilyLibrary.Infrastructure.Extensions;
+using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
-services.AddSeqSetup(builder.Configuration);
+services.AddDefaultSerilog(builder.Configuration);
 // Add services to the container.
 services.AddControllers(options =>
 {
-    options.Filters.Add(typeof(GlobalExceptionsFilter));
-}).AddProduceJsonSetup();
+    options.Filters.Add(typeof(ExceptionsFilter));
+});
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddCorsSetup();

@@ -1,13 +1,7 @@
 ﻿using System.Net;
-using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Consul;
 using GalaFamilyLibrary.Infrastructure.Cors;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
-using Serilog;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
 {

@@ -1,15 +1,13 @@
 ﻿using GalaFamilyLibrary.Model.Package;
-using GalaFamilyLibrary.Repository;
 
 namespace GalaFamilyLibrary.Service.Package
 {
-    public interface IVersionService : IServiceBase<PackageVersion>
+    public interface IVersionService : IServiceBase<PackageVersion, long>
     {
     }
-    public class VersionService : ServiceBase<PackageVersion>, IVersionService
+
+    public class VersionService(IRepositoryBase<PackageVersion, long> dbContext)
+        : ServiceBase<PackageVersion, long>(dbContext), IVersionService
     {
-        public VersionService(IRepositoryBase<PackageVersion> dbContext) : base(dbContext)
-        {
-        }
     }
 }

@@ -1,14 +1,7 @@
 ﻿using System.Reflection;
-using System.Security.Cryptography;
-using System.Text;
 using GalaFamilyLibrary.Infrastructure.Attributes;
-using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Infrastructure.Utils;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 namespace GalaFamilyLibrary.Infrastructure.Filters
 {
@@ -42,8 +35,6 @@ namespace GalaFamilyLibrary.Infrastructure.Filters
 
                 if (await redis.Exist(redisKey))
                 {
-                    logger.LogWarning("路径 {path} 请求频繁，请求ip：{ip}", request.Path,
-                        context.HttpContext.GetRequestIp());
                     var message = new MessageData(false, idempotencyAttribute.Message, 409);
                     context.Result = new ObjectResult(message) { StatusCode = 200 };
                 }

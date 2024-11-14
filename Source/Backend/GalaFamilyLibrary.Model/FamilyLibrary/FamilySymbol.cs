@@ -1,6 +1,6 @@
-using GalaFamilyLibrary.Repository;
-using SqlSugar;
+using GalaFamilyLibrary.Infrastructure.Domains;
 using GalaFamilyLibrary.Model.FamilyParameter;
+using SqlSugar;
 
 namespace GalaFamilyLibrary.Model.FamilyLibrary
 {

@@ -1,10 +1,10 @@
 ﻿using Asp.Versioning;
 using AutoMapper;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Model.FamilyLibrary;
-using GalaFamilyLibrary.Repository;
 using GalaFamilyLibrary.Service.FamilyLibrary;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -152,7 +152,7 @@ public class FamilyController(
         var familyPage = await familyService.GetFamilyPageAsync(expression, pageIndex, pageSize, order);
         var args = new PresignedGetObjectArgs().WithBucket(_bucketName).WithExpiry(_expiry);
         familyPage.Data.ForEach(f => _minioClient.PresignedGetObjectAsync(args.WithObject(f.GetImagePath())));
-        var familyPageDto = familyPage.ConvertTo<FamilyDTO>(mapper);
+        var familyPageDto = familyPage.ConvertTo<FamilyDTO>();
         return SucceedPage(familyPageDto);
     }
 
@@ -189,6 +189,7 @@ public class FamilyController(
                 return Success(true);
             }
         }
+
         return Failed<bool>();
     }
 

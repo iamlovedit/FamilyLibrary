@@ -1,5 +1,3 @@
-using Newtonsoft.Json;
-
 namespace GalaFamilyLibrary.Infrastructure.OAuth.Gitee
 {
     public class GiteeUserInfo()

@@ -1,11 +1,11 @@
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.FamilyParameter;
 using GalaFamilyLibrary.Service.FamilyParameter;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.AddInfrastructureSetup();
+builder.AddDefaultInfrastructure<long>();
 var services = builder.Services;
 services.AddScoped<IParameterService, ParameterService>();
 services.AddScoped<IParameterDefinitionService, ParameterDefinitionService>();

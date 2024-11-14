@@ -1,7 +1,7 @@
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.Package;
 using GalaFamilyLibrary.Service.Package;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -15,7 +15,7 @@ services.Configure<KestrelServerOptions>(options => { options.Limits.MaxRequestB
 services.AddScoped<IPackageService, PackageService>();
 services.AddScoped<IVersionService, VersionService>();
 
-builder.AddInfrastructureSetup();
+builder.AddDefaultInfrastructure<long>();
 services.AddQuartz(options =>
 {
     var jobKey = new JobKey("update packages");

@@ -1,6 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
-
 namespace GalaFamilyLibrary.Infrastructure.Common;
 
 public static class EncryptHelper
@@ -78,17 +75,17 @@ public static class EncryptHelper
     {
         if (string.IsNullOrEmpty(plainText))
         {
-            throw new ArgumentException($"¡°{nameof(plainText)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(plainText));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(plainText)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(plainText));
         }
 
         if (string.IsNullOrEmpty(passPhrase))
         {
-            throw new ArgumentException($"¡°{nameof(passPhrase)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(passPhrase));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(passPhrase)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(passPhrase));
         }
 
         if (string.IsNullOrEmpty(iv))
         {
-            throw new ArgumentException($"¡°{nameof(iv)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(iv));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(iv)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(iv));
         }
 
         var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -120,17 +117,17 @@ public static class EncryptHelper
     {
         if (string.IsNullOrEmpty(cipherText))
         {
-            throw new ArgumentException($"¡°{nameof(cipherText)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(cipherText));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(cipherText)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(cipherText));
         }
 
         if (string.IsNullOrEmpty(passPhrase))
         {
-            throw new ArgumentException($"¡°{nameof(passPhrase)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(passPhrase));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(passPhrase)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(passPhrase));
         }
 
         if (string.IsNullOrEmpty(iv))
         {
-            throw new ArgumentException($"¡°{nameof(iv)}¡±²»ÄÜÎª null »ò¿Õ¡£", nameof(iv));
+            throw new ArgumentException($"ï¿½ï¿½{nameof(iv)}ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª null ï¿½ï¿½Õ¡ï¿½", nameof(iv));
         }
         try
         {

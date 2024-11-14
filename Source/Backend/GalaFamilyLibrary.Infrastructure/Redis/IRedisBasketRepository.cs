@@ -1,6 +1,4 @@
-﻿using StackExchange.Redis;
-
-namespace GalaFamilyLibrary.Infrastructure.Redis
+﻿namespace GalaFamilyLibrary.Infrastructure.Redis
 {
     public interface IRedisBasketRepository
     {

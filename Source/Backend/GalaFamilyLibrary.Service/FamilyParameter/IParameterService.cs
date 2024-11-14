@@ -1,16 +1,12 @@
 using GalaFamilyLibrary.Model.FamilyParameter;
-using GalaFamilyLibrary.Repository;
-
 namespace GalaFamilyLibrary.Service.FamilyParameter;
 
-public interface IParameterService:IServiceBase<Parameter>
+public interface IParameterService : IServiceBase<Parameter, long>
 {
-    
 }
 
-public class ParameterService : ServiceBase<Parameter>, IParameterService
+public class ParameterService(IRepositoryBase<Parameter, long> dbContext)
+    : ServiceBase<Parameter, long>(dbContext), IParameterService
 {
-    public ParameterService(IRepositoryBase<Parameter> dbContext) : base(dbContext)
-    {
-    }
+    
 }

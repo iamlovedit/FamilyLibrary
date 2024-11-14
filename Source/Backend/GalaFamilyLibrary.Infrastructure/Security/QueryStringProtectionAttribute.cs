@@ -1,7 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
-using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace GalaFamilyLibrary.Infrastructure.Security
+﻿namespace GalaFamilyLibrary.Infrastructure.Security
 {
     public class QueryStringProtectionAttribute(IDataProtectionHelper dataProtectionHelper) : ActionFilterAttribute
     {

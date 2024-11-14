@@ -1,6 +1,3 @@
-using GalaFamilyLibrary.Infrastructure.Common;
-using Microsoft.AspNetCore.Http;
-
 namespace GalaFamilyLibrary.Infrastructure.Middlewares;
 
 public class NotFoundMiddleware(RequestDelegate next)

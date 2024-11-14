@@ -1,4 +1,4 @@
-﻿using GalaFamilyLibrary.Repository;
+﻿using GalaFamilyLibrary.Infrastructure.Domains;
 using Newtonsoft.Json;
 using SqlSugar;
 

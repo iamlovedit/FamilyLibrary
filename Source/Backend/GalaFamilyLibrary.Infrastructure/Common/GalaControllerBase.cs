@@ -1,8 +1,5 @@
 ﻿using System.Security.Claims;
-using GalaFamilyLibrary.Repository;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace GalaFamilyLibrary.Infrastructure.Common;

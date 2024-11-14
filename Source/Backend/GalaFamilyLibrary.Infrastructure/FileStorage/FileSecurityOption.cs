@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using SqlSugar.Extensions;
-
-namespace GalaFamilyLibrary.Infrastructure.FileStorage
+﻿namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {
     public class FileSecurityOption
     {

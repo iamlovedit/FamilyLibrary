@@ -1,4 +1,3 @@
-using GalaFamilyLibrary.Repository;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Model.FamilyLibrary

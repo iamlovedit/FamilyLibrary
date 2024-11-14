@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace GalaFamilyLibrary.Infrastructure.Common

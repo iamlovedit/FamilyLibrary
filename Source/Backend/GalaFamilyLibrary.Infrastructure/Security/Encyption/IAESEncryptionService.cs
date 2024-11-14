@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
+﻿namespace GalaFamilyLibrary.Infrastructure.Security.Encyption
 {
     public interface IAESEncryptionService
     {

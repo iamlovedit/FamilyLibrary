@@ -1,10 +1,4 @@
 ﻿using System.Text.Encodings.Web;
-using GalaFamilyLibrary.Infrastructure.Common;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.Security;
 

@@ -1,8 +1,8 @@
 using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.FamilyLibrary;
 using GalaFamilyLibrary.Service.FamilyLibrary;
 using GalaFamilyLibrary.Service.Validators;
@@ -19,7 +19,7 @@ services.AddScoped<IFamilyLikesService, FamilyLikesService>();
 services.AddScoped<IFamilyVersionService, FamilyVersionService>();
 services.AddScoped<IFamilyCollectionsService, FamilyCollectionsService>();
 services.AddScoped<IValidator<FamilyCreationDTO>, FamilyCreationValidator>();
-builder.AddInfrastructureSetup();
+builder.AddDefaultInfrastructure<long>();
 
 services.AddMinio(client =>
 {

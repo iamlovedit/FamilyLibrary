@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-
-namespace GalaFamilyLibrary.Infrastructure.Cors;
+﻿namespace GalaFamilyLibrary.Infrastructure.Cors;
 
 public static class CorsSetup
 {

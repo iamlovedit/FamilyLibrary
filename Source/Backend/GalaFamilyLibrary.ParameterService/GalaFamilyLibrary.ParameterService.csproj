@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GalaFamilyLibrary.Infrastructure\GalaFamilyLibrary.Infrastructure.csproj" />
+    <ProjectReference Include="..\GalaFamilyLibrary.Model\GalaFamilyLibrary.Model.csproj" />
+    <ProjectReference Include="..\GalaFamilyLibrary.Service\GalaFamilyLibrary.Service.csproj" />
   </ItemGroup>
 
 </Project>

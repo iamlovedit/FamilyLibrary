@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using GalaFamilyLibrary.FileStorageService.Models;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.FileStorage;
 using GalaFamilyLibrary.Infrastructure.Security.Encyption;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.FileStorageService.Controllers
 {

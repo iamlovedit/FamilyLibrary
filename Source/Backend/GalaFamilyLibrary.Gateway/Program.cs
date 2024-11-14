@@ -1,5 +1,4 @@
-using GalaFamilyLibrary.Infrastructure.Redis;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Ocelot.Provider.Polly;
@@ -11,12 +10,12 @@ builder.Configuration.SetBasePath(builder.Environment.ContentRootPath)
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false)
     .AddEnvironmentVariables();
 var services = builder.Services;
-services.AddRedisCacheSetup(builder.Configuration);
+services.AddDefaultRedis(builder.Configuration);
 
-services.AddSeqSetup(builder.Configuration);
+services.AddDefaultSerilog(builder.Configuration);
 
-services.AddAuthorizationSetup(builder.Configuration);
-services.AddAuthenticationSetup(builder.Configuration);
+services.AddDefaultAuthentication(builder.Configuration);
+services.AddDefaultAuthorize(builder.Configuration);
 services.AddOcelot().AddPolly();
 var app = builder.Build();
 

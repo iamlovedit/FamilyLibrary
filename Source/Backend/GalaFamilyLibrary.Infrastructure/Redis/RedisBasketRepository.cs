@@ -1,9 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using StackExchange.Redis;
-using System.Text;
-
-namespace GalaFamilyLibrary.Infrastructure.Redis
+﻿namespace GalaFamilyLibrary.Infrastructure.Redis
 {
     public class RedisBasketRepository(ILogger<RedisBasketRepository> logger, ConnectionMultiplexer redis)
         : IRedisBasketRepository

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace GalaFamilyLibrary.Infrastructure.Cors
+﻿namespace GalaFamilyLibrary.Infrastructure.Cors
 {
     public static class CorsMiddleware
     {

@@ -1,6 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Common;
-
-namespace GalaFamilyLibrary.Infrastructure.Security;
+﻿namespace GalaFamilyLibrary.Infrastructure.Security;
 
 internal class  GalaApiResponse
 {

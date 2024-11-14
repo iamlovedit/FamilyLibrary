@@ -1,6 +1,4 @@
-﻿using GalaFamilyLibrary.Infrastructure.Security.Encyption;
-using Microsoft.Extensions.Configuration;
-using System.Web;
+﻿using System.Web;
 
 namespace GalaFamilyLibrary.Infrastructure.FileStorage
 {

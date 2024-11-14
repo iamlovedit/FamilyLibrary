@@ -1,6 +1,4 @@
 using Consul;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace GalaFamilyLibrary.Infrastructure.Consul;
 

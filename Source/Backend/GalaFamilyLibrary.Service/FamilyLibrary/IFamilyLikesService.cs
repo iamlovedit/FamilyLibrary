@@ -1,16 +1,16 @@
 using System.Linq.Expressions;
+using GalaFamilyLibrary.Infrastructure.Domains;
 using GalaFamilyLibrary.Model.FamilyLibrary;
-using GalaFamilyLibrary.Repository;
 
 namespace GalaFamilyLibrary.Service.FamilyLibrary
 {
-    public interface IFamilyLikesService : IServiceBase<FamilyLikes>
+    public interface IFamilyLikesService : IServiceBase<FamilyLikes, long>
     {
         Task<FamilyLikes> GetFamilyLikesByExpressionAsync(Expression<Func<FamilyLikes, bool>> expression);
     }
 
-    public class FamilyLikesService(IRepositoryBase<FamilyLikes> dbContext)
-        : ServiceBase<FamilyLikes>(dbContext), IFamilyLikesService
+    public class FamilyLikesService(IRepositoryBase<FamilyLikes, long> dbContext)
+        : ServiceBase<FamilyLikes, long>(dbContext), IFamilyLikesService
     {
         public async Task<FamilyLikes> GetFamilyLikesByExpressionAsync(Expression<Func<FamilyLikes, bool>> expression)
         {

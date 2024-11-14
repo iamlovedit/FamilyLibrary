@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-
-namespace GalaFamilyLibrary.Infrastructure.Security
+﻿namespace GalaFamilyLibrary.Infrastructure.Security
 {
     public class RequestDecryptAttribute : ActionFilterAttribute
     {

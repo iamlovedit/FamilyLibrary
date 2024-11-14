@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Text.Json;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace GalaFamilyLibrary.Infrastructure.Middlewares
 {

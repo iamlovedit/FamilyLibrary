@@ -1,6 +1,4 @@
-﻿using SqlSugar;
-
-namespace GalaFamilyLibrary.Infrastructure.Seed;
+﻿namespace GalaFamilyLibrary.Infrastructure.Seed;
 
 public class DatabaseContext
 {

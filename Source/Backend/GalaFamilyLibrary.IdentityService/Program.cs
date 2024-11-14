@@ -1,8 +1,8 @@
 using FluentValidation;
 using GalaFamilyLibrary.DataTransferObject.Identity;
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
-using GalaFamilyLibrary.Infrastructure.ServiceExtensions;
 using GalaFamilyLibrary.Model.Identity;
 using GalaFamilyLibrary.Service.Identity;
 using GalaFamilyLibrary.Service.Validators;
@@ -12,7 +12,7 @@ var services = builder.Services;
 
 services.AddScoped<IUserService, UserService>();
 services.AddScoped<IValidator<UserCreationDTO>, UserCreationValidator>();
-builder.AddInfrastructureSetup();
+builder.AddDefaultInfrastructure<long>();
 
 var app = builder.Build();
 

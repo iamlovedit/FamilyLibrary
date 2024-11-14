@@ -1,10 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace GalaFamilyLibrary.Infrastructure.OAuth
 {

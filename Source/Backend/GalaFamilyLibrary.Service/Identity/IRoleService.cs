@@ -1,16 +1,14 @@
 ﻿using GalaFamilyLibrary.Model.Identity;
-using GalaFamilyLibrary.Repository;
 
 namespace GalaFamilyLibrary.Service.Identity
 {
-    public interface IRoleService : IServiceBase<Role>
+    public interface IRoleService : IServiceBase<Role, long>
     {
-
     }
 
-    public class RoleService : ServiceBase<Role>, IRoleService
+    public class RoleService : ServiceBase<Role, long>, IRoleService
     {
-        public RoleService(IRepositoryBase<Role> dbContext) : base(dbContext)
+        public RoleService(IRepositoryBase<Role, long> dbContext) : base(dbContext)
         {
         }
     }

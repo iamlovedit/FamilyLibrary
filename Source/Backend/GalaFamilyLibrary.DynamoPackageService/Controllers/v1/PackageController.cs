@@ -1,19 +1,18 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
+using GalaFamilyLibrary.DataTransferObject.Package;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Seed;
+using GalaFamilyLibrary.Model.Package;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System.Linq.Expressions;
-using System.Xml;
-using Asp.Versioning;
-using GalaFamilyLibrary.DataTransferObject.Package;
-using GalaFamilyLibrary.Model.Package;
-using GalaFamilyLibrary.Repository;
-using GalaFamilyLibrary.Repository.UnitOfWorks;
-using GalaFamilyLibrary.Service.Package;
 using SqlSugar;
+using GalaFamilyLibrary.Service.Package;
+using Mapster;
 
 namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 
@@ -23,8 +22,7 @@ namespace GalaFamilyLibrary.DynamoPackageService.Controllers.v1;
 public class PackageController(
     IPackageService packageService,
     ILogger<PackageController> logger,
-    IRedisBasketRepository redis,
-    IMapper mapper)
+    IRedisBasketRepository redis)
     : GalaControllerBase
 {
     private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
@@ -44,7 +42,7 @@ public class PackageController(
         var versionPage =
             await versionService.QueryPageAsync(pv => pv.PackageId == id, pageIndex, pageSize, pv => pv.CreatedDate,
                 OrderByType.Desc);
-        var result = versionPage.ConvertTo<PackageVersionDTO>(mapper);
+        var result = versionPage.ConvertTo<PackageVersionDTO>();
         await redis.Set(redisKey, result, _cacheTime);
         return SucceedPage(result);
     }
@@ -57,7 +55,7 @@ public class PackageController(
         if (await redis.Exist(redisKey))
         {
             package = await redis.Get<DynamoPackage>(redisKey);
-            return Success(mapper.Map<PackageDTO>(package));
+            return Success(package.Adapt<PackageDTO>());
         }
 
         package = await packageService.GetPackageDetailByIdAsync(id);
@@ -67,7 +65,7 @@ public class PackageController(
         }
 
         await redis.Set(redisKey, package, _cacheTime);
-        return Success(mapper.Map<PackageDTO>(package));
+        return Success(package.Adapt<PackageDTO>());
     }
 
     [HttpGet("{id}/{packageVersion}")]
@@ -102,7 +100,7 @@ public class PackageController(
             await redis.Set(redisKey, packagesPage, _cacheTime);
         }
 
-        return SucceedPage(packagesPage.ConvertTo<PackageDTO>(mapper));
+        return SucceedPage(packagesPage.ConvertTo<PackageDTO>());
     }
 
     [HttpPost]

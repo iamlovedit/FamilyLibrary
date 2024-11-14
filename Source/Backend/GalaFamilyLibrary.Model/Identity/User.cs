@@ -1,5 +1,5 @@
-﻿using GalaFamilyLibrary.Model.FamilyLibrary;
-using GalaFamilyLibrary.Repository;
+﻿using GalaFamilyLibrary.Infrastructure.Domains;
+using GalaFamilyLibrary.Model.FamilyLibrary;
 using SqlSugar;
 
 namespace GalaFamilyLibrary.Model.Identity

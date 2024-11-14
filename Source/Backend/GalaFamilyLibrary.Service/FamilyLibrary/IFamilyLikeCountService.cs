@@ -1,14 +1,14 @@
 using GalaFamilyLibrary.Model.FamilyLibrary;
-using GalaFamilyLibrary.Repository;
+
 
 namespace GalaFamilyLibrary.Service.FamilyLibrary
 {
-    public interface IFamilyLikeCountService : IServiceBase<FamilyLikeCount>
+    public interface IFamilyLikeCountService : IServiceBase<FamilyLikeCount,long>
     {
     }
 
-    public class FamilyLikeCountService(IRepositoryBase<FamilyLikeCount> dbContext)
-        : ServiceBase<FamilyLikeCount>(dbContext), IFamilyLikeCountService
+    public class FamilyLikeCountService(IRepositoryBase<FamilyLikeCount,long> dbContext)
+        : ServiceBase<FamilyLikeCount,long>(dbContext), IFamilyLikeCountService
     {
         
     }

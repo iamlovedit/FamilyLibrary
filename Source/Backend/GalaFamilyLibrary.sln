@@ -37,8 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.Service",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.DataTransferObject", "GalaFamilyLibrary.DataTransferObject\GalaFamilyLibrary.DataTransferObject.csproj", "{FFC42604-D687-4988-99A6-5136DA4DE4AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalaFamilyLibrary.Repository", "GalaFamilyLibrary.Repository\GalaFamilyLibrary.Repository.csproj", "{346F0069-F9C4-4AFA-B066-B2C74A29F07C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,10 +95,6 @@ Global
 		{FFC42604-D687-4988-99A6-5136DA4DE4AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFC42604-D687-4988-99A6-5136DA4DE4AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFC42604-D687-4988-99A6-5136DA4DE4AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{346F0069-F9C4-4AFA-B066-B2C74A29F07C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{346F0069-F9C4-4AFA-B066-B2C74A29F07C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{346F0069-F9C4-4AFA-B066-B2C74A29F07C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{346F0069-F9C4-4AFA-B066-B2C74A29F07C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,7 +111,6 @@ Global
 		{4F7011C3-D4DB-40DA-BC53-06E375018B63} = {E82AA31C-B6E3-4673-8D3B-2B8F150D6089}
 		{1200D7F2-344A-4A9B-AD24-1019913E1DFA} = {E82AA31C-B6E3-4673-8D3B-2B8F150D6089}
 		{FFC42604-D687-4988-99A6-5136DA4DE4AB} = {E82AA31C-B6E3-4673-8D3B-2B8F150D6089}
-		{346F0069-F9C4-4AFA-B066-B2C74A29F07C} = {E82AA31C-B6E3-4673-8D3B-2B8F150D6089}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {301A9876-88C7-44C2-97BF-F2397A8B3A36}

@@ -1,7 +1,7 @@
 ﻿using GalaFamilyLibrary.Infrastructure.Redis;
+using GalaFamilyLibrary.Infrastructure.Repository;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Model.Package;
-using GalaFamilyLibrary.Repository.UnitOfWorks;
 using Newtonsoft.Json.Linq;
 using Quartz;
 

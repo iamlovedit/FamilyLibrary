@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.AspNetCore.Authentication;
 
 namespace GalaFamilyLibrary.Infrastructure.OAuth.QQ
 {

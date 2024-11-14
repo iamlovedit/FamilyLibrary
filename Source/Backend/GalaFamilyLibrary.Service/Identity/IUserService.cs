@@ -1,24 +1,19 @@
 ﻿using GalaFamilyLibrary.Model.Identity;
-using GalaFamilyLibrary.Repository;
 
 namespace GalaFamilyLibrary.Service.Identity
 {
-    public interface IUserService : IServiceBase<User>
+    public interface IUserService : IServiceBase<User, long>
     {
         Task<List<Role>> GetUserRolesAsync(long userId);
     }
 
-    public class UserService : ServiceBase<User>, IUserService
+    public class UserService(IRepositoryBase<User, long> dbContext) : ServiceBase<User, long>(dbContext), IUserService
     {
-        public UserService(IRepositoryBase<User> dbContext) : base(dbContext)
-        {
-        }
-
         public async Task<List<Role>> GetUserRolesAsync(long userId)
         {
             var user = await DAL.DbContext.Queryable<User>()
-                  .Includes(u => u.Roles)
-                  .InSingleAsync(userId);
+                .Includes(u => u.Roles)
+                .InSingleAsync(userId);
             return user?.Roles!;
         }
     }

@@ -1,12 +1,12 @@
 using System.Linq.Expressions;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Model.FamilyLibrary;
-using GalaFamilyLibrary.Repository;
 using SqlSugar;
 using SqlSugar.Extensions;
 
 namespace GalaFamilyLibrary.Service.FamilyLibrary;
 
-public interface IFamilyService : IServiceBase<Family>
+public interface IFamilyService : IServiceBase<Family, long>
 {
     Task<IList<FamilyCategory>?> GetCategoryTreeAsync(int? rootId);
 
@@ -16,7 +16,8 @@ public interface IFamilyService : IServiceBase<Family>
         int pageSize = 20, string? orderByFields = null);
 }
 
-public class FamilyService(IRepositoryBase<Family> dbContext) : ServiceBase<Family>(dbContext), IFamilyService
+public class FamilyService(IRepositoryBase<Family, long> dbContext)
+    : ServiceBase<Family, long>(dbContext), IFamilyService
 {
     public async Task<FamilyDetail?> GetFamilyDetails(long familyId)
     {

@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-
-namespace GalaFamilyLibrary.Infrastructure.OAuth.QQ
+﻿namespace GalaFamilyLibrary.Infrastructure.OAuth.QQ
 {
     public class QQToken
     {
