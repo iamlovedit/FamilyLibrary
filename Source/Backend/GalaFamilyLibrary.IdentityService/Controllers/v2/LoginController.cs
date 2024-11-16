@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Service.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class LoginController(
     PermissionRequirement permissionRequirement,
     ILogger<LoginController> logger,
     IUserService userService)
-    : GalaControllerBase
+    : DefaultControllerBase
 {
     [HttpGet]
     public IActionResult Get()

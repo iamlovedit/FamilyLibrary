@@ -1,5 +1,4 @@
 ﻿using Asp.Versioning;
-using AutoMapper;
 using GalaFamilyLibrary.DataTransferObject.Package;
 using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
@@ -23,7 +22,7 @@ public class PackageController(
     IPackageService packageService,
     ILogger<PackageController> logger,
     IRedisBasketRepository redis)
-    : GalaControllerBase
+    : DefaultControllerBase
 {
     private readonly TimeSpan _cacheTime = TimeSpan.FromDays(1);
 
@@ -55,17 +54,17 @@ public class PackageController(
         if (await redis.Exist(redisKey))
         {
             package = await redis.Get<DynamoPackage>(redisKey);
-            return Success(package.Adapt<PackageDTO>());
+            return Succeed(package.Adapt<PackageDTO>());
         }
 
         package = await packageService.GetPackageDetailByIdAsync(id);
         if (package is null)
         {
-            return Failed<PackageDTO>("404", 404);
+            return Fail<PackageDTO>("404", 404);
         }
 
         await redis.Set(redisKey, package, _cacheTime);
-        return Success(package.Adapt<PackageDTO>());
+        return Succeed(package.Adapt<PackageDTO>());
     }
 
     [HttpGet("{id}/{packageVersion}")]
@@ -121,7 +120,7 @@ public class PackageController(
                     var content = jObject["content"];
                     if (content is null)
                     {
-                        return Failed("获取原网站数据失败");
+                        return Fail("获取原网站数据失败");
                     }
 
                     var newPackages = content.ToObject<List<DynamoPackage>>();
@@ -195,14 +194,14 @@ public class PackageController(
                 {
                     unitOfWork.RollbackTransaction();
                     logger.LogError(e, e.Message);
-                    return Failed(e.Message);
+                    return Fail(e.Message);
                 }
 
-                return Success("更新完成");
+                return Succeed(message: "更新完成");
             }
         }
 
-        return Failed($"request failed,http status code {responseMessage.StatusCode}");
+        return Fail($"request failed,http status code {responseMessage.StatusCode}");
     }
 
     [HttpPost("update")]
@@ -284,9 +283,9 @@ public class PackageController(
         {
             unitOfWork.RollbackTransaction();
             logger.LogError(e, e.Message);
-            return Failed(e.Message);
+            return Fail(e.Message);
         }
 
-        return Success("更新完成");
+        return Succeed(message: "更新完成");
     }
 }

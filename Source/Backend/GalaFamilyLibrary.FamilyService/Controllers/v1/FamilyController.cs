@@ -3,6 +3,7 @@ using AutoMapper;
 using GalaFamilyLibrary.DataTransferObject.FamilyLibrary;
 using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
+using GalaFamilyLibrary.Infrastructure.HttpUserContext;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Model.FamilyLibrary;
 using GalaFamilyLibrary.Service.FamilyLibrary;
@@ -22,11 +23,12 @@ public class FamilyController(
     ILogger<FamilyController> logger,
     IRedisBasketRepository redis,
     IMapper mapper,
+    IUserContext<long> userContext,
     IFamilyLikesService familyLikesService,
     IFamilyCollectionsService familyCollectionsService,
     IFamilyService familyService,
     RedisRequirement redisRequirement)
-    : GalaControllerBase
+    : DefaultControllerBase
 {
     private readonly IMinioClient _minioClient = minioClient.WithRegion(_region);
     private const string _bucketName = "storage";
@@ -62,7 +64,7 @@ public class FamilyController(
         var lockKey = $"{familyCreationDTO.Name}{familyCreationDTO.UploaderId}";
         if (await redis.Exist(lockKey))
         {
-            return Failed<string>("invalid request");
+            return Fail<string>("invalid request");
         }
 
         await redis.Set(lockKey, familyCreationDTO, TimeSpan.FromSeconds(5));
@@ -70,7 +72,7 @@ public class FamilyController(
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName)
             .WithObject(family.GetFilePath(familyCreationDTO.Version)).WithExpiry(_expiry);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Success<string>(url);
+        return Succeed<string>(url);
     }
 
     [HttpPost("file")]
@@ -79,20 +81,20 @@ public class FamilyController(
         var lockKey = $"family/files/{fileName}";
         if (await redis.Exist(lockKey))
         {
-            return Failed<string>("invalid request");
+            return Fail<string>("invalid request");
         }
 
         await redis.Set(lockKey, fileName, TimeSpan.FromSeconds(5));
         var suffix = Path.GetExtension(fileName)?.ToLower();
         if (!_dirMap.TryGetValue(suffix, out var dir))
         {
-            return Failed<string>("invalid file format");
+            return Fail<string>("invalid file format");
         }
 
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName).WithObject($"{dir}/{fileName}")
             .WithExpiry(_expiry * 5);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Success<string>(url);
+        return Succeed<string>(url);
     }
 
 
@@ -103,20 +105,20 @@ public class FamilyController(
         var redisKey = $"familyDetails/{id}";
         if (await redis.Exist(redisKey))
         {
-            return Success(await redis.Get<FamilyDetailDTO>(redisKey));
+            return Succeed(await redis.Get<FamilyDetailDTO>(redisKey));
         }
 
         var familyDetail = await familyService.GetFamilyDetails(id);
         if (familyDetail is null)
         {
             logger.LogWarning("query family details failed id: {id} ,family not existed", id);
-            return Failed<FamilyDetailDTO>("family not exist", 404);
+            return Fail<FamilyDetailDTO>("family not exist", 404);
         }
 
         logger.LogInformation("query family details succeed id: {id}", id);
         var detailDto = mapper.Map<FamilyDetailDTO>(familyDetail);
         await redis.Set(redisKey, detailDto, redisRequirement.CacheTime);
-        return Success(detailDto);
+        return Succeed(detailDto);
     }
 
     [HttpGet("categories")]
@@ -127,13 +129,13 @@ public class FamilyController(
         var redisKey = parentId == null ? $"family/categories" : $"family/categories?parentId={parentId}";
         if (await redis.Exist(redisKey))
         {
-            return Success(await redis.Get<List<FamilyCategoryDTO>>(redisKey));
+            return Succeed(await redis.Get<List<FamilyCategoryDTO>>(redisKey));
         }
 
         var categories = await familyService.GetCategoryTreeAsync(parentId);
         var categoriesDto = mapper.Map<List<FamilyCategoryDTO>>(categories);
         await redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
-        return Success(categoriesDto);
+        return Succeed(categoriesDto);
     }
 
     [HttpGet("all")]
@@ -157,18 +159,13 @@ public class FamilyController(
     }
 
     [HttpPost("like/{familyId:long}")]
-    public async Task<MessageData<bool>> LikeFamilyAsync(long familyId)
+    public async Task<MessageData> LikeFamilyAsync(long familyId)
     {
-        var userId = GetUserIdFromClaims();
-        if (userId == 0)
-        {
-            return Failed<bool>("get user`s information failed");
-        }
-
+        var userId = userContext.Id;
         var redisKey = $"family/family_likes/userId={userId}&&familyId={familyId}";
         if (await redis.Exist(redisKey))
         {
-            return Failed<bool>("invalid request");
+            return Fail("invalid request");
         }
 
         await redis.Set(redisKey, 0, TimeSpan.FromSeconds(5));
@@ -186,26 +183,26 @@ public class FamilyController(
             var id = await familyLikesService.AddSnowflakeAsync(familyLike);
             if (id > 0)
             {
-                return Success(true);
+                return Succeed(true);
             }
         }
 
-        return Failed<bool>();
+        return Fail<bool>();
     }
 
     [HttpPost("collect/{familyId:long}")]
-    public async Task<MessageData<bool>> CollectFamilyAsync(long familyId)
+    public async Task<MessageData> CollectFamilyAsync(long familyId)
     {
-        var userId = GetUserIdFromClaims();
+        var userId = userContext.Id;
         if (userId == 0)
         {
-            return Failed<bool>("get user`s information failed");
+            return Fail("get user`s information failed");
         }
 
         var redisKey = $"family/family_collections/userId={userId}&&familyId={familyId}";
         if (await redis.Exist(redisKey))
         {
-            return Failed<bool>("invalid request");
+            return Fail("invalid request");
         }
 
         await redis.Set(redisKey, 0, TimeSpan.FromSeconds(5));
@@ -224,7 +221,7 @@ public class FamilyController(
             var id = await familyCollectionsService.AddSnowflakeAsync(familyCollection);
             if (id > 0)
             {
-                return Success(true);
+                return Succeed();
             }
         }
         else
@@ -236,11 +233,11 @@ public class FamilyController(
                 if (await familyCollectionsService.UpdateColumnsAsync(familyCollection,
                         fc => new { fc.IsDeleted, fc.CreateDate }))
                 {
-                    return Success(true);
+                    return Succeed();
                 }
             }
         }
 
-        return Failed<bool>();
+        return Fail();
     }
 }

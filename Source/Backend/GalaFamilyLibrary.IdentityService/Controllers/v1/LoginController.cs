@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using Asp.Versioning;
 using GalaFamilyLibrary.DataTransferObject.Identity;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Security;
@@ -22,7 +23,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         IRedisBasketRepository redis,
         ITokenBuilder tokenBuilder,
         IUserService userService)
-        : GalaControllerBase
+        : DefaultControllerBase
     {
         [HttpPost("login")]
         [AllowAnonymous]
@@ -30,26 +31,26 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         {
             if (string.IsNullOrEmpty(loginUser.Username) || string.IsNullOrEmpty(loginUser.Password))
             {
-                return Failed<TokenInfo>("password or username is empty");
+                return Fail<TokenInfo>("password or username is empty");
             }
 
             var lockKey = $"auth/username={loginUser.Username}&password={loginUser.Password}";
             if (await redis.Exist(lockKey))
             {
-                return Failed<TokenInfo>("invalid request", 400);
+                return Fail<TokenInfo>("invalid request", 400);
             }
 
             await redis.Set(lockKey, loginUser, TimeSpan.FromSeconds(1));
             var user = await userService.GetFirstByExpressionAsync(u => u.Username == loginUser.Username);
             if (user is null)
             {
-                return Failed<TokenInfo>("username or password is incorrect");
+                return Fail<TokenInfo>("username or password is incorrect");
             }
 
             var password = loginUser.Password!.MD5Encrypt32(user.Salt!);
             if (password != user.Password)
             {
-                return Failed<TokenInfo>("username or password is incorrect");
+                return Fail<TokenInfo>("username or password is incorrect");
             }
 
             var roles = await userService.GetUserRolesAsync(user.Id);
@@ -66,7 +67,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             };
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
             var token = tokenBuilder.GenerateTokenInfo(claims);
-            return Success(token);
+            return Succeed(token);
         }
 
         [HttpPost("refresh")]
@@ -75,27 +76,27 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             var lockKey = $"auth/token/refresh/token={token}";
             if (await redis.Exist(lockKey))
             {
-                return Failed<TokenInfo>("invalid request");
+                return Fail<TokenInfo>("invalid request");
             }
 
             await redis.Set(lockKey, token, TimeSpan.FromSeconds(1));
 
             if (string.IsNullOrEmpty(token))
             {
-                return Failed<TokenInfo>("token is invalid");
+                return Fail<TokenInfo>("token is invalid");
             }
 
             token = tokenBuilder.DecryptCipherToken(token);
             var uid = tokenBuilder.ParseUIdFromToken(token);
             if (!tokenBuilder.VerifyToken(token) || uid <= 0)
             {
-                return Failed<TokenInfo>("refresh failed");
+                return Fail<TokenInfo>("refresh failed");
             }
 
             var user = await userService.GetByIdAsync(uid);
             if (user is null)
             {
-                return Failed<TokenInfo>("refresh failed");
+                return Fail<TokenInfo>("refresh failed");
             }
 
             var roles = await userService.GetUserRolesAsync(uid);
@@ -111,7 +112,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             };
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
             var tokenInfo = tokenBuilder.GenerateTokenInfo(claims);
-            return Success(tokenInfo);
+            return Succeed(tokenInfo);
         }
     }
 }

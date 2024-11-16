@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Asp.Versioning;
 using AutoMapper;
 using GalaFamilyLibrary.DataTransferObject.Identity;
+using GalaFamilyLibrary.Infrastructure;
 using GalaFamilyLibrary.Infrastructure.Common;
 using GalaFamilyLibrary.Infrastructure.Redis;
 using GalaFamilyLibrary.Infrastructure.Repository;
@@ -26,43 +27,29 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
         IMapper mapper,
         IUserService userService,
         IUnitOfWork unitOfWork)
-        : GalaControllerBase
+        : DefaultControllerBase
     {
         [HttpGet("exist")]
-        public async Task<MessageData<bool>> IsExistsAsync(string username)
+        public async Task<MessageData> IsExistsAsync(string username)
         {
             var redisKey = $"users/username={username}";
             var user = default(User);
             if (await redis.Exist(redisKey))
             {
                 user = await redis.Get<User>(redisKey);
-                return Success(true);
+                return Succeed();
             }
             else
             {
                 user = await userService.GetFirstByExpressionAsync(u => u.Username == username);
                 if (user is null)
                 {
-                    return Failed<bool>("user not exists");
+                    return Fail("user not exists");
                 }
 
                 await redis.Set(redisKey, user, TimeSpan.FromDays(7));
-                return Success(true);
+                return Succeed();
             }
-        }
-
-        [HttpGet("me")]
-        public async Task<MessageData<UserDTO>> GetUserDetails()
-        {
-            var userId = GetUserIdFromClaims();
-            if (userId == 0)
-            {
-                return Failed<UserDTO>("obtain user id failed");
-            }
-
-            var user = await userService.GetByIdAsync(userId);
-
-            return Success(mapper.Map<UserDTO>(user));
         }
 
         [HttpPost]
@@ -73,7 +60,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             var redisKey = $"user/register/username={userCreationDTO.Username}&password={userCreationDTO.Password}";
             if (await redis.Exist(redisKey))
             {
-                return Failed<TokenInfo>("invalid request", 400);
+                return Fail<TokenInfo>("invalid request", 400);
             }
 
             await redis.Set(redisKey, userCreationDTO, TimeSpan.FromSeconds(1));
@@ -81,7 +68,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             var user = await userService.GetFirstByExpressionAsync(u => u.Username == userCreationDTO.Username);
             if (user != null)
             {
-                return Failed<TokenInfo>("user already exists!", 300);
+                return Fail<TokenInfo>("user already exists!", 300);
             }
 
             user = mapper.Map<User>(userCreationDTO);
@@ -90,7 +77,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             if (role is null)
             {
                 logger.LogWarning("role: {roleName} not exists", PermissionConstants.ROLE_CONSUMER);
-                return Failed<TokenInfo>("register failed", 500);
+                return Fail<TokenInfo>("register failed", 500);
             }
 
             try
@@ -118,12 +105,12 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 };
 
                 var token = tokenBuilder.GenerateTokenInfo(claims);
-                return Success(token);
+                return Succeed(token);
             }
             catch (Exception e)
             {
                 unitOfWork.RollbackTransaction();
-                return Failed<TokenInfo>(e.Message, 500);
+                return Fail<TokenInfo>(e.Message, 500);
             }
         }
     }
