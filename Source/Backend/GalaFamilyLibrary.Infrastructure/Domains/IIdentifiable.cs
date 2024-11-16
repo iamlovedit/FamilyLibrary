@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 
-namespace GalaFamilyLibrary.Infrastructure.Repository.Mongo;
+namespace GalaFamilyLibrary.Infrastructure.Domains;
 
 public interface IIdentifiable<TKey> where TKey : IEquatable<TKey>
 {

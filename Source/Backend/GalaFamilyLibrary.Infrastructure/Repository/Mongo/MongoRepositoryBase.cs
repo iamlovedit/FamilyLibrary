@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using GalaFamilyLibrary.Infrastructure.Domains;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;

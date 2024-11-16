@@ -1,4 +1,4 @@
-namespace GalaFamilyLibrary.Infrastructure.Repository.Mongo;
+namespace GalaFamilyLibrary.Infrastructure.Domains;
 
 public abstract class IdentifiableBase<TKey> : IIdentifiable<TKey> where TKey : IEquatable<TKey>
 {
