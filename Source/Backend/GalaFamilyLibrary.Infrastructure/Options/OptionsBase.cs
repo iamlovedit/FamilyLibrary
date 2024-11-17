@@ -2,5 +2,5 @@ namespace GalaFamilyLibrary.Infrastructure.Options;
 
 public abstract class OptionsBase
 {
-    public bool IsEnable { get; set; }
+    public bool IsEnabled { get; set; }
 }

@@ -14,6 +14,7 @@ services.Configure<KestrelServerOptions>(options => { options.Limits.MaxRequestB
 
 services.AddScoped<IPackageService, PackageService>();
 services.AddScoped<IVersionService, VersionService>();
+services.AddScoped<IPublishedPackageService, PublishedPackageService>();
 
 builder.AddDefaultInfrastructure<long>();
 services.AddQuartz(options =>

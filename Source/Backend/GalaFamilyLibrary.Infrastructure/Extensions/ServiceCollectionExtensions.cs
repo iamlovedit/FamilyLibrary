@@ -76,7 +76,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
         var redisOptions = configuration.GetOptions<RedisOptions>(RedisOptions.SectionName);
-        if (redisOptions is null || !redisOptions.IsEnable)
+        if (redisOptions is null || !redisOptions.IsEnabled)
         {
             return services;
         }
@@ -118,22 +118,22 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
-        var audienceOptions = configuration.GetOptions<AudienceOptions>(AudienceOptions.SectionName);
-        if (audienceOptions is null || !audienceOptions.IsEnable)
+        var audienceOptions = configuration.GetOptions<AuthOptions>(AuthOptions.SectionName);
+        if (audienceOptions is null || !audienceOptions.IsEnabled)
         {
             return services;
         }
 
         services.TryAddSingleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerOptionsPostConfigureOptions>();
-        var key = configuration["AUDIENCE_KEY"] ?? audienceOptions.Secret;
-        ArgumentException.ThrowIfNullOrEmpty(key);
-        var buffer = Encoding.UTF8.GetBytes(key);
-        var securityKey = new SymmetricSecurityKey(buffer);
+        var securityKey = configuration[AuthOptions.AuthSecurityKey] ?? audienceOptions.SecurityKey;
+        ArgumentException.ThrowIfNullOrEmpty(securityKey);
+        var buffer = Encoding.UTF8.GetBytes(securityKey);
+        var symmetricSecurityKey = new SymmetricSecurityKey(buffer);
 
         var tokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = securityKey,
+            IssuerSigningKey = symmetricSecurityKey,
             ValidIssuer = audienceOptions.Issuer,
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -180,17 +180,17 @@ public static class ServiceCollectionExtensions
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
-        var audienceOptions = configuration.GetSection(AudienceOptions.SectionName).Get<AudienceOptions>();
-        if (audienceOptions is null || !audienceOptions.IsEnable)
+        var audienceOptions = configuration.GetSection(AuthOptions.SectionName).Get<AuthOptions>();
+        if (audienceOptions is null || !audienceOptions.IsEnabled)
         {
             return services;
         }
 
-        var key = configuration["AUDIENCE_KEY"] ?? audienceOptions.Secret;
-        ArgumentException.ThrowIfNullOrEmpty(key);
-        var buffer = Encoding.UTF8.GetBytes(key);
-        var securityKey = new SymmetricSecurityKey(buffer);
-        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var securityKey = configuration[AuthOptions.AuthSecurityKey] ?? audienceOptions.SecurityKey;
+        ArgumentException.ThrowIfNullOrEmpty(securityKey);
+        var buffer = Encoding.UTF8.GetBytes(securityKey);
+        var symmetricSecurityKey = new SymmetricSecurityKey(buffer);
+        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
         services.TryAddSingleton(new JwtContext(
             audienceOptions.Issuer,
@@ -279,7 +279,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         var mongoDbOptions = configuration.GetOptions<MongoDbOptions>(MongoDbOptions.SectionName);
-        if (mongoDbOptions is null || !mongoDbOptions.IsEnable)
+        if (mongoDbOptions is null || !mongoDbOptions.IsEnabled)
         {
             return services;
         }
@@ -342,12 +342,12 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(hostEnvironment);
 
         var sqlSugarOptions = configuration.GetOptions<SqlSugarOptions>(SqlSugarOptions.SectionName);
-        if (sqlSugarOptions is null || !sqlSugarOptions.IsEnable)
+        if (sqlSugarOptions is null || !sqlSugarOptions.IsEnabled)
         {
             return services;
         }
 
-        if (sqlSugarOptions.SnowFlake?.IsEnable ?? false)
+        if (sqlSugarOptions.SnowFlake?.IsEnabled ?? false)
         {
             var workerId = configuration["SNOWFLAKES_WORKERID"]?.ObjToInt() ?? sqlSugarOptions.SnowFlake?.WorkerId;
             ArgumentNullException.ThrowIfNull(workerId);
@@ -472,7 +472,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
 
         var corsOptions = configuration.GetOptions<CorsOptions>(CorsOptions.SectionName);
-        if (corsOptions is null || !corsOptions.IsEnable)
+        if (corsOptions is null || !corsOptions.IsEnabled)
         {
             return services;
         }
@@ -533,7 +533,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(configuration);
 
         var versionOptions = configuration.GetOptions<VersionOptions>(VersionOptions.SectionName);
-        if (versionOptions is null || !versionOptions.IsEnable)
+        if (versionOptions is null || !versionOptions.IsEnabled)
         {
             return services;
         }
@@ -571,7 +571,7 @@ public static class ServiceCollectionExtensions
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configuration);
         var serilogOptions = configuration.GetSection(SerilogOptions.Name).Get<SerilogOptions>();
-        if (serilogOptions is null || !serilogOptions.IsEnable)
+        if (serilogOptions is null || !serilogOptions.IsEnabled)
         {
             return services;
         }
@@ -587,7 +587,7 @@ public static class ServiceCollectionExtensions
                 loggerConfiguration.WriteTo.File(Path.Combine("logs", "log"), rollingInterval: RollingInterval.Hour);
         }
 
-        if (serilogOptions.SeqOptions?.IsEnable ?? false)
+        if (serilogOptions.SeqOptions?.IsEnabled ?? false)
         {
             var serverUrl = configuration["SEQ_URL"] ?? serilogOptions.SeqOptions.Address;
             ArgumentException.ThrowIfNullOrEmpty(serverUrl);
