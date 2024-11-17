@@ -36,7 +36,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass<DynamoPackage>();
+    dbSeed.GenerateTablesByClass<DynamoPackage>();
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -45,9 +45,9 @@ app.UseInitSeed(dbSeed =>
 
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Packages");
-    dbSeed.InitSeed<DynamoPackage>(file);
+    dbSeed.GenerateSeedAsync<DynamoPackage>(file);
 
     file = string.Format(seedFolder, "PackageVersions");
-    dbSeed.InitSeed<PackageVersion>(file);
+    dbSeed.GenerateSeedAsync<PackageVersion>(file);
 });
 app.UseInfrastructure();

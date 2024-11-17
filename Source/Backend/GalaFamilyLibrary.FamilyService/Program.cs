@@ -31,7 +31,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass<Family>();
+    dbSeed.GenerateTablesByClass<Family>();
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -40,16 +40,16 @@ app.UseInitSeed(dbSeed =>
 
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
     var file = string.Format(seedFolder, "Families");
-    dbSeed.InitSeed<Family>(file);
+    dbSeed.GenerateSeedAsync<Family>(file);
 
     file = string.Format(seedFolder, "FamilySymbols");
-    dbSeed.InitSeed<FamilySymbol>(file);
+    dbSeed.GenerateSeedAsync<FamilySymbol>(file);
 
     file = string.Format(seedFolder, "FamilyCategories");
-    dbSeed.InitSeed<FamilyCategory>(file);
+    dbSeed.GenerateSeedAsync<FamilyCategory>(file);
 
     file = string.Format(seedFolder, "FamilyDetails");
-    dbSeed.InitSeed<FamilyDetail>(file);
+    dbSeed.GenerateSeedAsync<FamilyDetail>(file);
 });
 app.UseStaticFiles();
 app.UseInfrastructure();

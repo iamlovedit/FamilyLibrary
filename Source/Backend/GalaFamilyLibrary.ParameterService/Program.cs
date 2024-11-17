@@ -13,7 +13,7 @@ var app = builder.Build();
 
 app.UseInitSeed(dbSeed =>
 {
-    dbSeed.InitTablesByClass<Parameter>();
+    dbSeed.GenerateTablesByClass<Parameter>();
 
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
@@ -24,21 +24,21 @@ app.UseInitSeed(dbSeed =>
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
 
     var file = string.Format(seedFolder, "FamilyParameters");
-    dbSeed.InitSeed<Parameter>(file);
+    dbSeed.GenerateSeedAsync<Parameter>(file);
 
     file = string.Format(seedFolder, "ParameterDefinitions");
-    dbSeed.InitSeed<ParameterDefinition>(file);
+    dbSeed.GenerateSeedAsync<ParameterDefinition>(file);
 
     file = string.Format(seedFolder, "ParameterGroups");
-    dbSeed.InitSeed<ParameterGroup>(file);
+    dbSeed.GenerateSeedAsync<ParameterGroup>(file);
 
     file = string.Format(seedFolder, "ParameterTypes");
-    dbSeed.InitSeed<ParameterType>(file);
+    dbSeed.GenerateSeedAsync<ParameterType>(file);
 
     file = string.Format(seedFolder, "ParameterUnitTypes");
-    dbSeed.InitSeed<ParameterUnitType>(file);
+    dbSeed.GenerateSeedAsync<ParameterUnitType>(file);
 
     file = string.Format(seedFolder, "DisplayUnitTypes");
-    dbSeed.InitSeed<DisplayUnitType>(file);
+    dbSeed.GenerateSeedAsync<DisplayUnitType>(file);
 });
 app.UseInfrastructure();

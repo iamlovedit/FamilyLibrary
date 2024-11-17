@@ -11,7 +11,11 @@ public class SerilogOptions : OptionsBase
 
 public class SeqOptions : OptionsBase
 {
-    public string Address { get; set; }
+    public const string SeqUrl= "SEQ_URL";
+
+    public const string SeqApiKey = "SEQ_APIKEY";
+    
+    public string Url { get; set; }
 
     public string Secret { get; set; }
 }

@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using GalaFamilyLibrary.Infrastructure.Extensions;
 using Newtonsoft.Json.Serialization;
 
 namespace GalaFamilyLibrary.Infrastructure.Seed;
 
 public class DatabaseSeed(DatabaseContext databaseContext)
 {
-    public void InitTablesByClass<T>() where T : class, new()
+    public void GenerateTablesByClass<T>() where T : class, new()
     {
         if (databaseContext.DbType == DbType.Oracle)
         {
@@ -38,16 +39,8 @@ public class DatabaseSeed(DatabaseContext databaseContext)
     }
 
 
-    public async void InitSeed<T>(string seedFile) where T : class, new()
+    public async Task GenerateSeedAsync<T>(string seedFile) where T : class, new()
     {
-        var setting = new JsonSerializerSettings();
-        JsonConvert.DefaultSettings = new Func<JsonSerializerSettings>(() =>
-        {
-            setting.DateFormatHandling = DateFormatHandling.MicrosoftDateFormat;
-            setting.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-            setting.NullValueHandling = NullValueHandling.Ignore;
-            return setting;
-        });
         if (string.IsNullOrEmpty(seedFile))
         {
             throw new ArgumentException("Value cannot be null or empty.", nameof(seedFile));
@@ -66,7 +59,7 @@ public class DatabaseSeed(DatabaseContext databaseContext)
                 return;
             }
 
-            var data = JsonConvert.DeserializeObject<List<T>>(json);
+            var data = json.Deserialize<List<T>>();
             await databaseContext.GetEntityDatabase<T>().InsertRangeAsync(data);
         }
         catch (Exception e)

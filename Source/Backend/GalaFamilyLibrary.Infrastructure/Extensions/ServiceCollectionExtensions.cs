@@ -84,11 +84,11 @@ public static class ServiceCollectionExtensions
         services.TryAddScoped<IRedisBasketRepository, RedisBasketRepository>();
         services.TryAddSingleton<ConnectionMultiplexer>(_ =>
         {
-            var host = configuration["REDIS_HOST"] ?? redisOptions.Host;
+            var host = configuration[RedisOptions.RedisHost] ?? redisOptions.Host;
             ArgumentException.ThrowIfNullOrEmpty(host);
-            var password = configuration["REDIS_PASSWORD"] ?? redisOptions.Password;
+            var password = configuration[RedisOptions.RedisPassword] ?? redisOptions.Password;
             ArgumentException.ThrowIfNullOrEmpty(password);
-            var serviceName = configuration["REDIS_SERVICE_NAME"] ?? redisOptions.ServiceName;
+            var serviceName = configuration[RedisOptions.RedisServiceName] ?? redisOptions.ServiceName;
             var connectionString = string.IsNullOrEmpty(serviceName)
                 ? $"{host},password={password}"
                 : $"{host},password={password},serviceName={serviceName}";
@@ -349,24 +349,25 @@ public static class ServiceCollectionExtensions
 
         if (sqlSugarOptions.SnowFlake?.IsEnabled ?? false)
         {
-            var workerId = configuration["SNOWFLAKES_WORKERID"]?.ObjToInt() ?? sqlSugarOptions.SnowFlake?.WorkerId;
+            var workerId = configuration[SnowFlakeOptions.SnowFakeWorkId]?.ObjToInt() ??
+                           sqlSugarOptions.SnowFlake?.WorkerId;
             ArgumentNullException.ThrowIfNull(workerId);
             SnowFlakeSingle.WorkId = (int)workerId;
         }
 
-        var server = configuration["DB_HOST"] ?? sqlSugarOptions.Server;
+        var server = configuration[SqlSugarOptions.DatabaseHost] ?? sqlSugarOptions.Server;
         ArgumentException.ThrowIfNullOrEmpty(server);
 
-        var port = configuration["DB_PORT"] ?? sqlSugarOptions.Port.ToString();
+        var port = configuration[SqlSugarOptions.DatabasePort] ?? sqlSugarOptions.Port.ToString();
         ArgumentException.ThrowIfNullOrEmpty(port);
 
-        var database = configuration["DB_DATABASE"] ?? sqlSugarOptions.Database;
+        var database = configuration[SqlSugarOptions.DatabaseName] ?? sqlSugarOptions.Database;
         ArgumentException.ThrowIfNullOrEmpty(database);
 
-        var user = configuration["DB_USER"] ?? sqlSugarOptions.User;
+        var user = configuration[SqlSugarOptions.DatabaseUser] ?? sqlSugarOptions.User;
         ArgumentException.ThrowIfNullOrEmpty(user);
 
-        var password = configuration["DB_PASSWORD"] ?? sqlSugarOptions.Password;
+        var password = configuration[SqlSugarOptions.DatabasePassword] ?? sqlSugarOptions.Password;
         ArgumentException.ThrowIfNullOrEmpty(password);
 
         var connectionString = $"server={server};port={port};database={database};userid={user};password={password};";
@@ -589,9 +590,9 @@ public static class ServiceCollectionExtensions
 
         if (serilogOptions.SeqOptions?.IsEnabled ?? false)
         {
-            var serverUrl = configuration["SEQ_URL"] ?? serilogOptions.SeqOptions.Address;
+            var serverUrl = configuration[SeqOptions.SeqUrl] ?? serilogOptions.SeqOptions.Url;
             ArgumentException.ThrowIfNullOrEmpty(serverUrl);
-            var apiKey = configuration["SEQ_APIKEY"] ?? serilogOptions.SeqOptions.Secret;
+            var apiKey = configuration[SeqOptions.SeqApiKey] ?? serilogOptions.SeqOptions.Secret;
             ArgumentException.ThrowIfNullOrEmpty(apiKey);
             loggerConfiguration = loggerConfiguration.WriteTo.Seq(serverUrl, apiKey: apiKey);
         }

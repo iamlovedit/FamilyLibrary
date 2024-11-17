@@ -7,6 +7,16 @@ public sealed class SqlSugarOptions : OptionsBase
 {
     public const string SectionName = "SqlSugar";
 
+    public const string DatabaseHost= "DATABASE_HOST";
+
+    public const string DatabaseUser = "DATABASE_USER";
+
+    public const string DatabasePassword = "DATABASE_PASSWORD";
+
+    public const string DatabasePort = "DATABASE_PORT";
+
+    public const string DatabaseName = "DATABASE_DATABASE";
+
     public SnowFlakeOptions? SnowFlake { get; set; }
 
     public string? Server { get; set; }
@@ -22,5 +32,7 @@ public sealed class SqlSugarOptions : OptionsBase
 
 public class SnowFlakeOptions : OptionsBase
 {
+    public const string SnowFakeWorkId = "SNOWFLAKES_WORKER_ID";
+
     public int WorkerId { get; set; }
 }
