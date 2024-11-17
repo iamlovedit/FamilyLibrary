@@ -22,4 +22,10 @@
     <ProjectReference Include="..\GalaFamilyLibrary.Service\GalaFamilyLibrary.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
+  </ItemGroup>
+
 </Project>

@@ -3,16 +3,12 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 80
 
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["GalaFamilyLibrary.FileStorageService/GalaFamilyLibrary.FileStorageService.csproj", "GalaFamilyLibrary.FileStorageService/"]
 COPY ["GalaFamilyLibrary.Infrastructure/GalaFamilyLibrary.Infrastructure.csproj", "GalaFamilyLibrary.Infrastructure/"]
 COPY ["GalaFamilyLibrary.DataTransferObject/GalaFamilyLibrary.DataTransferObject.csproj", "GalaFamilyLibrary.DataTransferObject/"]
-COPY ["GalaFamilyLibrary.Model/GalaFamilyLibrary.Model.csproj", "GalaFamilyLibrary.Model/"]
-COPY ["GalaFamilyLibrary.Repository/GalaFamilyLibrary.Repository.csproj", "GalaFamilyLibrary.Repository/"]
-COPY ["GalaFamilyLibrary.Service/GalaFamilyLibrary.Service.csproj", "GalaFamilyLibrary.Service/"]
 RUN dotnet restore "GalaFamilyLibrary.FileStorageService/GalaFamilyLibrary.FileStorageService.csproj"
 COPY . .
 WORKDIR "/src/GalaFamilyLibrary.FileStorageService"

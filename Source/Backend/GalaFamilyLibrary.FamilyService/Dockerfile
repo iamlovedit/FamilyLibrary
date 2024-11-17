@@ -10,7 +10,6 @@ COPY ["GalaFamilyLibrary.FamilyService/GalaFamilyLibrary.FamilyService.csproj", 
 COPY ["GalaFamilyLibrary.Infrastructure/GalaFamilyLibrary.Infrastructure.csproj", "GalaFamilyLibrary.Infrastructure/"]
 COPY ["GalaFamilyLibrary.DataTransferObject/GalaFamilyLibrary.DataTransferObject.csproj", "GalaFamilyLibrary.DataTransferObject/"]
 COPY ["GalaFamilyLibrary.Model/GalaFamilyLibrary.Model.csproj", "GalaFamilyLibrary.Model/"]
-COPY ["GalaFamilyLibrary.Repository/GalaFamilyLibrary.Repository.csproj", "GalaFamilyLibrary.Repository/"]
 COPY ["GalaFamilyLibrary.Service/GalaFamilyLibrary.Service.csproj", "GalaFamilyLibrary.Service/"]
 RUN dotnet restore "GalaFamilyLibrary.FamilyService/GalaFamilyLibrary.FamilyService.csproj"
 COPY . .
