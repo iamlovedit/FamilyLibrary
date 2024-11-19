@@ -12,7 +12,7 @@ public static class DatabaseContextExtensions
         var databaseSeed = scope.ServiceProvider.GetRequiredService<DatabaseSeed>();
         seedBuilder.Invoke(databaseSeed);
     }
-    
+
     public static void GenerateTablesByClass<T>(this IServiceProvider services,
         Action<DatabaseSeed>? seedBuilder = null) where T : class, new()
     {
@@ -20,6 +20,15 @@ public static class DatabaseContextExtensions
         var databaseSeed = services.GetRequiredService<DatabaseSeed>()
                            ?? throw new ArgumentNullException($"{nameof(DatabaseSeed)} not found");
         databaseSeed.GenerateTablesByClass<T>();
+        seedBuilder?.Invoke(databaseSeed);
+    }
+
+    public static void ConfigureSeed(this IServiceProvider services, Action<DatabaseSeed> seedBuilder)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        var databaseSeed = services.GetRequiredService<DatabaseSeed>()
+                           ?? throw new ArgumentNullException($"{nameof(DatabaseSeed)} not found");
         seedBuilder?.Invoke(databaseSeed);
     }
 }
