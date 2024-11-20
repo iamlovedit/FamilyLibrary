@@ -9,9 +9,9 @@ const rootContainer = ReactDOM.createRoot(document.getElementById('root')!);
 rootContainer.render(
   <React.StrictMode>
     <NextUIProvider>
-      <Provider store={store}>
+      <main className="light text-foreground bg-background">
         <App />
-      </Provider>
+      </main>
     </NextUIProvider>
   </React.StrictMode>,
 )
