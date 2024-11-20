@@ -7,9 +7,9 @@ const rootContainer = ReactDOM.createRoot(document.getElementById('root')!);
 rootContainer.render(
   <React.StrictMode>
     <NextUIProvider>
-      <main className="dark text-foreground bg-background h-dvh w-full">
+      <div className="dark text-foreground bg-background h-dvh w-full">
         <App />
-      </main>
+      </div>
     </NextUIProvider>
   </React.StrictMode>,
 )

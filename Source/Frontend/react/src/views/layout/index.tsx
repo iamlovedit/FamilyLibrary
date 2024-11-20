@@ -1,12 +1,18 @@
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 function MainLayout() {
 
     return (
-        <h1 className="text-3xl font-bold underline">
-            Hello world!
-        </h1>
+        <div className="h-dvh w-full flex flex-col">
+            <Header />
+            <div className='flex-1'>
+                <Outlet />
+            </div>
+            <Footer />
+        </div>
     )
 }
 

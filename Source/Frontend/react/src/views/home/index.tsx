@@ -1,29 +1,10 @@
 import { useAppSelector, useAppDispatch } from '@/stores'
 import { decrement, increment } from '@/stores/modules/counter'
 
+import { Button } from '@nextui-org/react'
 
 function Home() {
-
-    const count = useAppSelector((state: any) => state.counter.value)
-    const dispatch = useAppDispatch()
-
-    return (
-        <div>
-            <button
-                aria-label="Increment value"
-                onClick={() => dispatch(increment())}
-            >
-                Increment
-            </button>
-            <span>{count}</span>
-            <button
-                aria-label="Decrement value"
-                onClick={() => dispatch(decrement())}
-            >
-                Decrement
-            </button>
-        </div>
-    )
+  return <Button color="primary">Press me!</Button>
 }
 
 export default Home
