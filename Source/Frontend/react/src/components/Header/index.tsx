@@ -1,3 +1,4 @@
+"use client";
 import {
   Navbar,
   NavbarBrand,
@@ -9,38 +10,64 @@ import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  Avatar
+  Avatar,
 } from '@nextui-org/react'
+import { useState } from 'react'
 import { AcmeLogo } from '../Logo'
 import { SearchIcon } from '../SearchIcon'
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+
+type MenuItem = {
+  name: string,
+  key: string
+}
 
 function Header() {
+  const location = useLocation()
+  const [activeItem, setActiveItem] = useState(location.pathname);
+  const navigate = useNavigate()
+
+  const menuItems: MenuItem[] = [
+    {
+      name: "主页",
+      key: "/"
+    },
+    {
+      name: "节点包",
+      key: "/dynamo"
+    }, {
+      name: "族库",
+      key: "/family"
+    }
+  ]
+
+  const handlePressNavbarItem = (event: any, key: string) => {
+    event.preventDefault();
+    setActiveItem(key)
+    navigate(key)
+  }
+
+
   return (
     <Navbar isBordered>
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <AcmeLogo />
-          <p className="hidden sm:block font-bold text-inherit">ACME</p>
+          <p className="hidden sm:block font-bold text-inherit">Young</p>
         </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page" color="secondary">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
       </NavbarContent>
-
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        {
+          menuItems.map((item: MenuItem) => (
+            <NavbarItem isActive={activeItem === item.key}>
+              <Link color={activeItem === item.key ? 'primary' : 'foreground'} href={item.key} onClick={(e) => handlePressNavbarItem(e, item.key)}>
+                {item.name}
+              </Link>
+            </NavbarItem>
+          ))
+        }
+      </NavbarContent>
       <NavbarContent as="div" className="items-center" justify="end">
         <Input
           classNames={{
@@ -84,6 +111,8 @@ function Header() {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
+
+
     </Navbar>
   )
 }
