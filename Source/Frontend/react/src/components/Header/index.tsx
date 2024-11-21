@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import {
   Navbar,
   NavbarBrand,
@@ -10,44 +10,44 @@ import {
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
-  Avatar,
+  Avatar
 } from '@nextui-org/react'
 import { useState } from 'react'
 import { AcmeLogo } from '../Logo'
 import { SearchIcon } from '../SearchIcon'
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 type MenuItem = {
-  name: string,
+  name: string
   key: string
 }
 
 function Header() {
   const location = useLocation()
-  const [activeItem, setActiveItem] = useState(location.pathname);
+  const [activeItem, setActiveItem] = useState(location.pathname)
   const navigate = useNavigate()
 
   const menuItems: MenuItem[] = [
     {
-      name: "主页",
-      key: "/"
+      name: '主页',
+      key: '/'
     },
     {
-      name: "节点包",
-      key: "/dynamo"
-    }, {
-      name: "族库",
-      key: "/family"
+      name: '节点包',
+      key: '/dynamo'
+    },
+    {
+      name: '族库',
+      key: '/family'
     }
   ]
 
   const handlePressNavbarItem = (event: any, key: string) => {
-    event.preventDefault();
+    event.preventDefault()
     setActiveItem(key)
     navigate(key)
   }
-
 
   return (
     <Navbar isBordered>
@@ -58,15 +58,17 @@ function Header() {
         </NavbarBrand>
       </NavbarContent>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        {
-          menuItems.map((item: MenuItem) => (
-            <NavbarItem isActive={activeItem === item.key}>
-              <Link color={activeItem === item.key ? 'primary' : 'foreground'} href={item.key} onClick={(e) => handlePressNavbarItem(e, item.key)}>
-                {item.name}
-              </Link>
-            </NavbarItem>
-          ))
-        }
+        {menuItems.map((item: MenuItem) => (
+          <NavbarItem isActive={activeItem === item.key} key={item.key}>
+            <Link
+              color={activeItem === item.key ? 'primary' : 'foreground'}
+              href={item.key}
+              onClick={(e) => handlePressNavbarItem(e, item.key)}
+            >
+              {item.name}
+            </Link>
+          </NavbarItem>
+        ))}
       </NavbarContent>
       <NavbarContent as="div" className="items-center" justify="end">
         <Input
@@ -111,8 +113,6 @@ function Header() {
           </DropdownMenu>
         </Dropdown>
       </NavbarContent>
-
-
     </Navbar>
   )
 }
