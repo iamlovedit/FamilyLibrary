@@ -23,12 +23,12 @@ public static class DatabaseContextExtensions
         seedBuilder?.Invoke(databaseSeed);
     }
 
-    public static void ConfigureSeed(this IServiceProvider services, Action<DatabaseSeed> seedBuilder)
+    public static Task? ConfigureSeedAsync(this IServiceProvider services, Func<DatabaseSeed, Task?> seedBuilder)
     {
         ArgumentNullException.ThrowIfNull(services);
 
         var databaseSeed = services.GetRequiredService<DatabaseSeed>()
                            ?? throw new ArgumentNullException($"{nameof(DatabaseSeed)} not found");
-        seedBuilder?.Invoke(databaseSeed);
+        return seedBuilder?.Invoke(databaseSeed);
     }
 }

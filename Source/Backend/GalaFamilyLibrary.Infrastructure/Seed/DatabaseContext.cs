@@ -1,14 +1,19 @@
-﻿namespace GalaFamilyLibrary.Infrastructure.Seed;
+﻿using MongoDB.Driver;
+
+namespace GalaFamilyLibrary.Infrastructure.Seed;
 
 public class DatabaseContext
 {
-    public DatabaseContext(ISqlSugarClient sqlSugarClient)
+    public DatabaseContext(ISqlSugarClient sqlSugarClient, IMongoDatabase mongoDatabase)
     {
+        MongoDatabase = mongoDatabase;
         if (sqlSugarClient is SqlSugarScope scope)
         {
             Database = scope;
         }
     }
+
+    public IMongoDatabase MongoDatabase { get; }
 
     public SqlSugarScope Database { get; private set; }
 

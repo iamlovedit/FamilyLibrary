@@ -1,10 +1,13 @@
 ﻿using System.Reflection;
 using GalaFamilyLibrary.Infrastructure.Extensions;
+using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 using Newtonsoft.Json.Serialization;
+using ILogger = DnsClient.Internal.ILogger;
 
 namespace GalaFamilyLibrary.Infrastructure.Seed;
 
-public class DatabaseSeed(DatabaseContext databaseContext)
+public class DatabaseSeed(DatabaseContext databaseContext, ILogger<DatabaseSeed> logger)
 {
     public void GenerateTablesByClass<T>() where T : class, new()
     {
@@ -33,7 +36,7 @@ public class DatabaseSeed(DatabaseContext databaseContext)
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            logger.LogError(e, e.Message);
             throw;
         }
     }
@@ -64,7 +67,38 @@ public class DatabaseSeed(DatabaseContext databaseContext)
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            logger.LogError(e, e.Message);
+            throw;
+        }
+    }
+
+    public async Task GenerateMongoSeedAsync<T>(string seedFile) where T : class, new()
+    {
+        if (string.IsNullOrEmpty(seedFile))
+        {
+            throw new ArgumentException("Value cannot be null or empty.", nameof(seedFile));
+        }
+
+        try
+        {
+            var collection = databaseContext.MongoDatabase.GetCollection<T>(typeof(T).Name);
+            if (await collection.AsQueryable().AnyAsync())
+            {
+                return;
+            }
+
+            var json = await File.ReadAllTextAsync(seedFile, Encoding.UTF8);
+            if (string.IsNullOrEmpty(json))
+            {
+                return;
+            }
+
+            var data = json.Deserialize<List<T>>();
+            await collection.InsertManyAsync(data);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, e.Message);
             throw;
         }
     }
