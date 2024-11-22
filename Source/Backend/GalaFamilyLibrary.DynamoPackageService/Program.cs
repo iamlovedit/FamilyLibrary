@@ -34,9 +34,8 @@ services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-app.UseInitSeed(dbSeed =>
+await app.Services.ConfigureSeedAsync(async seed =>
 {
-    dbSeed.GenerateTablesByClass<DynamoPackage>();
     var wwwRootDirectory = app.Environment.WebRootPath;
     if (string.IsNullOrEmpty(wwwRootDirectory))
     {
@@ -44,10 +43,7 @@ app.UseInitSeed(dbSeed =>
     }
 
     var seedFolder = Path.Combine(wwwRootDirectory, "Seed/{0}.json");
-    var file = string.Format(seedFolder, "Packages");
-    dbSeed.GenerateSeedAsync<DynamoPackage>(file);
-
-    file = string.Format(seedFolder, "PackageVersions");
-    dbSeed.GenerateSeedAsync<PackageVersion>(file);
+    var file = string.Format(seedFolder, "dynamo_packages");
+    await seed.GenerateMongoSeedAsync<PublishedPackage>(file);
 });
 app.UseInfrastructure();
