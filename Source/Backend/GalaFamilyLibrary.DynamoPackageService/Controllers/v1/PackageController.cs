@@ -54,7 +54,7 @@ public class PackageController(
         if (await redis.Exist(redisKey))
         {
             package = await redis.Get<DynamoPackage>(redisKey);
-            return Succeed(package.Adapt<PackageDTO>());
+            return SucceedData(package.Adapt<PackageDTO>());
         }
 
         package = await packageService.GetPackageDetailByIdAsync(id);
@@ -64,7 +64,7 @@ public class PackageController(
         }
 
         await redis.Set(redisKey, package, _cacheTime);
-        return Succeed(package.Adapt<PackageDTO>());
+        return SucceedData(package.Adapt<PackageDTO>());
     }
 
     [HttpGet("{id}/{packageVersion}")]

@@ -10,16 +10,20 @@ public class DefaultControllerBase : ControllerBase
 {
     [NonAction]
     [ApiExplorerSettings(IgnoreApi = true)]
-    public static MessageData<T> Succeed<T>(T data, string message = "成功", int code = 200)
+    public static MessageData<T> SucceedData<T>(T data, string message = "成功", int code = 200)
     {
         return new MessageData<T>(true, message, data, code);
     }
 
+    [NonAction]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public static MessageData Succeed(string message = "成功", int code = 200)
     {
         return new MessageData(true, message, code);
     }
 
+    [NonAction]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public static MessageData Fail(string message = "失败", int code = 500)
     {
         return new MessageData(false, message, code);

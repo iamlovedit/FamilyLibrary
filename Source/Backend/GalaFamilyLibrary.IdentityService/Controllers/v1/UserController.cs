@@ -105,7 +105,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
                 };
 
                 var token = tokenBuilder.GenerateTokenInfo(claims);
-                return Succeed(token);
+                return SucceedData(token);
             }
             catch (Exception e)
             {

@@ -72,7 +72,7 @@ public class FamilyController(
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName)
             .WithObject(family.GetFilePath(familyCreationDTO.Version)).WithExpiry(_expiry);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Succeed<string>(url);
+        return SucceedData<string>(url);
     }
 
     [HttpPost("file")]
@@ -94,7 +94,7 @@ public class FamilyController(
         var args = new PresignedPutObjectArgs().WithBucket(_bucketName).WithObject($"{dir}/{fileName}")
             .WithExpiry(_expiry * 5);
         var url = await _minioClient.PresignedPutObjectAsync(args);
-        return Succeed<string>(url);
+        return SucceedData<string>(url);
     }
 
 
@@ -105,7 +105,7 @@ public class FamilyController(
         var redisKey = $"familyDetails/{id}";
         if (await redis.Exist(redisKey))
         {
-            return Succeed(await redis.Get<FamilyDetailDTO>(redisKey));
+            return SucceedData(await redis.Get<FamilyDetailDTO>(redisKey));
         }
 
         var familyDetail = await familyService.GetFamilyDetails(id);
@@ -118,7 +118,7 @@ public class FamilyController(
         logger.LogInformation("query family details succeed id: {id}", id);
         var detailDto = mapper.Map<FamilyDetailDTO>(familyDetail);
         await redis.Set(redisKey, detailDto, redisRequirement.CacheTime);
-        return Succeed(detailDto);
+        return SucceedData(detailDto);
     }
 
     [HttpGet("categories")]
@@ -129,13 +129,13 @@ public class FamilyController(
         var redisKey = parentId == null ? $"family/categories" : $"family/categories?parentId={parentId}";
         if (await redis.Exist(redisKey))
         {
-            return Succeed(await redis.Get<List<FamilyCategoryDTO>>(redisKey));
+            return SucceedData(await redis.Get<List<FamilyCategoryDTO>>(redisKey));
         }
 
         var categories = await familyService.GetCategoryTreeAsync(parentId);
         var categoriesDto = mapper.Map<List<FamilyCategoryDTO>>(categories);
         await redis.Set(redisKey, categoriesDto, TimeSpan.FromDays(1));
-        return Succeed(categoriesDto);
+        return SucceedData(categoriesDto);
     }
 
     [HttpGet("all")]
@@ -183,7 +183,7 @@ public class FamilyController(
             var id = await familyLikesService.AddSnowflakeAsync(familyLike);
             if (id > 0)
             {
-                return Succeed(true);
+                return SucceedData(true);
             }
         }
 

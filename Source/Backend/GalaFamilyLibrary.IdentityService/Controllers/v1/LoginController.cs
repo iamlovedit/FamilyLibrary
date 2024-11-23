@@ -67,7 +67,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             };
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
             var token = tokenBuilder.GenerateTokenInfo(claims);
-            return Succeed(token);
+            return SucceedData(token);
         }
 
         [HttpPost("refresh")]
@@ -112,7 +112,7 @@ namespace GalaFamilyLibrary.IdentityService.Controllers.v1
             };
             claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r.Name!)));
             var tokenInfo = tokenBuilder.GenerateTokenInfo(claims);
-            return Succeed(tokenInfo);
+            return SucceedData(tokenInfo);
         }
     }
 }
