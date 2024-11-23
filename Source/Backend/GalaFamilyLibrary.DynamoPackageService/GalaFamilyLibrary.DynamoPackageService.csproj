@@ -15,6 +15,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Remove="logs\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,6 +32,18 @@
        <InternalsVisibleTo Include="Application.FunctionalTests" />
        <ProjectReference Include="..\GalaFamilyLibrary.Model\GalaFamilyLibrary.Model.csproj" />
        <ProjectReference Include="..\GalaFamilyLibrary.Service\GalaFamilyLibrary.Service.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="logs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="logs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="logs\**" />
     </ItemGroup>
 
 </Project>
