@@ -26,8 +26,8 @@ public static class DatabaseContextExtensions
     public static Task? ConfigureSeedAsync(this IServiceProvider services, Func<DatabaseSeed, Task?> seedBuilder)
     {
         ArgumentNullException.ThrowIfNull(services);
-
-        var databaseSeed = services.GetRequiredService<DatabaseSeed>()
+        using var serviceScope = services.CreateScope();
+        var databaseSeed = serviceScope.ServiceProvider.GetRequiredService<DatabaseSeed>()
                            ?? throw new ArgumentNullException($"{nameof(DatabaseSeed)} not found");
         return seedBuilder?.Invoke(databaseSeed);
     }
