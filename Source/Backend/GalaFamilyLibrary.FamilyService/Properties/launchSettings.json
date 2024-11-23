@@ -5,23 +5,7 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "DATABASE_HOST": "localhost",
-        "DATABASE_PORT": "5432",
-        "DATABASE_DATABASE": "gala_library",
-        "DATABASE_USERID": "root",
-        "DATABASE_PASSWORD": "pass@word",
-        "REDIS_HOST": "localhost",
-        "REDIS_PASSWORD": "pass@word",
-        "AUDIENCE_ISSUER": "Young",
-        "AUDIENCE_AUDIENCE": "GalaServer",
-        "AUDIENCE_KEY": "a7a31f84-1051-81bc-b930-89c0ae9e92ef",
-        "AUDIENCE_EXPIRATION": "3600",
-        "FILE_STORAGE_KEY": "cf940b17-4ab8-d540-1ee5-a781c741e5ee",
-        "AES_KEY": "zxcvbnmasdfghjkl",
-        "SEQ_URL": "http://localhost:5341",
-        "SEQ_APIKEY": "tZSCDVnAbyYZB1s4twSl",
-        "SNOWFLAKES_WORKID": "1"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5002;https://localhost:6002"
