@@ -36,4 +36,7 @@ public interface IMongoRepositoryBase<TEntity, in TKey>
         Expression<Func<TEntity, object>>? orderBy = null,
         bool ascending = false
     );
+
+    Task<PageData<TEntity>?> GetPageDataAsync(int page, int pageSize, Expression<Func<TEntity, bool>>? filter = null,
+        string? orderBy = null, bool ascending = false);
 }

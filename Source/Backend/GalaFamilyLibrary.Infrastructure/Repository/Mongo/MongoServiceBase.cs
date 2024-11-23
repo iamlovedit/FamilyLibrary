@@ -72,4 +72,11 @@ public abstract class MongoServiceBase<TEntity, TKey>(IMongoRepositoryBase<TEnti
     {
         return await DAL.GetPageDataAsync(page, pageSize, filter, orderBy, ascending);
     }
+
+    public async Task<PageData<TEntity>?> GetPageDataAsync(int page, int pageSize,
+        Expression<Func<TEntity, bool>>? filter = null, string? orderBy = null,
+        bool ascending = false)
+    {
+        return await DAL.GetPageDataAsync(page, pageSize, filter, orderBy, ascending);
+    }
 }

@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using GalaFamilyLibrary.Infrastructure.Domains;
+using GalaFamilyLibrary.Infrastructure.Exceptions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
@@ -15,7 +16,7 @@ public class MongoRepositoryBase<TEntity, TKey>(IMongoDatabase database) :
 
     public IMongoCollection<TEntity> Collection => _collection;
 
-    private const string _idField = "_id";
+    private const string IdField = "_id";
 
     public async Task AddAsync(TEntity entity)
     {
@@ -29,7 +30,7 @@ public class MongoRepositoryBase<TEntity, TKey>(IMongoDatabase database) :
 
     public async Task<TEntity?> GetAsync(TKey id)
     {
-        var filter = Builders<TEntity>.Filter.Eq(_idField, id);
+        var filter = Builders<TEntity>.Filter.Eq(IdField, id);
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
 
@@ -40,7 +41,7 @@ public class MongoRepositoryBase<TEntity, TKey>(IMongoDatabase database) :
 
     public async Task<TEntity?> GetByObjectIdAsync(string id)
     {
-        var filter = Builders<TEntity>.Filter.Eq(_idField, ObjectId.Parse(id));
+        var filter = Builders<TEntity>.Filter.Eq(IdField, ObjectId.Parse(id));
 
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
@@ -63,13 +64,13 @@ public class MongoRepositoryBase<TEntity, TKey>(IMongoDatabase database) :
 
     public async Task<TEntity> UpdateAsync(TKey id, TEntity entity)
     {
-        var filter = Builders<TEntity>.Filter.Eq(_idField, id);
+        var filter = Builders<TEntity>.Filter.Eq(IdField, id);
         return await _collection.FindOneAndReplaceAsync(filter, entity);
     }
 
     public async Task<TEntity> DeleteAsync(TKey id)
     {
-        var filter = Builders<TEntity>.Filter.Eq(_idField, id);
+        var filter = Builders<TEntity>.Filter.Eq(IdField, id);
         return await _collection.FindOneAndDeleteAsync(filter);
     }
 
@@ -95,26 +96,57 @@ public class MongoRepositoryBase<TEntity, TKey>(IMongoDatabase database) :
             throw new ArgumentException("Page index must be greater than 0.");
         }
 
-        var query = _collection.Find(filter is null
+        var filterBuilder = filter is null
             ? Builders<TEntity>.Filter.Empty
-            : Builders<TEntity>.Filter.Where(filter));
-        var totalTask = query.CountDocumentsAsync();
-        var itemTask = query.Skip((page - 1) * pageSize).Limit(pageSize);
+            : Builders<TEntity>.Filter.Where(filter);
+        var findOptions = new FindOptions<TEntity, TEntity>()
+        {
+            Limit = pageSize,
+            Skip = (page - 1) * pageSize,
+        };
         if (orderBy != null)
         {
-            if (ascending)
-            {
-                itemTask.SortByDescending(orderBy);
-            }
-            else
-            {
-                itemTask.SortBy(orderBy);
-            }
+            var sortBuilder = Builders<TEntity>.Sort;
+            findOptions.Sort = ascending ? sortBuilder.Ascending(orderBy) : sortBuilder.Descending(orderBy);
         }
 
-        var items = await itemTask.ToListAsync();
-        var total = await totalTask;
+        var items = await _collection.FindAsync(filterBuilder, findOptions);
+        var total = await _collection.CountDocumentsAsync(Builders<TEntity>.Filter.Empty);
         var pageCount = Math.Ceiling(total.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
-        return new PageData<TEntity>(page, pageCount, total, pageSize, items);
+        return new PageData<TEntity>(page, pageCount, total, pageSize, await items.ToListAsync());
+    }
+
+    public async Task<PageData<TEntity>?> GetPageDataAsync(int page, int pageSize,
+        Expression<Func<TEntity, bool>>? filter = null, string? orderBy = null,
+        bool ascending = false)
+    {
+        if (pageSize < 1)
+        {
+            throw new FriendlyException("Page size must be greater than 0.");
+        }
+
+        if (page < 1)
+        {
+            throw new FriendlyException("Page index must be greater than 0.");
+        }
+
+        var filterBuilder = filter is null
+            ? Builders<TEntity>.Filter.Empty
+            : Builders<TEntity>.Filter.Where(filter);
+        var findOptions = new FindOptions<TEntity, TEntity>()
+        {
+            Limit = pageSize,
+            Skip = (page - 1) * pageSize,
+        };
+        if (orderBy != null)
+        {
+            var sortBuilder = Builders<TEntity>.Sort;
+            findOptions.Sort = ascending ? sortBuilder.Ascending(orderBy) : sortBuilder.Descending(orderBy);
+        }
+
+        var items = await _collection.FindAsync(filterBuilder, findOptions);
+        var total = await _collection.CountDocumentsAsync(Builders<TEntity>.Filter.Empty);
+        var pageCount = Math.Ceiling(total.ObjToDecimal() / pageSize.ObjToDecimal()).ObjToInt();
+        return new PageData<TEntity>(page, pageCount, total, pageSize, await items.ToListAsync());
     }
 }
