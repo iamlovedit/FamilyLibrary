@@ -54,6 +54,9 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
     devDependencies:
+      '@ricons/ionicons5':
+        specifier: ^0.12.0
+        version: 0.12.0
       '@types/node':
         specifier: ^22.9.1
         version: 22.9.1
@@ -1390,6 +1393,9 @@ packages:
   '@remix-run/router@1.21.0':
     resolution: {integrity: sha512-xfSkCAchbdG5PnbrKqFWwia4Bi61nH+wm8wLEqfHDyp7Y3dZzgqS2itV8i4gAq9pC2HsTpwyBC6Ds8VHZ96JlA==}
     engines: {node: '>=14.0.0'}
+
+  '@ricons/ionicons5@0.12.0':
+    resolution: {integrity: sha512-CzS43wP5XDZTBXmSvuW9XvTgiAeRWLHeeYoUtvHS/3h6yfjlr/T0vqdB8Zhqb7xPnto3li7yXZ4gU9VEgv4w7w==}
 
   '@rollup/rollup-android-arm-eabi@4.27.3':
     resolution: {integrity: sha512-EzxVSkIvCFxUd4Mgm4xR9YXrcp976qVaHnqom/Tgm+vU79k4vV4eYTjmRvGfeoW8m9LVcsAy/lGjcgVegKEhLQ==}
@@ -4853,6 +4859,8 @@ snapshots:
       react-redux: 9.1.2(@types/react@18.3.12)(react@18.3.1)(redux@5.0.1)
 
   '@remix-run/router@1.21.0': {}
+
+  '@ricons/ionicons5@0.12.0': {}
 
   '@rollup/rollup-android-arm-eabi@4.27.3':
     optional: true
