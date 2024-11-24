@@ -20,4 +20,15 @@ public class PackageController(IPublishedPackageService packageService, ILogger<
             await packageService.GetPackagePageAsync(keyword, pageIndex, pageSize, orderBy);
         return SucceedPage(packagePage);
     }
+    
+    [HttpGet("{id}/{packageVersion}")]
+    public Task<IActionResult> Download(string id, string packageVersion)
+    {
+        return Task.Run<IActionResult>(() =>
+        {
+            logger.LogInformation("download package id:{id} version:{packageVersion}", id, packageVersion);
+            return Redirect($"https://dynamopackages.com/download/{id}/{packageVersion}");
+        });
+    }
+    
 }
