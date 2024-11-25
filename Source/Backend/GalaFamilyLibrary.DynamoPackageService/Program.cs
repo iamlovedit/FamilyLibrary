@@ -1,9 +1,11 @@
+using GalaFamilyLibrary.DataTransferObject.Package;
 using GalaFamilyLibrary.DynamoPackageService.Jobs;
 using GalaFamilyLibrary.Infrastructure.Extensions;
 using GalaFamilyLibrary.Infrastructure.Middlewares;
 using GalaFamilyLibrary.Infrastructure.Seed;
 using GalaFamilyLibrary.Model.Package;
 using GalaFamilyLibrary.Service.Package;
+using Mapster;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Quartz;
 
@@ -31,6 +33,16 @@ services.AddQuartz(options =>
 services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
 services.AddHttpClient();
+
+TypeAdapterConfig<PublishedPackage, PublishedPackageDetailDto>.NewConfig()
+    .Map(pd => pd.Maintainers, p => p.Maintainers.Select(x => x.Name).ToList())
+    .Map(pd => pd.UsedBy, p => p.UsedBy.Select(x => x.Name).ToList());
+
+TypeAdapterConfig<PublishedVersion, PublishedVersionDto>.NewConfig()
+    .Map(pd => pd.FullDependencyIds, p => p.FullDependencyIds.Select(x => x.Name).ToList())
+    .Map(pd => pd.DirectDependencyIds, p => p.DirectDependencyIds.Select(x => x.Name).ToList());
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
