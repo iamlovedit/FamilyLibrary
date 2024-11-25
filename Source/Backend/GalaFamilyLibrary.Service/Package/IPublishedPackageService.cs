@@ -10,7 +10,7 @@ namespace GalaFamilyLibrary.Service.Package
 {
     public interface IPublishedPackageService : IMongoServiceBase<PublishedPackage, string>
     {
-        Task<PageData<PublishedPackageDto>> GetPackagePageAsync(string? keyword = null, int pageIndex = 1,
+        Task<PageData<PublishedPackageBasicDto>> GetPackagePageAsync(string? keyword = null, int pageIndex = 1,
             int pageSize = 30, string? orderBy = null);
     }
 
@@ -19,7 +19,7 @@ namespace GalaFamilyLibrary.Service.Package
         IRedisBasketRepository redis)
         : MongoServiceBase<PublishedPackage, string>(repositoryBase), IPublishedPackageService
     {
-        public async Task<PageData<PublishedPackageDto>> GetPackagePageAsync(string? keyword = null, int pageIndex = 1,
+        public async Task<PageData<PublishedPackageBasicDto>> GetPackagePageAsync(string? keyword = null, int pageIndex = 1,
             int pageSize = 30, string? orderBy = null)
         {
             var expression = Expressionable.Create<PublishedPackage>()
@@ -27,7 +27,7 @@ namespace GalaFamilyLibrary.Service.Package
                     x => x.Name.Contains(keyword, StringComparison.CurrentCultureIgnoreCase))
                 .ToExpression();
             var packagePage = await DAL.GetPageDataAsync(pageIndex, pageSize, expression, orderBy);
-            return packagePage.ConvertTo<PublishedPackageDto>();
+            return packagePage.ConvertTo<PublishedPackageBasicDto>();
         }
     }
 }
