@@ -14,11 +14,11 @@ import {
   Button
 } from '@nextui-org/react'
 import { useState } from 'react'
-import { AcmeLogo } from '../Logo'
 import { useTheme } from 'next-themes'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { MoonOutline, SunnyOutline } from '@ricons/ionicons5'
-import { Icon } from '@ricons/utils'
+import { AcmeLogo } from '@/components/Icons/Logo'
+import { SunIcon } from '@/components/Icons/Sun'
+import { Moon } from '@/components/Icons/Moon'
 
 type MenuItem = {
   name: string
@@ -30,6 +30,14 @@ function Header() {
   const { theme, setTheme } = useTheme()
   const [activeItem, setActiveItem] = useState(location.pathname)
   const navigate = useNavigate()
+
+  const handleThemeChange = () => {
+    if (theme === 'light') {
+      setTheme('dark')
+    } else {
+      setTheme('light')
+    }
+  }
 
   const menuItems: MenuItem[] = [
     {
@@ -53,7 +61,7 @@ function Header() {
   }
 
   return (
-    <Navbar isBordered>
+    <Navbar isBordered maxWidth={'full'}>
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <AcmeLogo />
@@ -73,7 +81,11 @@ function Header() {
           </NavbarItem>
         ))}
       </NavbarContent>
-      <NavbarContent as="div" className="items-center" justify="end"></NavbarContent>
+      <NavbarContent as="div" className="items-center" justify="end">
+        <Button isIconOnly variant="light" onClick={handleThemeChange}>
+          {theme === 'light' ? <Moon /> : <SunIcon />}
+        </Button>
+      </NavbarContent>
     </Navbar>
   )
 }
