@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Navigate, RouteObject, useRoutes } from 'react-router-dom'
+import { Navigate, RouteObject, createBrowserRouter } from 'react-router-dom'
 import dynamoRoutes from './modules/dynamo'
 import familyRoutes from './modules/family'
 import excptionRoutes from './modules/exceptions'
@@ -11,33 +11,36 @@ const Loading = lazy(() => import('@/components/Loading'))
 
 const routes: RouteObject[] = [
   {
-    path: "*",
-    element: <Navigate to='/404' />
+    path: '*',
+    element: <Navigate to="/404" />
   },
   {
     path: '/',
-    element:
+    element: (
       <Suspense fallback={<Loading />}>
         <MainLayout />
-      </Suspense>,
+      </Suspense>
+    ),
     children: [
       {
         path: '',
-        element:
+        element: (
           <Suspense fallback={<Loading />}>
             <Home />
           </Suspense>
+        ),
+        loader: () => {
+          return 'hello'
+        }
       },
       ...dynamoRoutes,
-      ...familyRoutes,
+      ...familyRoutes
     ]
   },
   ...excptionRoutes,
   ...authRoutes
 ]
 
-const MainRoutes = () => {
-  return useRoutes(routes)
-}
+const router: any = createBrowserRouter(routes)
 
-export default MainRoutes;
+export default router

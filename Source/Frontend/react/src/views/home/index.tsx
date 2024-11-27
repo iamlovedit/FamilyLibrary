@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
+import { useLoaderData } from 'react-router-dom'
 
 function Home() {
   const [mounted, setMounted] = useState(false)
+  const hello = useLoaderData()
+
   useEffect(() => {
     setMounted(true)
   }, [])
@@ -10,7 +13,7 @@ function Home() {
     return null
   }
 
-  return <>{'Home view'}</>
+  return <>{hello}</>
 }
 
 export default Home
