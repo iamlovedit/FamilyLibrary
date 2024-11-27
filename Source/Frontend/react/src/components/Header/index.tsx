@@ -17,8 +17,8 @@ import { useState } from 'react'
 import { useTheme } from 'next-themes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AcmeLogo } from '@/components/Icons/Logo'
-import { SunIcon } from '@/components/Icons/Sun'
-import { Moon } from '@/components/Icons/Moon'
+import { FiSun } from 'react-icons/fi'
+import { BsCloudMoon } from 'react-icons/bs'
 
 type MenuItem = {
   name: string
@@ -83,7 +83,7 @@ function Header() {
       </NavbarContent>
       <NavbarContent as="div" className="items-center" justify="end">
         <Button isIconOnly variant="light" onClick={handleThemeChange}>
-          {theme === 'light' ? <Moon /> : <SunIcon />}
+          {theme === 'light' ? <BsCloudMoon /> : <FiSun />}
         </Button>
       </NavbarContent>
     </Navbar>
