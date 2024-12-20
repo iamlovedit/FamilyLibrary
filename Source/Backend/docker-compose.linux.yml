@@ -20,6 +20,7 @@ services:
       - postgresql
       - redis
       - seq
+      - mongo
     env_file:
       - .env
     image: ${DOCKER_REGISTRY-}gala-dynamo-packages
@@ -35,10 +36,11 @@ services:
       - postgresql
       - redis
       - seq
+      - mongo
     env_file:
       - .env
     volumes:
-      - ~/microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb/:/root/.microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb
+      - ~/.microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb/:/root/.microsoft/usersecrets/1a1a0cfd-b053-46b9-8625-8b3b9422c6eb
     image: ${DOCKER_REGISTRY-}gala-family-library
     build:
       context: .
@@ -52,6 +54,7 @@ services:
       - postgresql
       - redis
       - seq
+      - mongo
     env_file:
       - .env
     image: ${DOCKER_REGISTRY-}gala-identity
@@ -65,17 +68,30 @@ services:
     restart: unless-stopped
     networks:
       - gala-services-net
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     image: ${DOCKER_REGISTRY-}gala-family-parameters
     depends_on:
       - postgresql
       - redis
       - seq
+      - mongo
     build:
       context: .
       dockerfile: GalaFamilyLibrary.ParameterService/Dockerfile
+
+  mongo:
+    image: mongo:8
+    networks:
+      - "gala-services-net"
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./docker/mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:27017"
 
   postgresql:
     networks:
@@ -85,7 +101,7 @@ services:
     ports:
       - "${DATABASE_PORT}:5432"
     environment:
-      POSTGRES_USER: ${DATABASE_USERID}
+      POSTGRES_USER: ${DATABASE_USER}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
       POSTGRES_DB: ${DATABASE_DATABASE}
       TZ: "GMT+8"
@@ -115,7 +131,7 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
-      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMINPASSWORD}
+      - SEQ_FIRSTRUN_ADMINPASSWORDHASH=${SEQ_ADMIN_PASSWORD}
     ports:
       - "5341:80"
     networks:
