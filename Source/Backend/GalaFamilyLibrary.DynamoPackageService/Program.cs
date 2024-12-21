@@ -58,4 +58,4 @@ await app.Services.ConfigureSeedAsync(async seed =>
     var file = string.Format(seedFolder, "dynamo_packages");
     await seed.GenerateMongoSeedAsync<PublishedPackage>(file);
 });
-app.UseInfrastructure();
+app.UseDefaultInfrastructure();

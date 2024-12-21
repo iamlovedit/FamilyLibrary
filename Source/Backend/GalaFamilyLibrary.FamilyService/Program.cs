@@ -52,4 +52,4 @@ app.UseInitSeed(dbSeed =>
     dbSeed.GenerateSeedAsync<FamilyDetail>(file);
 });
 app.UseStaticFiles();
-app.UseInfrastructure();
+app.UseDefaultInfrastructure();

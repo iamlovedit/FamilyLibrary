@@ -42,4 +42,4 @@ app.UseInitSeed(dbSeed =>
     // file = string.Format(seedFolder, "FamilyStars");
     // dbSeed.InitSeed<FamilyStar>(file);
 });
-app.UseInfrastructure();
+app.UseDefaultInfrastructure();

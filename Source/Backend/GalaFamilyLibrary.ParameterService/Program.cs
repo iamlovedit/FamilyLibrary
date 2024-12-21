@@ -41,4 +41,4 @@ app.UseInitSeed(dbSeed =>
     file = string.Format(seedFolder, "DisplayUnitTypes");
     dbSeed.GenerateSeedAsync<DisplayUnitType>(file);
 });
-app.UseInfrastructure();
+app.UseDefaultInfrastructure();
