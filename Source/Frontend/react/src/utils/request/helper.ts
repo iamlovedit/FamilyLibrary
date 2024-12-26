@@ -1,11 +1,13 @@
-export interface HttpMessage<T> {
-  data: T
+import { GlobalVariables } from '@/utils'
+
+export type HttpMessage<T> = {
+  response: T
   succeed: boolean
   code: number
   message: string
 }
 
-export interface RequestOptions {
+export type RequestOptions = {
   method?: string
   url: string
   body?: any
@@ -23,19 +25,21 @@ export class HttpError extends Error {
 }
 
 export class HttpClient {
+  private requestInterceptors: Array<(url: string, options: RequestInit) => void> = []
+  private responseInterceptors: Array<(response: Response) => void> = []
   private baseUrl: string
   constructor(url?: string) {
     this.baseUrl = url ?? import.meta.env.VITE_APP_API_BASE_URL
   }
 
-  get<T>(url: string, requireToken: boolean = true): Promise<HttpMessage<T>> {
+  get = <T>(url: string, requireToken: boolean = true): Promise<HttpMessage<T>> => {
     return this.request({
       url,
       requireToken
     })
   }
 
-  send<T>(url: string, body?: any, requireToken: boolean = true): Promise<HttpMessage<T>> {
+  post = <T>(url: string, body?: any, requireToken: boolean = true): Promise<HttpMessage<T>> => {
     return this.request({
       url,
       method: 'POST',
@@ -44,13 +48,39 @@ export class HttpClient {
     })
   }
 
+  put = <T>(url: string, body?: any, requireToken: boolean = true): Promise<HttpMessage<T>> => {
+    return this.request({
+      url,
+      method: 'PUT',
+      body,
+      requireToken
+    })
+  }
+
+  delete = <T>(url: string, body?: any, requireToken: boolean = true): Promise<HttpMessage<T>> => {
+    return this.request({
+      url,
+      body,
+      method: 'DELETE',
+      requireToken
+    })
+  }
+
+  addResponseInterceptor(interceptor: (response: Response) => void) {
+    this.responseInterceptors.push(interceptor)
+  }
+
+  addRequestInterceptor(interceptor: (url: string, options: RequestInit) => void) {
+    this.requestInterceptors.push(interceptor)
+  }
+
   private async request<T>(requestOptions: RequestOptions): Promise<HttpMessage<T>> {
     try {
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
       }
       if (requestOptions.requireToken) {
-        const token = localStorage.getItem('auth_token')
+        const token = localStorage.getItem(GlobalVariables.tokenName)
         if (token) {
           headers['Authorization'] = `Bearer ${token}`
         }
@@ -62,12 +92,17 @@ export class HttpClient {
         body: requestOptions.body ? JSON.stringify(requestOptions.body) : undefined
       }
 
+      this.executeRequestInterceptors(url, options)
       const response: Response = await fetch(url, options)
+      this.executeResponseInterceptors(response)
       if (response.ok) {
         const data: HttpMessage<T> = await response.json()
-        return data
+        if (data.succeed) {
+          return data
+        }
+        throw new HttpError(data.message, data.code)
       }
-      throw new Error(`网络请求错误! status: ${response.status}`)
+      throw new HttpError(response.statusText, response.status)
     } catch (error: any) {
       if (error instanceof HttpError) {
         throw new HttpError(error.message, error.code)
@@ -78,8 +113,11 @@ export class HttpClient {
       throw new HttpError(error.message, 500)
     }
   }
-}
 
-export function useHttpClient(): HttpClient {
-  return new HttpClient()
+  private executeRequestInterceptors(url: string, options: RequestInit) {
+    this.requestInterceptors.forEach((interceptor) => interceptor(url, options))
+  }
+  private executeResponseInterceptors(response: Response) {
+    this.responseInterceptors.forEach((interceptor) => interceptor(response))
+  }
 }
