@@ -1,10 +1,6 @@
-import { memo } from "react";
+import { memo } from 'react'
 const Loading = memo(() => {
-    return (
-        <>
-            Loading...
-        </>
-    )
-});
+  return <div className="h-full w-full justify-center content-center text-center">Loading...</div>
+})
 
-export default Loading;
+export default Loading

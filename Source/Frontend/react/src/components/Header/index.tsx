@@ -1,19 +1,6 @@
 'use client'
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Input,
-  DropdownItem,
-  DropdownTrigger,
-  Dropdown,
-  DropdownMenu,
-  Avatar,
-  Button
-} from '@nextui-org/react'
-import { useState } from 'react'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from '@nextui-org/react'
+import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AcmeLogo } from '@/components/Icons/Logo'
@@ -38,6 +25,10 @@ function Header() {
       setTheme('light')
     }
   }
+
+  useEffect(() => {
+    setActiveItem(location.pathname)
+  }, [location.pathname])
 
   const menuItems: MenuItem[] = [
     {
@@ -74,7 +65,7 @@ function Header() {
             <Link
               color={activeItem === item.key ? 'primary' : 'foreground'}
               href={item.key}
-              onClick={(e) => handlePressNavbarItem(e, item.key)}
+              onPress={(e) => handlePressNavbarItem(e, item.key)}
             >
               {item.name}
             </Link>
@@ -82,7 +73,7 @@ function Header() {
         ))}
       </NavbarContent>
       <NavbarContent as="div" className="items-center" justify="end">
-        <Button isIconOnly variant="light" onClick={handleThemeChange}>
+        <Button isIconOnly variant="light" onPress={handleThemeChange}>
           {theme === 'light' ? <BsCloudMoon /> : <FiSun />}
         </Button>
       </NavbarContent>
