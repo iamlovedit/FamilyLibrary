@@ -21,6 +21,7 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.10" />
       <PackageReference Include="Minio" Version="6.0.3" />
       <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3" />
       <PackageReference Include="Ocelot.Provider.Consul" Version="23.3.6" />
       <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
       <PackageReference Include="RabbitMQ.MessageBus" Version="4.0.103" />
